@@ -16,33 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -67,7 +64,6 @@
     <link rel="prev" title="A simple trace" href="01_simple_trace.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,8 +79,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -92,6 +99,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -99,8 +107,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -116,8 +124,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -147,25 +154,31 @@
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../00_front_page.html">
-                    Vision for sim-tools
+                    sim-tools: tools to support the Discrete-Event Simulation process in python.
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Sampling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../01_sampling/01_distributions_examples.html">Sampling using <code class="docutils literal notranslate"><span class="pre">sim_tools</span></code> classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../01_sampling/02_time_dependent_examples.html">Time dependent arrivals via thinning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_sampling/01_distributions_examples.html">Theoretical distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_sampling/02_empirical_distributions.html">Empirial Distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_sampling/03_distributions_registry.html">Using the DistributionRegistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01_sampling/04_time_dependent_examples.html">Time dependent arrivals via thinning</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Debugging</span></p>
 <ul class="current nav bd-sidenav">
@@ -195,14 +208,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -413,16 +421,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -483,39 +499,21 @@
 <p>The model used to demonstrate trace functionality is implemented in <code class="docutils literal notranslate"><span class="pre">simpy</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">simpy</span>
-<span class="n">simpy</span><span class="o">.</span><span class="n">__version__</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;4.1.1&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sim_tools</span>
-<span class="n">sim_tools</span><span class="o">.</span><span class="n">__version__</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.7.1&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sim_tools.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Exponential</span><span class="p">,</span> 
-    <span class="n">Normal</span><span class="p">,</span> 
-    <span class="n">Lognormal</span><span class="p">,</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pylint: disable=missing-module-docstring,invalid-name,too-many-lines</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">simpy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sim_tools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sim_tools.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Exponential</span><span class="p">,</span>
+    <span class="n">Normal</span><span class="p">,</span>
+    <span class="n">Lognormal</span><span class="p">,</span>
     <span class="n">Bernoulli</span>
 <span class="p">)</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">sim_tools.time_dependent</span><span class="w"> </span><span class="kn">import</span> <span class="n">NSPPThinning</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sim_tools.trace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Traceable</span>
 </pre></div>
@@ -524,9 +522,14 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;simpy version: </span><span class="si">{</span><span class="n">simpy</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sim-tools version: </span><span class="si">{</span><span class="n">sim_tools</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>simpy version: 4.1.1
+sim-tools version: 0.9.0
 </pre></div>
 </div>
 </div>
@@ -620,10 +623,12 @@
 <span class="c1"># number of replications.</span>
 <span class="n">DEFAULT_N_REPS</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="c1">## set to True to show a trace of the simulation model (best used in single run mode)</span>
+<span class="c1"># set to True to show a trace of the simulation model (best used in single run</span>
+<span class="c1"># mode)</span>
 <span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="c1"># provide a list of integers that represent patient IDs.  Only these patients will be tracked</span>
+<span class="c1"># provide a list of integers that represent patient IDs.  Only these patients</span>
+<span class="c1"># will be tracked</span>
 <span class="n">TRACKED</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 </div>
@@ -637,14 +642,29 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">load_arrival_profile</span><span class="p">(</span><span class="n">profile_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load and transform an arrival profile from a CSV file.</span>
 
-       <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">profile_path</span><span class="p">)</span>
-              <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-              <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span><span class="s1">&#39;t&#39;</span><span class="p">})</span>
-              <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">mean_iat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">60.0</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">arrival_rate</span><span class="p">,</span>
-                     <span class="n">t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">t</span> <span class="o">*</span> <span class="mf">60.0</span><span class="p">)</span>
-       <span class="p">)</span>
-       <span class="k">return</span> <span class="n">df</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    profile_path : str</span>
+<span class="sd">        Path to CSV file containing the arrival rate profile. It is expected</span>
+<span class="sd">        to have a column called &#39;arrival_rate&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        A DataFrame with the following columns:</span>
+<span class="sd">        - &#39;t&#39;: Time.</span>
+<span class="sd">        - &#39;arrival_rate&#39;: Original arrival rate from CSV.</span>
+<span class="sd">        - &#39;mean_iat&#39;: Mean inter-arrival time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">profile_path</span><span class="p">)</span>
+          <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+          <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span><span class="s1">&#39;t&#39;</span><span class="p">})</span>
+          <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">mean_iat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">60.0</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">arrival_rate</span><span class="p">,</span>
+                  <span class="n">t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">t</span> <span class="o">*</span> <span class="mf">60.0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">df</span>
 </pre></div>
 </div>
 </div>
@@ -813,7 +833,9 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pylint: disable=too-many-instance-attributes,too-many-arguments</span>
+<span class="c1"># pylint: disable=too-many-positional-arguments,too-many-locals</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Container class for scenario parameters/arguments</span>
 <span class="sd">    </span>
@@ -913,12 +935,12 @@
 <span class="sd">            </span>
 <span class="sd">        tracked: list</span>
 <span class="sd">            List of integers that represent patient IDs.</span>
-<span class="sd">            Used with debug. If debug is True then only display trace for specific</span>
-<span class="sd">            patients.</span>
+<span class="sd">            Used with debug. If debug is True then only display trace for</span>
+<span class="sd">            specific patients.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># sampling</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_number_set</span> <span class="o">=</span> <span class="n">random_number_set</span>
-        
+
         <span class="c1"># store parameters for sampling</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">triage_mean</span> <span class="o">=</span> <span class="n">triage_mean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reg_mean</span> <span class="o">=</span> <span class="n">reg_mean</span>
@@ -933,17 +955,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_var</span> <span class="o">=</span> <span class="n">non_trauma_treat_var</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_p</span> <span class="o">=</span> <span class="n">non_trauma_treat_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prob_trauma</span> <span class="o">=</span> <span class="n">prob_trauma</span>
-                
+
         <span class="bp">self</span><span class="o">.</span><span class="n">init_sampling</span><span class="p">()</span>
-        
+
         <span class="c1"># count of each type of resource</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_resourse_counts</span><span class="p">(</span><span class="n">n_triage</span><span class="p">,</span> <span class="n">n_reg</span><span class="p">,</span> <span class="n">n_exam</span><span class="p">,</span> <span class="n">n_trauma</span><span class="p">,</span>
                                   <span class="n">n_cubicles_1</span><span class="p">,</span> <span class="n">n_cubicles_2</span><span class="p">)</span>
-        
+
         <span class="c1"># debug/trace information</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracked</span> <span class="o">=</span> <span class="n">tracked</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">set_random_no_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_number_set</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Controls the random sampling </span>
@@ -956,6 +978,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">random_number_set</span> <span class="o">=</span> <span class="n">random_number_set</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_sampling</span><span class="p">()</span>
 
+    <span class="c1"># pylint: disable=too-many-arguments,too-many-positional-arguments</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_resourse_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_triage</span><span class="p">,</span> <span class="n">n_reg</span><span class="p">,</span> <span class="n">n_exam</span><span class="p">,</span> <span class="n">n_trauma</span><span class="p">,</span>
                              <span class="n">n_cubicles_1</span><span class="p">,</span> <span class="n">n_cubicles_2</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
@@ -965,7 +988,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_reg</span> <span class="o">=</span> <span class="n">n_reg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_exam</span> <span class="o">=</span> <span class="n">n_exam</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_trauma</span> <span class="o">=</span> <span class="n">n_trauma</span>
-        
+
         <span class="c1"># non-trauma (1), trauma (2) treatment cubicles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_cubicles_1</span> <span class="o">=</span> <span class="n">n_cubicles_1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_cubicles_2</span> <span class="o">=</span> <span class="n">n_cubicles_2</span>
@@ -974,64 +997,66 @@
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create the distributions used by the model and initialise </span>
 <span class="sd">        the random seeds of each.</span>
-<span class="sd">        &#39;&#39;&#39;</span>       
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># MODIFICATION. Better method for producing n non-overlapping streams</span>
         <span class="n">seed_sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">SeedSequence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_number_set</span><span class="p">)</span>
-    
+
         <span class="c1"># Generate n high quality child seeds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span> <span class="o">=</span> <span class="n">seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">N_STREAMS</span><span class="p">)</span>
-        
+
         <span class="c1"># create distributions</span>
-        
+
         <span class="c1"># Triage duration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">triage_dist</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triage_mean</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">triage_dist</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triage_mean</span><span class="p">,</span>
                                        <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        
+
         <span class="c1"># Registration duration (non-trauma only)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reg_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_mean</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_mean</span><span class="p">,</span>
                                   <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_var</span><span class="p">),</span>
                                   <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        
+
         <span class="c1"># Evaluation (non-trauma only)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exam_dist</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exam_mean</span><span class="p">,</span>
                                 <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exam_var</span><span class="p">),</span>
                                 <span class="n">minimum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exam_min</span><span class="p">,</span>
                                 <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-        
+
         <span class="c1"># Trauma/stablisation duration (trauma only)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trauma_dist</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_mean</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">trauma_dist</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_mean</span><span class="p">,</span>
                                        <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-        
+
         <span class="c1"># Non-trauma treatment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nt_treat_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_mean</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">nt_treat_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_mean</span><span class="p">,</span>
                                        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_var</span><span class="p">),</span>
                                        <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-        
+
         <span class="c1"># treatment of trauma patients</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">treat_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_treat_mean</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">treat_dist</span> <span class="o">=</span> <span class="n">Lognormal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_treat_mean</span><span class="p">,</span>
                                     <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_treat_var</span><span class="p">),</span>
                                     <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
-        
+
         <span class="c1"># probability of non-trauma patient requiring treatment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nt_p_treat_dist</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_p</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">nt_p_treat_dist</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_treat_p</span><span class="p">,</span>
                                          <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
-        
-        
+
         <span class="c1"># probability of non-trauma versus trauma patient</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_trauma_dist</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prob_trauma</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_trauma_dist</span> <span class="o">=</span> <span class="n">Bernoulli</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prob_trauma</span><span class="p">,</span>
                                        <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
-        
+
         <span class="c1"># init sampling for non-stationary poisson process</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_nspp</span><span class="p">()</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="nf">init_nspp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        
-        <span class="c1"># read arrival profile</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise the Nonhomogeneous Poisson Process (NSPP) for arrivals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Load arrival profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrivals</span> <span class="o">=</span> <span class="n">load_arrival_profile</span><span class="p">(</span><span class="n">NSPP_PATH</span><span class="p">)</span>
 
-        <span class="c1"># maximum arrival rate (smallest time between arrivals)</span>
+        <span class="c1"># Compuate maximum arrival rate (smallest time between arrivals)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lambda_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrivals</span><span class="p">[</span><span class="s1">&#39;arrival_rate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-        
+
         <span class="c1"># NSPP thinning distribution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thinning_dist</span> <span class="o">=</span> <span class="n">NSPPThinning</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrivals</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
@@ -1074,22 +1099,22 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># initialise Trace</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-        
+
         <span class="c1"># metrics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_trauma</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trauma_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        simulates the major treatment process for a patient</span>
@@ -1102,95 +1127,103 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trauma_arrival</span><span class="p">()</span>
-        
-        <span class="c1"># request sign-in/triage </span>
+
+        <span class="c1"># request sign-in/triage</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">triage</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
             <span class="c1"># record the waiting time for triage</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>     
-            
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>
+
             <span class="c1"># triage begin event</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">triage_begin</span><span class="p">()</span>
-        
+
             <span class="c1"># sample triage duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">triage_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span><span class="p">)</span>
-            
+
             <span class="c1"># triage complete event</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">triage_complete</span><span class="p">()</span>
-            
+
         <span class="c1"># record the time that entered the trauma queue</span>
         <span class="n">start_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-    
-        <span class="c1"># request trauma room </span>
+
+        <span class="c1"># request trauma room</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">trauma</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
-            
+
             <span class="c1"># record the waiting time for trauma</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_trauma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_wait</span>
-            
+
             <span class="c1"># trauma begin event</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trauma_begin</span><span class="p">()</span>
-            
+
             <span class="c1"># sample stablisation duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trauma_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">trauma_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trauma_duration</span><span class="p">)</span>
-            
+
             <span class="c1"># trauma complete event</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trauma_complete</span><span class="p">()</span>
-            
+
         <span class="c1"># record the time that entered the treatment queue</span>
         <span class="n">start_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-    
-        <span class="c1"># request treatment cubicle </span>
+
+        <span class="c1"># request treatment cubicle</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_2</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
-            
+
             <span class="c1"># record the waiting time for trauma</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_wait</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">treatment_begin</span><span class="p">()</span>
-            
+
             <span class="c1"># sample treatment duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">treat_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span><span class="p">)</span>
-            
+
             <span class="bp">self</span><span class="o">.</span><span class="n">treatment_complete</span><span class="p">()</span>
-        
+
         <span class="c1"># total time in system</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>     
-    
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">trauma_arrival</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Trauma arrival event&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;arrival at centre 🚑&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">triage_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Enter triage event&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;enter triage. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
-                   <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-          
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;enter triage. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">trauma_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Enter trauma stabilisation&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;enter stabilisation. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_trauma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
-                   <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;enter stabilisation. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_trauma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">treatment_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Enter trauma treatment post stabilisation&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;enter treatment. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
-                   <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-    
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;enter treatment. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">triage_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Triage complete event&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;triage complete&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-          
+
     <span class="k">def</span><span class="w"> </span><span class="nf">trauma_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Patient stay in trauma is complete.&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;stabilisation complete.&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">treatment_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Treatment complete event&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;patient </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s1"> treatment complete; &#39;</span>
-                   <span class="sa">f</span><span class="s1">&#39;waiting time was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-    
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;patient </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s1"> treatment complete; &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;waiting time was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_trace_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Override trace config&#39;&#39;&#39;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
@@ -1236,10 +1269,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-        
+
         <span class="c1"># triage resource</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">triage</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">triage</span>
-        
+
         <span class="c1"># metrics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -1247,13 +1280,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_exam</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reg_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exam_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        
-        
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        simulates the non-trauma/minor treatment process for a patient</span>
@@ -1267,102 +1300,110 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># record the time of arrival and entered the triage queue</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-        
+
         <span class="c1"># trace arrival</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;arrival to centre.&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 
-        <span class="c1"># request sign-in/triage </span>
+        <span class="c1"># request sign-in/triage</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">triage</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
-            
+
             <span class="c1"># record the waiting time for triage</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>
-            
+
             <span class="c1"># trace enter triage</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;entering triage. &#39;</span>
                        <span class="sa">f</span><span class="s1">&#39;Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> mins&#39;</span><span class="p">,</span> 
                        <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-                        
-                        
+
+
             <span class="c1"># sample triage duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">triage_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triage_duration</span><span class="p">)</span>
-            
+
             <span class="c1"># trace exit triage</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;triage complete&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-                        
+
         <span class="c1"># record the time that entered the registration queue</span>
         <span class="n">start_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-    
-        <span class="c1"># request registration clert </span>
+
+        <span class="c1"># request registration clert</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
-            
+
             <span class="c1"># record the waiting time for registration</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_wait</span>
-            
+
             <span class="c1"># trace begin registration</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;starting patient registration.&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-            
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+                       <span class="s1">&#39;starting patient registration.&#39;</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
             <span class="c1"># sample registration duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reg_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">reg_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_duration</span><span class="p">)</span>
-            
+
             <span class="c1"># registration complete...</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;patient registered;&#39;</span>
                        <span class="sa">f</span><span class="s1">&#39;waiting time was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_triage</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
                        <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-            
+
         <span class="c1"># record the time that entered the evaluation queue</span>
         <span class="n">start_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-    
+
         <span class="c1"># request examination resource</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">exam</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">req</span>
-            
+
             <span class="c1"># record the waiting time for registration</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_exam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_wait</span>
-            
+
              <span class="c1"># trace begin examination</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;enter examination. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_exam</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> 
-                       <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-            
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;enter examination. Waiting time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_exam</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
             <span class="c1"># sample examination duration.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exam_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">exam_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exam_duration</span><span class="p">)</span>
-            
+
             <span class="c1"># trace exit examination</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;examination complete.&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-            
+
         <span class="c1"># sample if patient requires treatment?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">require_treat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">nt_p_treat_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">require_treat</span><span class="p">:</span>
-        
+
             <span class="c1"># record the time that entered the treatment queue</span>
             <span class="n">start_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
-    
+
             <span class="c1"># request treatment cubicle</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_1</span><span class="o">.</span><span class="n">request</span><span class="p">()</span> <span class="k">as</span> <span class="n">req</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">req</span>
 
                 <span class="c1"># record the waiting time for treatment</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_wait</span>
-                
+
                 <span class="c1"># trace enter treatment</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;enter treatment. Waiting time:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                           <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-        
+                <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;enter treatment. Waiting time:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_treat</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
                 <span class="c1"># sample treatment duration.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">nt_treat_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
                 <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treat_duration</span><span class="p">)</span>
 
                 <span class="c1"># trace exit treatment</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="s1">&#39;treatment complete ⛔&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-                
+                <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+                           <span class="s1">&#39;treatment complete ⛔&#39;</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+
         <span class="c1"># total time in system</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>      
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_trace_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;Override trace config&#39;&#39;&#39;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
@@ -1373,7 +1414,6 @@
             <span class="s2">&quot;tracked&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">tracked</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">config</span>
-    
 </pre></div>
 </div>
 </div>
@@ -1395,14 +1435,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Environment</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">patients</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trauma_patients</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_patients</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_period</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="nf">init_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Init the number of resources</span>
@@ -1418,68 +1458,65 @@
 <span class="sd">         </span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># sign/in triage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">triage</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">triage</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                           <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_triage</span><span class="p">)</span>
-        
+
         <span class="c1"># registration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">registration</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">registration</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                                 <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_reg</span><span class="p">)</span>
-        
+
         <span class="c1"># examination</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">exam</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">exam</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                         <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_exam</span><span class="p">)</span>
-        
+
         <span class="c1"># trauma</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">trauma</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">trauma</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                           <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_trauma</span><span class="p">)</span>
-        
+
         <span class="c1"># non-trauma treatment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_1</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_1</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                               <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_1</span><span class="p">)</span>
-            
+
         <span class="c1"># trauma treatment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_2</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">cubicle_2</span> <span class="o">=</span> <span class="n">simpy</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                                               <span class="n">capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_2</span><span class="p">)</span>
-        
-        
-        
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_collection_period</span><span class="o">=</span><span class="n">DEFAULT_RESULTS_COLLECTION_PERIOD</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Conduct a single run of the model in its current </span>
-<span class="sd">        configuration</span>
-<span class="sd">        </span>
-<span class="sd">        </span>
+<span class="sd">        configuration.</span>
+
 <span class="sd">        Parameters:</span>
 <span class="sd">        ----------</span>
 <span class="sd">        results_collection_period, float, optional</span>
 <span class="sd">            default = DEFAULT_RESULTS_COLLECTION_PERIOD</span>
-<span class="sd">            </span>
+
 <span class="sd">        warm_up, float, optional (default=0)</span>
-<span class="sd">        </span>
 <span class="sd">            length of initial transient period to truncate</span>
 <span class="sd">            from results.</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">        --------</span>
 <span class="sd">            None</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># setup the arrival generator process</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrivals_generator</span><span class="p">())</span>
-        
-        <span class="c1"># store rc perio</span>
+
+        <span class="c1"># store rc period</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_period</span> <span class="o">=</span> <span class="n">results_collection_period</span>
-        
+
         <span class="c1"># run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="n">results_collection_period</span><span class="p">)</span>
-        
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">arrivals_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">arrivals_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39; </span>
 <span class="sd">        Simulate the arrival of patients to the model</span>
-<span class="sd">        </span>
+
 <span class="sd">        Patients either follow a TraumaPathway or</span>
 <span class="sd">        NonTraumaPathway simpy process.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Non stationary arrivals implemented via Thinning acceptance-rejection </span>
 <span class="sd">        algorithm.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -1490,18 +1527,20 @@
 
             <span class="c1"># delay until next arrival</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="n">interarrival_time</span><span class="p">)</span>
-            
+
             <span class="c1"># sample if the patient is trauma or non-trauma</span>
             <span class="n">trauma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_trauma_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">trauma</span><span class="p">:</span>
                 <span class="c1"># create and store a trauma patient to update KPIs.</span>
-                <span class="n">new_patient</span> <span class="o">=</span> <span class="n">TraumaPathway</span><span class="p">(</span><span class="n">patient_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="n">new_patient</span> <span class="o">=</span> <span class="n">TraumaPathway</span><span class="p">(</span>
+                    <span class="n">patient_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">trauma_patients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_patient</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># create and store a non-trauma patient to update KPIs.</span>
-                <span class="n">new_patient</span> <span class="o">=</span> <span class="n">NonTraumaPathway</span><span class="p">(</span><span class="n">patient_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="n">new_patient</span> <span class="o">=</span> <span class="n">NonTraumaPathway</span><span class="p">(</span>
+                    <span class="n">patient_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_patient</span><span class="p">)</span>
-                
+
             <span class="c1"># start the pathway process for the patient</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">new_patient</span><span class="o">.</span><span class="n">execute</span><span class="p">())</span>
 </pre></div>
@@ -1529,78 +1568,76 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">process_run_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calculates statistics at end of run.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># list of all patients </span>
+        <span class="c1"># list of all patients</span>
         <span class="n">patients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span>
-        
+
         <span class="c1"># mean triage times (both types of patient)</span>
         <span class="n">mean_triage_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_triage&#39;</span><span class="p">,</span> <span class="n">patients</span><span class="p">)</span>
-        
+
         <span class="c1"># triage utilisation (both types of patient)</span>
-        <span class="n">triage_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;triage_duration&#39;</span><span class="p">,</span> 
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_triage</span><span class="p">,</span> 
+        <span class="n">triage_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;triage_duration&#39;</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_triage</span><span class="p">,</span>
                                              <span class="n">patients</span><span class="p">)</span>
-        
+
         <span class="c1"># mean waiting time for registration (non_trauma)</span>
-        <span class="n">mean_reg_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_reg&#39;</span><span class="p">,</span> 
+        <span class="n">mean_reg_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_reg&#39;</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># registration utilisation (trauma)</span>
-        <span class="n">reg_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;reg_duration&#39;</span><span class="p">,</span> 
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_reg</span><span class="p">,</span> 
+        <span class="n">reg_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;reg_duration&#39;</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_reg</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># mean waiting time for examination (non_trauma)</span>
-        <span class="n">mean_wait_exam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_exam&#39;</span><span class="p">,</span> 
+        <span class="n">mean_wait_exam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_exam&#39;</span><span class="p">,</span>
                                               <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># examination utilisation (non-trauma)</span>
-        <span class="n">exam_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;exam_duration&#39;</span><span class="p">,</span> 
-                                            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_exam</span><span class="p">,</span> 
+        <span class="n">exam_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;exam_duration&#39;</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_exam</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
-        
-        <span class="c1"># mean waiting time for treatment (non-trauma) </span>
-        <span class="n">mean_treat_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_treat&#39;</span><span class="p">,</span> 
+
+        <span class="c1"># mean waiting time for treatment (non-trauma)</span>
+        <span class="n">mean_treat_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_treat&#39;</span><span class="p">,</span>
                                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># treatment utilisation (non_trauma)</span>
-        <span class="n">treat_util1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;treat_duration&#39;</span><span class="p">,</span> 
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_1</span><span class="p">,</span> 
+        <span class="n">treat_util1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;treat_duration&#39;</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_1</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># mean total time (non_trauma)</span>
-        <span class="n">mean_total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;total_time&#39;</span><span class="p">,</span> 
+        <span class="n">mean_total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;total_time&#39;</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">non_trauma_patients</span><span class="p">)</span>
-                                    
-        <span class="c1"># mean waiting time for trauma </span>
-        <span class="n">mean_trauma_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_trauma&#39;</span><span class="p">,</span> 
+
+        <span class="c1"># mean waiting time for trauma</span>
+        <span class="n">mean_trauma_wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_trauma&#39;</span><span class="p">,</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># trauma utilisation (trauma)</span>
-        <span class="n">trauma_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;trauma_duration&#39;</span><span class="p">,</span> 
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_trauma</span><span class="p">,</span> 
+        <span class="n">trauma_util</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;trauma_duration&#39;</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_trauma</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span><span class="p">)</span>
-        
-        <span class="c1"># mean waiting time for treatment (rauma) </span>
-        <span class="n">mean_treat_wait2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_treat&#39;</span><span class="p">,</span> 
+
+        <span class="c1"># mean waiting time for treatment (trauma)</span>
+        <span class="n">mean_treat_wait2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;wait_treat&#39;</span><span class="p">,</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span><span class="p">)</span>
-        
+
         <span class="c1"># treatment utilisation (trauma)</span>
-        <span class="n">treat_util2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;treat_duration&#39;</span><span class="p">,</span> 
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_2</span><span class="p">,</span> 
+        <span class="n">treat_util2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource_util</span><span class="p">(</span><span class="s1">&#39;treat_duration&#39;</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_cubicles_2</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span><span class="p">)</span>
 
         <span class="c1"># mean total time (trauma)</span>
-        <span class="n">mean_total2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;total_time&#39;</span><span class="p">,</span> 
+        <span class="n">mean_total2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_metric</span><span class="p">(</span><span class="s1">&#39;total_time&#39;</span><span class="p">,</span>
                                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trauma_patients</span><span class="p">)</span>
-        
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;00_arrivals&#39;</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">patients</span><span class="p">),</span>
                         <span class="s1">&#39;01a_triage_wait&#39;</span><span class="p">:</span> <span class="n">mean_triage_wait</span><span class="p">,</span>
                         <span class="s1">&#39;01b_triage_util&#39;</span><span class="p">:</span> <span class="n">triage_util</span><span class="p">,</span>
@@ -1617,7 +1654,7 @@
                         <span class="s1">&#39;07b_treatment_util(trauma)&#39;</span><span class="p">:</span><span class="n">treat_util2</span><span class="p">,</span>
                         <span class="s1">&#39;08_total_time(trauma)&#39;</span><span class="p">:</span><span class="n">mean_total2</span><span class="p">,</span>
                         <span class="s1">&#39;09_throughput&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_throughput</span><span class="p">(</span><span class="n">patients</span><span class="p">)}</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mean_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">patients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calculate mean of the performance measure for the</span>
@@ -1634,11 +1671,10 @@
 <span class="sd">        patients: list</span>
 <span class="sd">            A list of patients</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span> 
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span>
                          <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">mean</span>
-    
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_resource_util</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">n_resources</span><span class="p">,</span> <span class="n">patients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calculate proportion of the results collection period</span>
@@ -1657,11 +1693,11 @@
 <span class="sd">        patients: list</span>
 <span class="sd">            A list of patients</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span> 
-                         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> 
-        
+        <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span>
+                         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">total</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rc_period</span> <span class="o">*</span> <span class="n">n_resources</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_throughput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">patients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the total number of patients that have successfully</span>
@@ -1678,7 +1714,7 @@
 <span class="sd">        float</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">total_time</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">summary_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns run results as a pandas.DataFrame</span>
@@ -1695,7 +1731,6 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">T</span>
         <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rep&#39;</span>
         <span class="k">return</span> <span class="n">df</span>
-    
 </pre></div>
 </div>
 </div>
@@ -1708,7 +1743,7 @@
 <p>We include two functions. <code class="docutils literal notranslate"><span class="pre">single_run()</span></code> and <code class="docutils literal notranslate"><span class="pre">multiple_replications</span></code>.  The latter is used to repeatedly call and process the results from <code class="docutils literal notranslate"><span class="pre">single_run</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">single_run</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="o">=</span><span class="n">DEFAULT_RESULTS_COLLECTION_PERIOD</span><span class="p">,</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">single_run</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="o">=</span><span class="n">DEFAULT_RESULTS_COLLECTION_PERIOD</span><span class="p">,</span>
                <span class="n">random_no_set</span><span class="o">=</span><span class="n">DEFAULT_RNG_SET</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Perform a single run of the model and return the results</span>
@@ -1731,8 +1766,8 @@
 <span class="sd">    --------</span>
 <span class="sd">        pandas.DataFrame:</span>
 <span class="sd">        results from single run.</span>
-<span class="sd">    &#39;&#39;&#39;</span>  
-        
+<span class="sd">    &#39;&#39;&#39;</span>
+
     <span class="c1"># set random number set - this controls sampling for the run.</span>
     <span class="n">scenario</span><span class="o">.</span><span class="n">set_random_no_set</span><span class="p">(</span><span class="n">random_no_set</span><span class="p">)</span>
 
@@ -1741,11 +1776,11 @@
 
     <span class="c1"># run the model</span>
     <span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">results_collection_period</span><span class="o">=</span><span class="n">rc_period</span><span class="p">)</span>
-        
+
     <span class="c1"># run results</span>
     <span class="n">summary</span> <span class="o">=</span> <span class="n">SimulationSummary</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">summary_df</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">summary_frame</span><span class="p">()</span>
-    
+
     <span class="k">return</span> <span class="n">summary_df</span>
 </pre></div>
 </div>
@@ -1753,8 +1788,9 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">multiple_replications</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="o">=</span><span class="n">DEFAULT_RESULTS_COLLECTION_PERIOD</span><span class="p">,</span> 
-                          <span class="n">n_reps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">multiple_replications</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="o">=</span><span class="n">DEFAULT_RESULTS_COLLECTION_PERIOD</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Perform multiple replications of the model.</span>
 <span class="sd">    </span>
@@ -1775,9 +1811,9 @@
 <span class="sd">    pandas.DataFrame</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_run</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="p">,</span> <span class="n">random_no_set</span><span class="o">=</span><span class="n">rep</span><span class="p">)</span> 
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_run</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rc_period</span><span class="p">,</span> <span class="n">random_no_set</span><span class="o">=</span><span class="n">rep</span><span class="p">)</span>
                <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
-    
+
     <span class="c1">#format and return results in a dataframe</span>
     <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="n">df_results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_results</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
@@ -1798,7 +1834,7 @@
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the default scenario. </span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the default scenario.</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tracked</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">19</span><span class="p">])</span>
 
 <span class="c1"># use the single_run() func</span>
@@ -1808,7 +1844,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;simulation complete.&#39;</span><span class="p">)</span>
 
 <span class="c1"># show results (transpose replication for easier view)</span>
-<span class="n">results</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1849,97 +1885,26 @@
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">505.03</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">patient </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">19</span><span style="color: #000000; text-decoration-color: #000000"> treatment complete; waiting time was </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">31.447</span>
 </pre>
 </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>simulation complete.
+rep                                      1
+00_arrivals                     209.000000
+01a_triage_wait                  16.622674
+01b_triage_util                   0.527512
+02a_registration_wait           111.161345
+02b_registration_util             0.801061
+03a_examination_wait             24.927965
+03b_examination_util              0.851285
+04a_treatment_wait(non_trauma)  172.435861
+04b_treatment_util(non_trauma)    0.845652
+05_total_time(non-trauma)       248.848441
+06a_trauma_wait                 201.144403
+06b_trauma_util                   0.919830
+07a_treatment_wait(trauma)       22.620880
+07b_treatment_util(trauma)        0.493576
+08_total_time(trauma)           310.384648
+09_throughput                   155.000000
 </pre></div>
 </div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>rep</th>
-      <th>1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>00_arrivals</th>
-      <td>209.000000</td>
-    </tr>
-    <tr>
-      <th>01a_triage_wait</th>
-      <td>16.622674</td>
-    </tr>
-    <tr>
-      <th>01b_triage_util</th>
-      <td>0.527512</td>
-    </tr>
-    <tr>
-      <th>02a_registration_wait</th>
-      <td>111.161345</td>
-    </tr>
-    <tr>
-      <th>02b_registration_util</th>
-      <td>0.801061</td>
-    </tr>
-    <tr>
-      <th>03a_examination_wait</th>
-      <td>24.927965</td>
-    </tr>
-    <tr>
-      <th>03b_examination_util</th>
-      <td>0.851285</td>
-    </tr>
-    <tr>
-      <th>04a_treatment_wait(non_trauma)</th>
-      <td>172.435861</td>
-    </tr>
-    <tr>
-      <th>04b_treatment_util(non_trauma)</th>
-      <td>0.845652</td>
-    </tr>
-    <tr>
-      <th>05_total_time(non-trauma)</th>
-      <td>248.848441</td>
-    </tr>
-    <tr>
-      <th>06a_trauma_wait</th>
-      <td>201.144403</td>
-    </tr>
-    <tr>
-      <th>06b_trauma_util</th>
-      <td>0.919830</td>
-    </tr>
-    <tr>
-      <th>07a_treatment_wait(trauma)</th>
-      <td>22.620880</td>
-    </tr>
-    <tr>
-      <th>07b_treatment_util(trauma)</th>
-      <td>0.493576</td>
-    </tr>
-    <tr>
-      <th>08_total_time(trauma)</th>
-      <td>310.384648</td>
-    </tr>
-    <tr>
-      <th>09_throughput</th>
-      <td>155.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+</div>
 </div>
 </section>
 <section id="disabling-trace-for-multiple-independent-replications">
@@ -2043,8 +2008,7 @@ dtype: float64
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2120,8 +2084,8 @@ By Thomas Monks
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

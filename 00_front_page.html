@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Vision for sim-tools &#8212; sim-tools docs</title>
+    <title>sim-tools: tools to support the Discrete-Event Simulation process in python. &#8212; sim-tools docs</title>
   
   
   
@@ -16,33 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
@@ -63,10 +60,9 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '00_front_page';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Sampling using sim_tools classes" href="01_sampling/01_distributions_examples.html" />
+    <link rel="next" title="Theoretical distributions" href="01_sampling/01_distributions_examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -82,8 +78,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -91,6 +98,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -98,8 +106,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -117,8 +125,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -148,25 +155,31 @@
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Vision for sim-tools
+                    sim-tools: tools to support the Discrete-Event Simulation process in python.
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Sampling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_sampling/01_distributions_examples.html">Sampling using <code class="docutils literal notranslate"><span class="pre">sim_tools</span></code> classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_sampling/02_time_dependent_examples.html">Time dependent arrivals via thinning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_sampling/01_distributions_examples.html">Theoretical distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_sampling/02_empirical_distributions.html">Empirial Distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_sampling/03_distributions_registry.html">Using the DistributionRegistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_sampling/04_time_dependent_examples.html">Time dependent arrivals via thinning</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Debugging</span></p>
 <ul class="nav bd-sidenav">
@@ -196,14 +209,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -347,16 +355,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -370,7 +386,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Vision for sim-tools</h1>
+    <h1>sim-tools: tools to support the Discrete-Event Simulation process in python.</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -380,14 +396,23 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Vision for sim-tools</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><code class="docutils literal notranslate"><span class="pre">sim-tools</span></code>: tools to support the Discrete-Event Simulation process in python.</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-for-sim-tools">Vision for sim-tools</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features:</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-simple-ways-to-explore-sim-tools">Two simple ways to explore sim-tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pip-and-pypi">Pip and PyPi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conda-forge">Conda-forge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mamba">Mamba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binder">Binder</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-how-to-use-sim-tools">Learn how to use <code class="docutils literal notranslate"><span class="pre">sim-tools</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#online-tutorials">Online Tutorials</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-to-sim-tools">Contributing to sim-tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
 </ul>
 </li>
 </ul>
@@ -402,33 +427,69 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p><img alt="DOI" src="https://zenodo.org/badge/225608065.svg" />](https://zenodo.org/badge/latestdoi/225608065)
+  <section id="sim-tools-tools-to-support-the-discrete-event-simulation-process-in-python">
+<h1><code class="docutils literal notranslate"><span class="pre">sim-tools</span></code>: tools to support the Discrete-Event Simulation process in python.<a class="headerlink" href="#sim-tools-tools-to-support-the-discrete-event-simulation-process-in-python" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://mybinder.org/v2/gh/TomMonks/sim-tools/HEAD"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<a class="reference external" href="https://zenodo.org/badge/latestdoi/225608065"><img alt="DOI" src="https://zenodo.org/badge/225608065.svg" /></a>
 <a class="reference external" href="https://pypi.python.org/pypi/sim-tools/"><img alt="PyPI version fury.io" src="https://badge.fury.io/py/sim-tools.svg" /></a>
+<a class="reference external" href="https://anaconda.org/conda-forge/sim-tools"><img alt="Anaconda-Server Badge" src="https://anaconda.org/conda-forge/sim-tools/badges/version.svg" /></a>
+<a class="reference external" href="https://anaconda.org/conda-forge/sim-tools"><img alt="Anaconda-Server Badge" src="https://anaconda.org/conda-forge/sim-tools/badges/platforms.svg" /></a>
+<a class="reference external" href="https://tommonks.github.io/sim-tools"><img alt="Read the Docs" src="https://readthedocs.org/projects/pip/badge/?version=latest" /></a>
 <a class="reference external" href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 <a class="reference external" href="https://www.python.org/downloads/release/python-360+/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10+-blue.svg" /></a>
 <a class="reference external" href="https://orcid.org/0000-0003-2631-4481"><img alt="License: MIT" src="https://img.shields.io/badge/ORCID-0000--0003--2631--4481-brightgreen" /></a></p>
-<p>sim-tools is being developed to support simulation education and applied simulation research.  It is MIT licensed and freely available to practitioners, students and researchers via PyPi.  There is a longer term plan to make sim-tools available via conda-forge.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sim-tools</span></code> is being developed to support Discrete-Event Simulation (DES) and Monte-Carlo Simulation education and applied simulation research.  It is MIT licensed and freely available to practitioners, students and researchers via <a class="reference external" href="https://pypi.org/project/sim-tools/">PyPi</a> and <a class="reference external" href="https://anaconda.org/conda-forge/sim-tools">conda-forge</a></p>
+</section>
 <section id="vision-for-sim-tools">
 <h1>Vision for sim-tools<a class="headerlink" href="#vision-for-sim-tools" title="Link to this heading">#</a></h1>
 <ol class="arabic simple">
-<li><p>Deliver high quality reliable code for simulation education and practice with full documentation.</p></li>
+<li><p>Deliver high quality reliable code for DES and Monte-Carlo Simulation education and practice with full documentation.</p></li>
 <li><p>Provide a simple to use pythonic interface.</p></li>
-<li><p>To improve the quality of simulation education and encourage the use of best practice.</p></li>
+<li><p>To improve the quality of simulation education using FOSS tools and encourage the use of best practice.</p></li>
 </ol>
 </section>
 <section id="features">
 <h1>Features:<a class="headerlink" href="#features" title="Link to this heading">#</a></h1>
 <ol class="arabic simple">
-<li><p>Implementation of classic optimisation via Simulation procedures such as KN, KN++, OBCA and OBCA-m</p></li>
-<li><p>Distributions module that includes classes that encapsulate a random number stream, seed, and distribution parameters.</p></li>
-<li><p>Implementation of Thinning to sample from Non-stationary poisson processes in a discrete-event simulation</p></li>
+<li><p>Implementation of classic Optimisation via Simulation procedures such as KN, KN++, OBCA and OBCA-m</p></li>
+<li><p>Theoretical and empirical distributions module that includes classes that encapsulate a random number stream, seed, and distribution parameters.</p></li>
+<li><p>An extendable Distribution registry that provides a quick reproduible way to parameterise simulation models.</p></li>
+<li><p>Implementation of Thinning to sample from Non-stationary Poisson Processes (time-dependent) in a DES.</p></li>
+<li><p>Automatic selection of the number of replications to run via the Replications Algorithm.</p></li>
+<li><p>EXPERIMENTAL: model trace functionality to support debugging of simulation models.</p></li>
 </ol>
-<section id="two-simple-ways-to-explore-sim-tools">
-<h2>Two simple ways to explore sim-tools<a class="headerlink" href="#two-simple-ways-to-explore-sim-tools" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">sim-tools</span></code></p></li>
-<li><p>Click on the launch-binder at the top of this readme. This will open example Jupyter notebooks in the cloud via Binder.</p></li>
-</ol>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<section id="pip-and-pypi">
+<h3>Pip and PyPi<a class="headerlink" href="#pip-and-pypi" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sim-tools
+</pre></div>
+</div>
+</section>
+<section id="conda-forge">
+<h3>Conda-forge<a class="headerlink" href="#conda-forge" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>sim-tools
+</pre></div>
+</div>
+</section>
+<section id="mamba">
+<h3>Mamba<a class="headerlink" href="#mamba" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">mamba</span></code> is a FOSS alternative to <code class="docutils literal notranslate"><span class="pre">conda</span></code> that is also quicker at resolving and installing environments.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>sim-tools
+</pre></div>
+</div>
+</section>
+<section id="binder">
+<h3>Binder<a class="headerlink" href="#binder" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://mybinder.org/v2/gh/TomMonks/sim-tools/HEAD"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
+</section>
+</section>
+<section id="learn-how-to-use-sim-tools">
+<h2>Learn how to use <code class="docutils literal notranslate"><span class="pre">sim-tools</span></code><a class="headerlink" href="#learn-how-to-use-sim-tools" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Online documentation: https://tommonks.github.io/sim-tools</p></li>
+<li><p>Introduction to DES in python: https://health-data-science-or.github.io/simpy-streamlit-tutorial/</p></li>
+</ul>
 </section>
 <section id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Link to this heading">#</a></h2>
@@ -448,10 +509,10 @@
 </div>
 </section>
 </section>
-<section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h1>
+<section id="online-tutorials">
+<h1>Online Tutorials<a class="headerlink" href="#online-tutorials" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>Optimisation Via Simulation <a class="reference external" href="https://colab.research.google.com/github/TomMonks/sim-tools/blob/master/examples/sw21_tutorial.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p></li>
+<li><p>Optimisation Via Simulation <a class="reference external" href="https://colab.research.google.com/github/TomMonks/sim-tools/blob/master/docs/02_ovs/03_sw21_tutorial.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p></li>
 </ul>
 <section id="contributing-to-sim-tools">
 <h2>Contributing to sim-tools<a class="headerlink" href="#contributing-to-sim-tools" title="Link to this heading">#</a></h2>
@@ -462,6 +523,21 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">sim_tools</span></code></p></li>
 </ul>
 <p><strong>All contributions are welcome!</strong></p>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">#</a></h2>
+<p>Once in the <code class="docutils literal notranslate"><span class="pre">sim_tools</span></code> environment, you can run tests using the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>
+</pre></div>
+</div>
+<p>To view the documentation, navigate to the top level directory of the code repository in your terminal and issue the following command to build the Jupyter Book:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jb</span> <span class="n">build</span> <span class="n">docs</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>To lint the repository, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">lint</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -510,7 +586,7 @@
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Sampling using <code class="docutils literal notranslate"><span class="pre">sim_tools</span></code> classes</p>
+        <p class="prev-next-title">Theoretical distributions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -521,8 +597,7 @@
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -531,14 +606,23 @@
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Vision for sim-tools</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><code class="docutils literal notranslate"><span class="pre">sim-tools</span></code>: tools to support the Discrete-Event Simulation process in python.</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#vision-for-sim-tools">Vision for sim-tools</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features:</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-simple-ways-to-explore-sim-tools">Two simple ways to explore sim-tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pip-and-pypi">Pip and PyPi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conda-forge">Conda-forge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mamba">Mamba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binder">Binder</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-how-to-use-sim-tools">Learn how to use <code class="docutils literal notranslate"><span class="pre">sim-tools</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#online-tutorials">Online Tutorials</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-to-sim-tools">Contributing to sim-tools</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
 </ul>
 </li>
 </ul>
@@ -590,8 +674,8 @@ By Thomas Monks
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
