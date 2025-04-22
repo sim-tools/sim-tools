@@ -2,6 +2,7 @@
 :alt: simtools
 :width: 400px
 :align: center
+:class: dark-light
 ```
 
 
