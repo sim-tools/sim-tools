@@ -16,33 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -67,7 +64,6 @@
     <link rel="prev" title="A simple trace" href="01_simple_trace.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,8 +79,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -92,6 +99,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -99,8 +107,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -116,8 +124,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -147,17 +154,21 @@
     
     
     <img src="../_static/simtools_logo_notext.png" class="logo__image only-light" alt="sim-tools docs - Home"/>
-    <img src="../_static/simtools_logo_notext.png" class="logo__image only-dark pst-js-only" alt="sim-tools docs - Home"/>
+    <script>document.write(`<img src="../_static/simtools_logo_notext.png" class="logo__image only-dark" alt="sim-tools docs - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -194,7 +205,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Release History</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../03_CHANGES.html">Change log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Change log</a></li>
 </ul>
 
     </div>
@@ -203,14 +214,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -421,16 +427,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -484,7 +498,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="advanced-trace">
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-trace">
 <h1>Advanced trace<a class="headerlink" href="#advanced-trace" title="Link to this heading">#</a></h1>
 <section id="imports">
 <h2>1. Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
@@ -1051,8 +1065,8 @@ sim-tools version: 0.9.0
 
         <span class="c1"># NSPP thinning distribution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thinning_dist</span> <span class="o">=</span> <span class="n">NSPPThinning</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrivals</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-                                           <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+                                          <span class="n">random_seed1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+                                          <span class="n">random_seed2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1844,58 +1858,56 @@ sim-tools version: 0.9.0
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Running simulation ... =&gt; 
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">Cell In[12], line 100,</span> in <span class="ni">TreatmentCentreModel.arrivals_generator</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span> <span class="k">for</span> <span class="n">patient_count</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
-<span class="g g-Whitespace">     </span><span class="mi">98</span> 
-<span class="g g-Whitespace">     </span><span class="mi">99</span>     <span class="c1"># sample iat via thinning</span>
-<span class="ne">--&gt; </span><span class="mi">100</span>     <span class="n">interarrival_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">thinning_dist</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">102</span>     <span class="c1"># delay until next arrival</span>
-
-<span class="nn">File ~/Documents/code/sim-tools/sim_tools/time_dependent.py:108,</span> in <span class="ni">NSPPThinning.sample</span><span class="nt">(self, simulation_time)</span>
-<span class="g g-Whitespace">    </span><span class="mi">107</span> <span class="c1"># this gives us the index of dataframe to use</span>
-<span class="ne">--&gt; </span><span class="mi">108</span> <span class="n">t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">simulation_time</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span> <span class="n">mean_iat_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;mean_iat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-
-<span class="ne">TypeError</span>: unsupported operand type(s) for //: &#39;int&#39; and &#39;numpy.random.bit_generator.SeedSequence&#39;
-
-<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
-
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="c1"># use the single_run() func</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="c1"># try changing `random_no_set` to see different run results</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running simulation ...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; =&gt; &#39;</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="n">results</span> <span class="o">=</span> <span class="n">single_run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">random_no_set</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;simulation complete.&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="c1"># show results (transpose replication for easier view)</span>
-
-<span class="nn">Cell In[14], line 33,</span> in <span class="ni">single_run</span><span class="nt">(scenario, rc_period, random_no_set)</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="n">model</span> <span class="o">=</span> <span class="n">TreatmentCentreModel</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span> <span class="c1"># run the model</span>
-<span class="ne">---&gt; </span><span class="mi">33</span> <span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">results_collection_period</span><span class="o">=</span><span class="n">rc_period</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="c1"># run results</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">summary</span> <span class="o">=</span> <span class="n">SimulationSummary</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-<span class="nn">Cell In[12], line 84,</span> in <span class="ni">TreatmentCentreModel.run</span><span class="nt">(self, results_collection_period)</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_period</span> <span class="o">=</span> <span class="n">results_collection_period</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span> <span class="c1"># run</span>
-<span class="ne">---&gt; </span><span class="mi">84</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="n">results_collection_period</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/envs/sim_tools/lib/python3.11/site-packages/simpy/core.py:246,</span> in <span class="ni">Environment.run</span><span class="nt">(self, until)</span>
-<span class="g g-Whitespace">    </span><span class="mi">244</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">245</span>     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">246</span>         <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">247</span> <span class="k">except</span> <span class="n">StopSimulation</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">248</span>     <span class="k">return</span> <span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># == until.value</span>
-
-<span class="nn">File ~/miniconda3/envs/sim_tools/lib/python3.11/site-packages/simpy/core.py:204,</span> in <span class="ni">Environment.step</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">202</span> <span class="n">exc</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">_value</span><span class="p">)(</span><span class="o">*</span><span class="n">event</span><span class="o">.</span><span class="n">_value</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">203</span> <span class="n">exc</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">_value</span>
-<span class="ne">--&gt; </span><span class="mi">204</span> <span class="k">raise</span> <span class="n">exc</span>
-
-<span class="ne">TypeError</span>: unsupported operand type(s) for //: &#39;int&#39; and &#39;numpy.random.bit_generator.SeedSequence&#39;
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">169.77</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">arrival to centre.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">175.62</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">entering triage. Waiting time: </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">5.849</span><span style="color: #000000; text-decoration-color: #000000"> mins</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">175.79</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">triage complete</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">188.70</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">starting patient registration.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">193.51</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">patient registered;waiting time was </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">5.849</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">193.51</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">enter examination. Waiting time: </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">0.000</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">204.96</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">arrival at centre 🚑</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">208.94</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">examination complete.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">208.94</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">enter treatment. Waiting tim</span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">e:0</span><span style="color: #000000; text-decoration-color: #000000">.</span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">000</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">214.79</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">enter triage. Waiting time: </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">9.833</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">221.03</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">triage complete</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">[</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">221.63</span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">treatment complete ⛔</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">384.82</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">enter stabilisation. Waiting time: </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">163.799</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">441.65</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">stabilisation complete.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">473.10</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">enter treatment. Waiting time: </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">31.447</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">[</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">505.03</span><span style="color: #800080; text-decoration-color: #800080; font-weight: bold">]:</span><span style="color: #000000; text-decoration-color: #000000">patient </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">19</span><span style="color: #000000; text-decoration-color: #000000"> treatment complete; waiting time was </span><span style="color: #000000; text-decoration-color: #000000; font-weight: bold">31.447</span>
+</pre>
+</div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>simulation complete.
+rep                                      1
+00_arrivals                     209.000000
+01a_triage_wait                  16.622674
+01b_triage_util                   0.527512
+02a_registration_wait           111.161345
+02b_registration_util             0.801061
+03a_examination_wait             24.927965
+03b_examination_util              0.851285
+04a_treatment_wait(non_trauma)  172.435861
+04b_treatment_util(non_trauma)    0.845652
+05_total_time(non-trauma)       248.848441
+06a_trauma_wait                 201.144403
+06b_trauma_util                   0.919830
+07a_treatment_wait(trauma)       22.620880
+07b_treatment_util(trauma)        0.493576
+08_total_time(trauma)           310.384648
+09_throughput                   155.000000
 </pre></div>
 </div>
 </div>
@@ -2002,8 +2014,7 @@ dtype: float64
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2079,8 +2090,8 @@ By Thomas Monks
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
