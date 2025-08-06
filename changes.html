@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -506,17 +506,32 @@ document.write(`
 <h2 class="rubric" id="unreleased">Unreleased</h2>
 <h3 class="rubric" id="added">Added</h3>
 <ul class="simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">sort</span></code> argument to <code class="docutils literal notranslate"><span class="pre">DistributionRegistry.create_batch()</span></code> for dict inputs, ensuring deterministic results if the config key order changes.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">_validate_and_create()</span></code> to <code class="docutils literal notranslate"><span class="pre">DistributionRegistry</span></code> which checks that the distribution configurations are dictionaries with only two keys: “class_name” and “params”.</p></li>
+<li><p>Add tests for the new <code class="docutils literal notranslate"><span class="pre">sort</span></code> argument and <code class="docutils literal notranslate"><span class="pre">_validate_and_create()</span></code> method.</p></li>
+</ul>
+<h3 class="rubric" id="changed">Changed</h3>
+<ul class="simple">
+<li><p>Some linting of <code class="docutils literal notranslate"><span class="pre">_validation.py</span></code>, <code class="docutils literal notranslate"><span class="pre">time_dependent.py</span></code>, <code class="docutils literal notranslate"><span class="pre">distributions.py</span></code> and <code class="docutils literal notranslate"><span class="pre">trace.py</span></code>.</p></li>
+</ul>
+<h2 class="rubric" id="v0-9-1">v0.9.1</h2>
+<h3 class="rubric" id="id1">Added</h3>
+<ul class="simple">
 <li><p>Add unit tests for all distributions which check it uses the base class, data types and sample size are correct, that the sample mean looks right, and that the random seed is working. Some similar tests existed, but they did not cover all distributions.</p></li>
 <li><p>Add some specific tests for <code class="docutils literal notranslate"><span class="pre">Lognormal</span></code> and <code class="docutils literal notranslate"><span class="pre">DiscreteEmpirical</span></code>.</p></li>
 <li><p>Add back tests for all distributions (which check that new samples are equal to those generated previously, when random seed controlled).</p></li>
 </ul>
-<h3 class="rubric" id="changed">Changed</h3>
+<h3 class="rubric" id="id2">Changed</h3>
 <ul class="simple">
 <li><p>Adjusted docstrings to use a more consistent NumPy style.</p></li>
 <li><p>Some linting of <code class="docutils literal notranslate"><span class="pre">distributions.py</span></code>.</p></li>
 </ul>
+<h3 class="rubric" id="fixed">Fixed</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DiscreteEmpirical</span></code> - now allows any type of data to be included. For example, str, as well as numeric value.</p></li>
+</ul>
 <h2 class="rubric" id="v0-9-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.9.0">v0.9.0</a>  <a class="reference external" href="https://doi.org/10.5281/zenodo.15256118"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.15256118.svg" /></a></h2>
-<h3 class="rubric" id="id1">Added</h3>
+<h3 class="rubric" id="id3">Added</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">distributions.DistributionRegistry</span></code> - for batch creation of standard distributions from a dictionary or list.</p></li>
 <li><p>DOCS: <code class="docutils literal notranslate"><span class="pre">DistributionRegistry</span></code> explaination and examples including use of JSON to store configs.</p></li>
@@ -531,7 +546,7 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <li><p>All distribution classes updated to include valudation of input parameters.</p></li>
 <li><p>DOCS: Dedicated page for using empirical distributions.</p></li>
 </ul>
-<h3 class="rubric" id="id2">Changed</h3>
+<h3 class="rubric" id="id4">Changed</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Distribution</span></code> changed from abstract base class to <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>.  All inheritance removed from concrete classes.</p></li>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code> to all distribution classes.</p></li>
@@ -541,14 +556,14 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <li><p>BREAKING: <code class="docutils literal notranslate"><span class="pre">ContinuousEmpirical</span></code> -&gt; GroupedContinuousEmpirical`. To clarify the purpose of the emprical distribution</p></li>
 <li><p>BREAKING: <code class="docutils literal notranslate"><span class="pre">NSPPThinning</span></code>: class now only requires “mean_iat” column in <code class="docutils literal notranslate"><span class="pre">data</span></code>. Acceptance/rejection calcualted using $iat_{min} / iat_(t)$</p></li>
 </ul>
-<h3 class="rubric" id="fixed">Fixed</h3>
+<h3 class="rubric" id="id5">Fixed</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Gamma</span></code> fix of the calculation of the mean based on alpha and beta.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GroupedContinuousEmpirical</span></code>: silent bug when <code class="docutils literal notranslate"><span class="pre">u</span></code> selects the first group.  Interpolation did not work correctly and sampled out of range. This now been handled by logic pre-sample.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NSPPThinning</span></code>: removed redundant outer loop from sampling.</p></li>
 </ul>
 <h2 class="rubric" id="v0-8-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.8.0a">v0.8.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.15041282"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.15041282.svg" /></a></h2>
-<h3 class="rubric" id="id3">Added</h3>
+<h3 class="rubric" id="id6">Added</h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">simpy</span></code> and <code class="docutils literal notranslate"><span class="pre">treat-sim</span></code> to the environment, as these were required in the notebooks in <code class="docutils literal notranslate"><span class="pre">docs/</span></code>.</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">nbqa</span></code> and <code class="docutils literal notranslate"><span class="pre">pylint</span></code> to the environment for linting, plus a relevant files <code class="docutils literal notranslate"><span class="pre">lint.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">.pylintrc</span></code>.</p></li>
@@ -556,7 +571,7 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <li><p>Add validation of parameters in <code class="docutils literal notranslate"><span class="pre">ReplicationsAlgorithm</span></code>.</p></li>
 <li><p>Add validation of data type in <code class="docutils literal notranslate"><span class="pre">OnlineStatistics</span></code>.</p></li>
 </ul>
-<h3 class="rubric" id="id4">Changed</h3>
+<h3 class="rubric" id="id7">Changed</h3>
 <ul class="simple">
 <li><p>Simplified distribution value type tests to a single test where possible using <code class="docutils literal notranslate"><span class="pre">pytest.mark.parametrize</span></code>.</p></li>
 <li><p>Linted <code class="docutils literal notranslate"><span class="pre">.py</span></code> and <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files using <code class="docutils literal notranslate"><span class="pre">pylint</span></code> (most addressed, some remain unresolved).</p></li>
@@ -567,17 +582,17 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <ul class="simple">
 <li><p>Removed duplicate <code class="docutils literal notranslate"><span class="pre">sw21_tutorial.ipynb</span></code>.</p></li>
 </ul>
-<h3 class="rubric" id="id5">Fixed</h3>
+<h3 class="rubric" id="id8">Fixed</h3>
 <ul class="simple">
 <li><p>Within <code class="docutils literal notranslate"><span class="pre">confidence_interval_method</span></code>, convert data provided to <code class="docutils literal notranslate"><span class="pre">OnlineStatistics</span></code> to <code class="docutils literal notranslate"><span class="pre">np.array</span></code> so that it is actually used to update the class (when before, it was not, as it was a list).</p></li>
 </ul>
 <h2 class="rubric" id="v0-7-1"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.7.1">v0.7.1</a>  <a class="reference external" href="https://doi.org/10.5281/zenodo.14844701"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.14844701.svg" /></a></h2>
-<h3 class="rubric" id="id6">Fixed</h3>
+<h3 class="rubric" id="id9">Fixed</h3>
 <ul class="simple">
 <li><p>Patched <code class="docutils literal notranslate"><span class="pre">ReplicationsAlgorithm</span></code> look ahead will now correctly use <code class="docutils literal notranslate"><span class="pre">_klimit()</span></code> to calculate extra no. replications to run.</p></li>
 </ul>
 <h2 class="rubric" id="v0-7-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.7.0">v0.7.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.14834956"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.14834956.svg" /></a></h2>
-<h3 class="rubric" id="id7">Added</h3>
+<h3 class="rubric" id="id10">Added</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">output_analysis</span></code> module - focussed at the moment on selecting the number of replications</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ReplicationsAlgorithm</span></code> that implements the automated approach to selecting the number of replications for a single performance measures.</p></li>
@@ -593,62 +608,62 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <li><p><code class="docutils literal notranslate"><span class="pre">sim-tools</span></code> dev conda environment now pip installs local python package in editable model.</p></li>
 </ul>
 <h2 class="rubric" id="v0-6-1"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.6.1">v0.6.1</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.13135700"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.13135700.svg" /></a></h2>
-<h3 class="rubric" id="id8">Fixed</h3>
+<h3 class="rubric" id="id11">Fixed</h3>
 <ul class="simple">
 <li><p>BUILD: added rich library.</p></li>
 </ul>
-<h3 class="rubric" id="id9">Removed</h3>
+<h3 class="rubric" id="id12">Removed</h3>
 <ul class="simple">
 <li><p>Scipy Dependency</p></li>
 </ul>
 <h2 class="rubric" id="v0-6-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.6.0">v0.6.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.13122484"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.13122484.svg" /></a></h2>
-<h3 class="rubric" id="id10">Added</h3>
+<h3 class="rubric" id="id13">Added</h3>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">nspp_plot</span></code> and <code class="docutils literal notranslate"><span class="pre">nspp_simulation</span></code> functions to <code class="docutils literal notranslate"><span class="pre">time_dependent</span></code> module.</p></li>
 <li><p>DOCS: added <code class="docutils literal notranslate"><span class="pre">nspp_plot</span></code> and <code class="docutils literal notranslate"><span class="pre">nspp_simulation</span></code> examples to time dependent notebook</p></li>
 <li><p>DOCS: simple trace notebook</p></li>
 </ul>
-<h3 class="rubric" id="id11">Changed</h3>
+<h3 class="rubric" id="id14">Changed</h3>
 <ul class="simple">
 <li><p>BREAKING: to prototype trace functionality. config name -&gt; class breaks with v0.5.0</p></li>
 </ul>
-<h3 class="rubric" id="id12">Fixed</h3>
+<h3 class="rubric" id="id15">Fixed</h3>
 <ul class="simple">
 <li><p>THINNING: patched compatibility of thinning algorithm to work with numpy &gt;= v2. <code class="docutils literal notranslate"><span class="pre">np.Inf</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">np.inf</span></code></p></li>
 </ul>
 <h2 class="rubric" id="v0-5-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.5.0">v0.5.0</a>  <a class="reference external" href="https://doi.org/10.5281/zenodo.12204481"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.12204481.svg" /></a></h2>
-<h3 class="rubric" id="id13">Added</h3>
+<h3 class="rubric" id="id16">Added</h3>
 <ul class="simple">
 <li><p>EXPERIMENTAL: added <code class="docutils literal notranslate"><span class="pre">trace</span></code> module with <code class="docutils literal notranslate"><span class="pre">Traceable</span></code> class for colour coding output from different processes and tracking individual patients.</p></li>
 </ul>
-<h3 class="rubric" id="id14">Fixed</h3>
+<h3 class="rubric" id="id17">Fixed</h3>
 <ul class="simple">
 <li><p>DIST: fix to <code class="docutils literal notranslate"><span class="pre">NSPPThinning</span></code> sampling to pre-calcualte mean IAT to ensure that correct exponential mean is used.</p></li>
 <li><p>DIST: normal distribution allows minimum value and truncates automaticalled instead of resampling.</p></li>
 </ul>
 <h2 class="rubric" id="v0-4-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.4.0">v0.4.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10987685"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10987685.svg" /></a></h2>
-<h3 class="rubric" id="id15">Changed</h3>
+<h3 class="rubric" id="id18">Changed</h3>
 <ul class="simple">
 <li><p>BUILD: Dropped legacy <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> and migrated package build to <code class="docutils literal notranslate"><span class="pre">hatch</span></code></p></li>
 <li><p>BUILD: Removed <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">MANIFEST</span></code> in favour of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></li>
 </ul>
 <h2 class="rubric" id="v0-3-3"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.3.3">v0.3.3</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10629861"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10629861.svg" /></a></h2>
-<h3 class="rubric" id="id16">Fixed</h3>
+<h3 class="rubric" id="id19">Fixed</h3>
 <ul class="simple">
 <li><p>PATCH: <code class="docutils literal notranslate"><span class="pre">distributions.Discrete</span></code> was not returning numpy arrays.</p></li>
 </ul>
 <h2 class="rubric" id="v0-3-2"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.3.2">v0.3.2</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10625581"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10625581.svg" /></a></h2>
-<h3 class="rubric" id="id17">Changed</h3>
+<h3 class="rubric" id="id20">Changed</h3>
 <ul class="simple">
 <li><p>Update Github action to publish to pypi. Use setuptools instead of build</p></li>
 </ul>
 <h2 class="rubric" id="v0-3-1"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.3.1">v0.3.1</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10625470"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10625470.svg" /></a></h2>
-<h3 class="rubric" id="id18">Fixed</h3>
+<h3 class="rubric" id="id21">Fixed</h3>
 <ul class="simple">
 <li><p>PYPI has deprecated username and password. PYPI Publish Github action no works with API Token</p></li>
 </ul>
 <h2 class="rubric" id="v0-3-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.3.0">v0.3.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10625096"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10625096.svg" /></a></h2>
-<h3 class="rubric" id="id19">Added</h3>
+<h3 class="rubric" id="id22">Added</h3>
 <ul class="simple">
 <li><p>Distributions classes now have python type hints.</p></li>
 <li><p>Added distributions and time dependent arrivals via thinning example notebooks.</p></li>
@@ -674,17 +689,17 @@ the algorithm described in Law &amp; Kelton’s “Simulation Modeling and Analy
 <li><p>Basic Jupyterbook of documentation.</p></li>
 </ul>
 <h2 class="rubric" id="v0-2-1"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.2.1">v0.2.1</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10201794"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10201794.svg" /></a></h2>
-<h3 class="rubric" id="id20">Fixed</h3>
+<h3 class="rubric" id="id23">Fixed</h3>
 <ul class="simple">
 <li><p>Modified Setup tools to avoid numpy import error on build.</p></li>
 <li><p>Updated github action to use up to date actions.</p></li>
 </ul>
 <h2 class="rubric" id="v0-2-0"><a class="reference external" href="https://github.com/TomMonks/sim-tools/releases/tag/v0.2.0">v0.2.0</a> <a class="reference external" href="https://doi.org/10.5281/zenodo.10201726"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.10201726.svg" /></a></h2>
-<h3 class="rubric" id="id21">Added</h3>
+<h3 class="rubric" id="id24">Added</h3>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">sim_tools.distribution</span></code> module.  This contains classes representing popular sampling distributions for Discrete-event simulation. All classes encapsulate a <code class="docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code> object, a random seed, and the parameters of a sampling distribution.</p></li>
 </ul>
-<h3 class="rubric" id="id22">Changed</h3>
+<h3 class="rubric" id="id25">Changed</h3>
 <ul class="simple">
 <li><p>Python has been updated, tested, and patched for 3.10 and 3.11 as well as numpy 1.20+</p></li>
 <li><p>Minor linting and code formatting improvement.</p></li>
