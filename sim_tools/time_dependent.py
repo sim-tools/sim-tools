@@ -2,6 +2,8 @@
 Classes and functions to support time dependent samplingm in DES models.
 """
 
+from .distributions import DistributionRegistry
+
 from typing import Optional, Tuple
 
 import numpy as np
@@ -129,6 +131,160 @@ class NSPPThinning:
             u = self.thinning_rng.uniform(0.0, 1.0)
 
         return interarrival_time
+
+
+@DistributionRegistry.register()
+class NSPPDirect:
+    """
+    Non-Stationary Poisson Process via the Direct (Inversion) Algorithm.
+
+    The algorithm inverts the cumulative rate function Λ(t) to map
+    unit-rate Poisson process event times (Sn) onto NSPP event times (Tn).
+
+    With K piecewise-constant segments, the pre-computed tables are:
+        b_k : right time-boundary of segment k  (b_0 = 0)
+        r_k : constant arrival rate over segment k
+        c_k : cumulative arrivals at right boundary of segment k  (c_0 = 0)
+
+    Key inversion formula (Eq. 4, Harrod & Kelton 2006):
+        Tn = b_{k-1} + (Sn - c_{k-1}) / r_k
+    where k satisfies c_{k-1} < Sn <= c_k.
+
+    Sn = arrival clock (number of ticks)
+    Tn = current simulation time
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Columns required:
+          "t"            - right boundary of each interval (b_k)
+          "arrival_rate" - piecewise-constant rate r_k for that segment
+          "mean_iat"     - 1 / arrival_rate (accepted for interface parity
+                           with NSPPThinning; not used internally)
+    interval_width : float, optional
+        Width of each time interval. Inferred from data when omitted.
+        Must be supplied when data has only one row.
+    random_seed : int | SeedSequence, optional
+        Seed for the U(0,1) RNG used to generate unit-rate Poisson IATs.
+
+
+    Reference:
+    ----------
+    Harrod, S. & Kelton, W.D. (2006). Numerical Methods for Realizing
+    Nonstationary Poisson Processes with Piecewise-Constant
+    Instantaneous-Rate Functions. Simulation, 82(3), 147-157.
+    DOI: 10.1177/0037549706065514
+    """
+
+    def __init__(
+        self,
+        data: pd.DataFrame,
+        interval_width: Optional[float] = None,
+        random_seed: Optional[int | SeedSequence] = None,
+    ):
+        self.data = data
+        self.rng = np.random.default_rng(random_seed)
+
+        # some basic validation of arrival rates
+        if (data["arrival_rate"] < 0).any():
+            raise ValueError("Arrival rates must be non-negative.")
+        if (data["arrival_rate"] == 0).all():
+            raise ValueError("At least one arrival rate must be positive.")
+
+        if interval_width is not None:
+            self.interval = float(interval_width)
+        elif len(data) > 1:
+            self.interval = float(data.iloc[1]["t"] - data.iloc[0]["t"])
+        else:
+            raise ValueError(
+                "With only one data point, interval_width must be provided."
+            )
+
+        # Build r_k, b_k, c_k arrays.
+        # Index 0 holds the origin (b_0=0, c_0=0); segments are 1-indexed.
+        rates   = data["arrival_rate"].to_numpy(dtype=float)
+        b_right = data["t"].to_numpy(dtype=float)
+        b_left  = np.concatenate([[0.0], b_right[:-1]])
+        widths  = b_right - b_left
+        cumulative = np.cumsum(rates * widths)
+
+        self._r = np.concatenate([[0.0], rates])       # r[0] unused
+        self._b = np.concatenate([[0.0], b_right])     # b[0] = 0
+        self._c = np.concatenate([[0.0], cumulative])  # c[0] = 0
+
+        # Internal state
+        self._Sn_prev: float = 0.0  # cumulative rate-1 time at last event
+        self._Tn_prev: float = 0.0  # NSPP clock time at last event
+
+    def __repr__(self) -> str:
+        data_str = repr(self.data)
+        if len(data_str) > 100:
+            data_str = data_str[:100] + "..."
+        return (
+            f"{self.__class__.__name__}(data={data_str}, "
+            f"interval={self.interval})"
+        )
+
+    def reset(self) -> None:
+        """Reset internal state so the generator can be reused from t=0.
+        Needed because the algorithm is stateful.  If the same object is used
+        across replications then reset should be called."""
+        self._Sn_prev = 0.0
+        self._Tn_prev = 0.0
+
+    def _invert(self, Sn_val: float) -> float:
+        """
+        Map a cumulative rate-1 value Sn onto an NSPP time Tn,
+        supporting cyclic (repeating) rate profiles.
+
+        Implements steps 5.4-5.5 of the direct algorithm pseudocode.
+        """
+        K = len(self._r) - 1
+        C_total = self._c[-1]   # total arrivals per cycle
+        T_cycle = self._b[-1]   # wall-clock length of one profile cycle
+
+        # Handle cycles i.e. circling back to the first interval
+        n_cycles  = int(Sn_val // C_total)
+        Sn_rem    = Sn_val % C_total
+
+        # Step 5.4: find segment k such that c[k-1] < Sn_rem <= c[k]
+        # TM note: fine for small arrival profiles but maybe inefficient for large
+        # is there a numpy way to do this quickly?
+        k = 1
+        while k < K and Sn_rem > self._c[k]:
+            k += 1
+
+        # Step 5.5: Eq. 4 inversion
+        Tn_within = self._b[k - 1] + (Sn_rem - self._c[k - 1]) / self._r[k]
+        return n_cycles * T_cycle + Tn_within
+
+    def sample(self) -> float:
+        """
+        Generate the next inter-arrival time using the Direct Algorithm.
+
+        The direct algorithm uses its own internal state
+        (Sn, Tn) and does not require the caller to supply the 
+        simulation clock time.
+
+        Returns
+        -------
+        float
+            Inter-arrival time until the next NSPP event.
+        """
+        # Steps 5.1–5.3: generate next unit-rate Poisson inter-event time
+        u  = self.rng.uniform(0.0, 1.0)
+        An = -np.log(u)
+        Sn = self._Sn_prev + An
+
+        # Steps 5.4–5.5: invert to absolute NSPP time, then derive IAT
+        Tn  = self._invert(Sn)
+        # inter-arrival time = current time - time of previous arrival
+        iat = Tn - self._Tn_prev
+
+        self._Sn_prev = Sn
+        self._Tn_prev = Tn
+        return iat
+
 
 
 def nspp_simulation(
@@ -295,4 +451,143 @@ def nspp_plot(
     _ = ax.set_xlabel("interval (from profile)")
     _ = plt.xticks(arrival_profile["t"])
 
+    return fig, ax
+
+
+def nspp_direct_simulation(
+    arrival_profile: pd.DataFrame,
+    run_length: Optional[float] = None,
+    n_reps: Optional[int] = 1000,
+) -> pd.DataFrame:
+    """
+    Generate a pandas DataFrame containing multiple replications of a
+    non-stationary Poisson process using the Direct (Inversion) Algorithm.
+
+    Equivalent to nspp_simulation() but uses NSPPDirect instead of
+    NSPPThinning.  Useful for validating that NSPPDirect reproduces the
+    desired arrival profile and for cross-checking against nspp_simulation.
+
+    On each replication counts arrivals per interval from the profile.
+    Returns a DataFrame with reps as rows and intervals as columns.
+
+    Parameters
+    ----------
+    arrival_profile : pd.DataFrame
+        Must contain columns 't', 'arrival_rate', and 'mean_iat'.
+    run_length : float, optional (default=None)
+        How long to run each replication. Defaults to the last value of
+        't' in the profile (= one complete cycle).
+    n_reps : int, optional (default=1000)
+        Number of replications.
+
+    Returns
+    -------
+    pd.DataFrame
+        Shape (n_reps, n_intervals). Index labelled 'rep' (1-based).
+
+    Notes
+    -----
+    run_length defaults to the last 't' value (one complete cycle) rather
+    than last 't' + interval. Using last 't' + interval would add a partial
+    second cycle and double-count the first interval's arrivals.
+    """
+    replication_results = []
+
+    if run_length is None:
+        run_length = float(arrival_profile["t"].iloc[-1])
+
+    for rep in range(n_reps):
+        seed_sequence = np.random.SeedSequence(rep)
+        seeds = seed_sequence.spawn(1)
+        nspp_rng = NSPPDirect(data=arrival_profile, random_seed=seeds[0])
+
+        interval_samples = [0] * arrival_profile.shape[0]
+        simulation_time = 0.0
+
+        while simulation_time < run_length:
+            iat = nspp_rng.sample()
+            simulation_time += iat
+            if simulation_time < run_length:
+                interval_of_day = (
+                    int(simulation_time // nspp_rng.interval)
+                    % len(arrival_profile)
+                )
+                interval_samples[interval_of_day] += 1
+
+        replication_results.append(interval_samples)
+
+    df_replications = pd.DataFrame(replication_results)
+    df_replications.index = np.arange(1, len(df_replications) + 1)
+    df_replications.index.name = "rep"
+    return df_replications
+
+
+def nspp_direct_plot(
+    arrival_profile: pd.DataFrame,
+    run_length: Optional[float] = None,
+    n_reps: Optional[int] = 1000,
+) -> Tuple[plt.Figure, plt.Axes]:
+    """
+    Generate a matplotlib chart to visualise a non-stationary Poisson
+    process produced by the Direct (Inversion) Algorithm.
+
+    Equivalent to nspp_plot() but uses NSPPDirect. Plots simulated mean
+    arrivals per interval (±1 SD band) alongside the expected arrivals
+    (rate × interval_width) for direct visual validation.
+
+    Parameters
+    ----------
+    arrival_profile : pd.DataFrame
+        Must contain columns 't', 'arrival_rate', and 'mean_iat'.
+    run_length : float, optional (default=None)
+        Run length per replication. Defaults to last 't' (one full cycle).
+    n_reps : int, optional (default=1000)
+        Number of replications.
+
+    Returns
+    -------
+    fig : plt.Figure
+    ax  : plt.Axes
+    """
+    if not isinstance(arrival_profile, pd.DataFrame):
+        raise ValueError(
+            f"arrival_profile expected pd.DataFrame got {type(arrival_profile)}"
+        )
+    required_columns = ["t", "arrival_rate", "mean_iat"]
+    for col in required_columns:
+        if col not in arrival_profile.columns:
+            raise ValueError(
+                f"arrival_profile must contain "
+                f"the following columns: {required_columns}."
+            )
+
+    df_interval_results = nspp_direct_simulation(
+        arrival_profile, run_length, n_reps
+    )
+    interval_means = df_interval_results.mean(axis=0)
+    interval_sd    = df_interval_results.std(axis=0)
+    upper = interval_means + interval_sd
+    lower = (interval_means - interval_sd).clip(lower=0)
+
+    _tmp = NSPPDirect(data=arrival_profile)
+    expected = arrival_profile["arrival_rate"] * _tmp.interval
+
+    fig = plt.figure(figsize=(12, 4))
+    ax  = fig.add_subplot()
+    ax.plot(arrival_profile["t"], interval_means, label="Simulated mean")
+    ax.fill_between(
+        arrival_profile["t"], lower, upper, alpha=0.2, label="±1 SD"
+    )
+    ax.plot(
+        arrival_profile["t"], expected.values,
+        linestyle="--", color="black",
+        label="Expected (rate × interval)",
+    )
+    ax.legend(loc="best", ncol=3)
+    ax.set_ylim(0)
+    ax.set_xlim(0, arrival_profile.shape[0] - 1)
+    ax.set_ylabel("Arrivals per interval")
+    ax.set_xlabel("Interval right boundary (min)")
+    plt.xticks(arrival_profile["t"])
+    plt.tight_layout()
     return fig, ax
