@@ -10,6 +10,8 @@ import numpy as np
 from numpy.random import SeedSequence
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.io as pio
 
 
 # pylint: disable=too-few-public-methods
@@ -284,6 +286,192 @@ class NSPPDirect:
         self._Sn_prev = Sn
         self._Tn_prev = Tn
         return iat
+    
+    def plot_cumulative_rate(
+        self,
+        arrivals=None,
+        n_arrivals=0,
+        random_seed=None,
+        show_grid_lines=True,
+        units_y=None,
+        units_x=None
+    ) -> go.Figure:
+        """
+        Interactive Plotly recreation of Figure 2 from Harrod & Kelton (2006).
+
+        Plots the cumulative rate function Λ(t) with:
+        - Piecewise-linear Λ(t) curve (T on x-axis, S on y-axis)
+        - b_k boundaries marked on the time axis
+        - c_k boundaries marked on the arrival-clock axis
+        - r_k slope annotations for each segment
+        - Optional: sampled arrivals (Tn, Sn) with dashed projection lines
+            showing the inversion step T_n = Λ⁻¹(S_n)
+
+        Parameters
+        ----------
+        arrivals : list of (Tn, Sn) tuples, optional
+            Pre-computed arrival points to overlay. If None and n_arrivals > 0,
+            arrivals are sampled internally using random_seed.
+        n_arrivals : int, optional (default=0)
+            Number of arrivals to simulate and overlay. Set to 0 to show
+            the cumulative rate function only.
+        random_seed : int, optional
+            Seed for the internal RNG when sampling arrivals.
+        show_grid_lines : bool, optional (default=True)
+            Draw dashed projection lines from each arrival point to both axes,
+            illustrating the inversion step.
+
+        Returns
+        -------
+        plotly.graph_objects.Figure
+        """
+
+        # Build arrival rate Λ(t) curve 
+        t_points = [0.0]
+        c_points = [0.0]
+        for k in range(1, len(self._b)):
+            t_points.append(self._b[k])
+            c_points.append(self._c[k])
+
+        # Sample arrivals to display
+        if arrivals is None and n_arrivals > 0:
+            # safer to create internal NSPPDirect object 
+            # in case user doesn't called reset on S_n and T_n
+            rng_copy = NSPPDirect(
+                data=self.data,
+                interval_width=self.interval,
+                random_seed=random_seed
+            )
+
+            Sn_running = 0.0
+            arrivals = []
+            for _ in range(n_arrivals):
+                u  = rng_copy.rng.uniform(0.0, 1.0)
+                An = -np.log(u)
+                Sn = Sn_running + An
+                Tn = rng_copy._invert(Sn)
+                arrivals.append((Tn, Sn))
+                Sn_running = Sn
+
+        # Axis limits 
+        t_max = self._b[-1] * 1.05
+        c_max = self._c[-1] * 1.05
+
+        fig = go.Figure()
+
+        # 1. Plot Λ(t) cumulative rate curve
+        fig.add_trace(go.Scatter(
+            x=t_points, y=c_points,
+            mode="lines",
+            name="Λ(t) cumulative rate",
+            line=dict(width=3),
+            hovertemplate="t = %{x:.2f}<br>Λ(t) = %{y:.4f}<extra></extra>",
+        ))
+
+        # 2. b_k boundary markers (vertical dotted lines + labels)
+        for k in range(1, len(self._b) - 1):
+            fig.add_shape(type="line",
+                x0=self._b[k], x1=self._b[k],
+                y0=0, y1=self._c[k],
+                line=dict(color="black", width=1, dash="dot"),
+                layer="below",
+            )
+            fig.add_annotation(
+                x=self._b[k], y=-c_max * 0.04,
+                text=f"b<sub>{k}</sub>",
+                showarrow=False, font=dict(size=11), xanchor="center",
+            )
+
+        # 3. c_k boundary markers (horizontal dotted lines + labels)
+        for k in range(1, len(self._c) - 1):
+            fig.add_shape(type="line",
+                x0=0, x1=self._b[k],
+                y0=self._c[k], y1=self._c[k],
+                line=dict(color="black", width=1, dash="dot"),
+                layer="below",
+            )
+            fig.add_annotation(
+                x=-t_max * 0.03, y=self._c[k],
+                text=f"c<sub>{k}</sub>",
+                showarrow=False, font=dict(size=11), xanchor="right",
+            )
+
+        # 4. r_k slope labels at segment midpoints
+        for k in range(1, len(self._r)):
+            t_mid = (self._b[k-1] + self._b[k]) / 2
+            c_mid = (self._c[k-1] + self._c[k]) / 2
+            fig.add_annotation(
+                x=t_mid, y=c_mid,
+                text=f"r<sub>{k}</sub>",
+                showarrow=False,
+                font=dict(size=12, color="black"),
+                bgcolor="rgba(255,255,255,0.7)",
+                xanchor="center",
+            )
+
+        # 5. Arrival projection lines and points
+        if arrivals:
+            colors = pio.templates[pio.templates.default].layout.colorway
+            arr_color = colors[1] if len(colors) > 1 else "red"
+
+            for i, (Tn, Sn) in enumerate(arrivals):
+                # if showing mapping from Λ(t) to arrival clock t
+                if show_grid_lines:
+                    # Vertical drop to time axis
+                    fig.add_shape(type="line",
+                        x0=Tn, x1=Tn, y0=0, y1=Sn,
+                        line=dict(color=arr_color, width=1, dash="dash"),
+                        layer="below",
+                    )
+                    # Horizontal projection to arrival-clock axis
+                    fig.add_shape(type="line",
+                        x0=0, x1=Tn, y0=Sn, y1=Sn,
+                        line=dict(color=arr_color, width=1, dash="dash"),
+                        layer="below",
+                    )
+                fig.add_trace(go.Scatter(
+                    x=[Tn], y=[Sn],
+                    mode="markers",
+                    marker=dict(size=9, color=arr_color, symbol="circle"),
+                    showlegend=False,
+                    hovertemplate=(
+                        f"<b>Arrival {i+1}</b><br>"
+                        f"T<sub>n</sub> = {Tn:.4f}<br>"
+                        f"S<sub>n</sub> = {Sn:.4f}"
+                        "<extra></extra>"
+                    ),
+                ))
+
+            # Single legend entry for all arrival points
+            fig.add_trace(go.Scatter(
+                x=[None], y=[None], mode="markers",
+                marker=dict(size=9, color=arr_color),
+                name="Arrival (Tₙ, Sₙ)",
+            ))
+
+        fig.update_layout(
+            title=dict(text=(
+                "Cumulative Arrival Function Λ(t)"
+            #    "Dashed lines show inversion Tₙ = Λ⁻¹(Sₙ)"
+            )),
+            legend=dict(orientation="h", yanchor="bottom",
+                        y=1.05, xanchor="center", x=0.5),
+        )
+
+        # Add units to axes labels
+
+        y_label = "Cumulative Arrivals Λ(t)"
+        x_label = "Time t"
+        if units_y:
+            y_label += f" ({units_y})"
+
+        if units_x:
+            x_label += f" ({units_x})"
+
+        fig.update_xaxes(title_text=x_label, range=[-t_max * 0.05, t_max])
+        fig.update_yaxes(title_text=y_label,  range=[-c_max * 0.06, c_max])
+        return fig
+
 
 
 
