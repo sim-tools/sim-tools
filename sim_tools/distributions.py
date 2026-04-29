@@ -100,6 +100,7 @@ from typing import (
     Dict,
     runtime_checkable,
     TypeVar,
+    Callable,
 )
 
 import numpy as np
@@ -257,7 +258,7 @@ class DistributionRegistry:
     >>> exp_dist = DistributionRegistry.create("Exponential", mean=2.0)
     >>> exp_dist.sample(5)  # Generate 5 samples
 
-    Create multiple distributions from configuration:
+    Create multiple distributions from a flat configuration:
 
     >>> config = {
     ...     "arrivals": {
@@ -270,9 +271,29 @@ class DistributionRegistry:
     ...     }
     ... }
     >>> distributions = DistributionRegistry.create_batch(config,
-                                                          main_seed=12345)
+    ...                                                    main_seed=12345)
     >>> arrivals = distributions["arrivals"]
     >>> service_times = distributions["service_times"]
+
+    Create distributions from a nested configuration:
+
+    >>> config = {
+    ...     "call": {
+    ...         "C1": {"class_name": "Exponential", "params": {"mean": 10.0}},
+    ...         "C2": {"class_name": "Exponential", "params": {"mean": 8.0}},
+    ...     },
+    ...     "response_time": {
+    ...         "C1": {
+    ...             "class_name": "Lognormal",
+    ...             "params": {"mean": 30.0, "stdev": 5.0},
+    ...         },
+    ...     },
+    ... }
+    >>> dists = DistributionRegistry.create_batch(
+    ...     config, main_seed=42, preserve_structure=True
+    ... )
+    >>> dists["call"]["C1"].sample(5)
+    >>> dists["response_time"]["C1"].sample(5)
 
     Notes
     -----
@@ -280,12 +301,23 @@ class DistributionRegistry:
     receives its own statistically independent seed derived from the main seed.
     This ensures proper statistical independence between random number streams
     while maintaining overall reproducibility through the main seed.
+
+    When `preserve_structure=True`, the output mirrors the shape of the
+    input configuration, so nested configs produce nested dicts of instances.
+    When `preserve_structure=False` (default), all leaf distributions are
+    flattened into a single dict whose keys are the path components joined by
+    underscores (e.g. `"call_C1"`).
+
+    With `sort=True` (default), keys at every nesting level are sorted
+    alphabetically before seeds are assigned. This ensures that seed
+    assignment is stable even if the insertion order of keys in the config
+    dict changes between runs.
     """
 
-    _registry = {}
+    _registry: Dict[str, type] = {}
 
     @classmethod
-    def register(cls, name: Optional[str] = None):
+    def register(cls, name: Optional[str] = None) -> Callable:
         """
         Decorator to register a distribution class in the registry.
 
@@ -310,7 +342,7 @@ class DistributionRegistry:
         return decorator
 
     @classmethod
-    def get(cls, name: str):
+    def get(cls, name: str) -> type:
         """
         Get a distribution class by name.
 
@@ -354,42 +386,145 @@ class DistributionRegistry:
         return distribution_class(**params)
 
     @classmethod
+    def _is_dist_config(cls, obj) -> bool:
+        """
+        Return True if `obj` is a valid distribution config leaf.
+
+        A valid leaf is a dict with exactly the keys `'class_name'` and
+        `'params'` and no others.
+
+        Parameters
+        ----------
+        obj : object
+            The object to test.
+
+        Returns
+        -------
+        bool
+        """
+        return (
+            isinstance(obj, dict)
+            and set(obj.keys()) == {"class_name", "params"}
+        )
+
+    @classmethod
     def create_batch(
         cls,
         config: Union[List[Dict], Dict[str, Dict]],
         main_seed: Optional[int] = None,
-        sort: Optional[bool] = True
+        sort: Optional[bool] = True,
+        preserve_structure: bool = False,
     ) -> Union[List, Dict]:
         """
         Create multiple distributions from a configuration dictionary or list.
 
+        Accepts both flat and arbitrarily nested dict configurations. Every
+        leaf must be a dict with exactly the keys `'class_name'` and
+        `'params'`.
+
         Parameters
         ----------
         config : Union[List[Dict], Dict[str, Dict]]
-            Either:
-            - A list of distribution configs, each with 'class_name' and
-              'params'
-            - A dictionary mapping names to distribution configs
+            One of:
+
+            - A **list** of distribution configs, each with `'class_name'`
+              and `'params'`. Returns a list of instances.
+            - A **flat dict** mapping names to distribution configs:
+
+                  {
+                      "arrivals": {
+                          "class_name": "Exponential",
+                          "params": {"mean": 5.0},
+                      }
+                  }
+
+            - A **nested dict** where intermediate keys group distributions
+              and leaves are distribution configs:
+
+                  {
+                      "call": {
+                          "C1": {
+                              "class_name": "Exponential",
+                              "params": {"mean": 10.0},
+                          }
+                      }
+                  }
+
         main_seed : Optional[int], default=None
             Master seed to generate individual seeds for each distribution.
             If None, random seeds will still be generated for independence.
         sort : Optional[bool], default=True
-            If True and config is dict, sort configs before assigning seeds,
-            ensuring deterministic results if the config key order changes. Not
-            relevant for lists as they are unnamed.
+            If True, keys at every nesting level are sorted alphabetically
+            before seeds are assigned. This ensures deterministic seed
+            assignment even if config key insertion order changes between
+            runs. Not relevant for top-level lists.
+        preserve_structure : Optional[bool], default=False
+            Controls the shape of the returned dict when `config` is a dict.
+
+            - `False` (default): all distributions are returned in a single
+              flat dict whose keys are the path components of each leaf joined
+              by underscores, e.g. `"call_C1"`.
+            - `True`: the returned dict mirrors the nesting of the input
+              config, so `result["call"]["C1"]` gives the distribution
+              directly.
+
+            Has no effect when `config` is a list.
 
         Returns
         -------
         Union[List, Dict]
-            Either:
-            - A list of distribution instances (if config was a list)
-            - A dictionary mapping names to distribution instances
+            - A list of distribution instances if `config` was a list.
+            - A flat dict of distribution instances if `config` was a dict
+              and `preserve_structure=False`.
+            - A nested dict of distribution instances if `config` was a dict
+              and `preserve_structure=True`.
 
         Raises
         ------
         TypeError
-            If config is neither a list nor a dictionary
+            If `config` is neither a list nor a dictionary.
+        ValueError
+            If any distribution config is malformed, if a required key is
+            missing or an unexpected key is present, or if the config
+            contains values that are neither dicts, lists, nor valid
+            distribution configs.
         """
+        flat_items = []
+
+        def walk(node, path=()):
+            if cls._is_dist_config(node):
+                flat_items.append((path, node))
+                return
+
+            if isinstance(node, dict):
+                # Detect a malformed distribution config: has one of the
+                # expected keys but not the exact right set, which most
+                # likely means a typo or missing key in a leaf config.
+                if "class_name" in node or "params" in node:
+                    expected = {"class_name", "params"}
+                    raise ValueError(
+                        f"Distribution config at path {path!r} must have "
+                        f"ONLY the keys {expected}. "
+                        f"Found keys: {set(node.keys())}"
+                    )
+                items = node.items()
+                if sort:
+                    items = sorted(items, key=lambda kv: kv[0])
+                for key, value in items:
+                    walk(value, path + (key,))
+                return
+
+            if isinstance(node, list):
+                for i, value in enumerate(node):
+                    walk(value, path + (i,))
+                return
+
+            raise ValueError(
+                f"Expected a distribution config dict, a nested grouping "
+                f"dict, or a list at path {path!r}. "
+                f"Got {type(node).__name__!r}."
+            )
+
         if isinstance(config, list):
             seeds = spawn_seeds(len(config), main_seed)
             return [
@@ -397,33 +532,48 @@ class DistributionRegistry:
                 for i, dist_config in enumerate(config)
             ]
 
-        if isinstance(config, dict):
-            items = list(config.items())
-            if sort:
-                items = sorted(items, key=lambda kv: kv[0])
-            seeds = spawn_seeds(len(items), main_seed)
-            return {
-                name: cls._validate_and_create(dist_config, seeds[i])
-                for i, (name, dist_config) in enumerate(items)
-            }
+        if not isinstance(config, dict):
+            raise TypeError(
+                "Configuration must be a list or dictionary, "
+                f"got {type(config).__name__!r}."
+            )
 
-        raise TypeError("Configuration must be a list or dictionary")
+        walk(config)
+        seeds = spawn_seeds(len(flat_items), main_seed)
+
+        created = [
+            (path, cls._validate_and_create(dist_config, seeds[i]))
+            for i, (path, dist_config) in enumerate(flat_items)
+        ]
+
+        if not preserve_structure:
+            return {"_".join(map(str, path)): obj for path, obj in created}
+
+        result: Dict = {}
+        for path, obj in created:
+            cursor = result
+            for part in path[:-1]:
+                cursor = cursor.setdefault(part, {})
+            cursor[path[-1]] = obj
+        return result
 
     @classmethod
     def _validate_and_create(cls, dist_config, seed):
         """
-        Validate that each of the distribution configurations has ONLY
-        'class_name' and 'params' keys, add 'random_seed' to params, and
-        create the distribution instance.
+        Validate a distribution config, inject a random seed, and instantiate.
+
+        Checks that `dist_config` has exactly the keys `'class_name'` and
+        `'params'`, injects `random_seed` into the params, then creates
+        and returns the distribution instance.
 
         Parameters
         ----------
         dist_config : dict
             Dictionary specifying the distribution configuration. Must have
-            keys 'class_name' (str) and 'params' (dict), and no others.
+            keys `'class_name'` (str) and `'params'` (dict), and no others.
         seed : int
             The seed to include in the distribution's parameters (as
-            'random_seed').
+            `'random_seed'`).
 
         Returns
         -------
@@ -457,42 +607,42 @@ class DistributionRegistry:
         return cls.create(dist_config["class_name"], **params)
 
     @classmethod
-    def get_template(cls, format="json", indent=2):
+    def get_template(cls, format: str = "json", indent: int = 2) -> Union[Dict, str]:
         """
         Generate a template configuration containing all registered
         distributions.
 
         This helper method creates a template that includes all registered
         distribution types with appropriate dummy parameters. Users can modify
-        this template and pass it directly to create_batch() to instantiate
+        this template and pass it directly to `create_batch()` to instantiate
         their distributions.
 
         Parameters
         ----------
         format : str, default="json"
-            Output format: 'dict' for Python dictionary or 'json' for JSON
-            string
+            Output format: `'dict'` for a Python dictionary or `'json'`
+            for a JSON string.
         indent : int, default=2
-            Indentation for JSON formatting (if format='json')
+            Indentation for JSON formatting (only used when
+            `format='json'`).
 
         Returns
         -------
         Union[Dict, str]
-            Either a dictionary (if format='dict') or a JSON string (if
-            format='json') containing template configurations for all
-            registered distributions
+            Either a dictionary (if`format='dict'`) or a JSON string (if
+            `format='json'`) containing template configurations for all
+            registered distributions.
 
         Examples
         --------
         >>> template = DistributionRegistry.get_template(format='dict')
-        >>> print(template.keys())
-        dict_keys(['Exponential_example', 'Normal_example',
-                   'Uniform_example', ...])
+        >>> print(list(template.keys()))
+        ['Exponential_example', 'Normal_example', 'Uniform_example', ...]
 
         >>> template = DistributionRegistry.get_template(format='json')
         >>> print(template[:70])
         {
-        "Exponential_example": {
+          "Exponential_example": {
             "class_name": "Exponential",
             "params": {
         """
