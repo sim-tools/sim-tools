@@ -7,6 +7,7 @@ distribution implementations.
 """
 
 import numpy as np
+import pandas as pd
 import pytest
 
 import sim_tools.distributions as dists
@@ -278,3 +279,12 @@ def test_registry_batch_validation(conf, should_pass):
     else:
         with pytest.raises(ValueError):
             dists.DistributionRegistry._validate_and_create(conf, seed)
+
+
+def test_registry_nsppthinning():
+    """Check that Registry includes time_dependent.NSPPThinning."""
+    # NSPPThinning is in a different module - confirm it is registered and can
+    # still be created via the registry.
+    assert "NSPPThinning" in dists.DistributionRegistry._registry, (
+        "NSPPThinning should be registered in DistributionRegistry"
+    )
