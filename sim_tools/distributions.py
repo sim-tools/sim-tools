@@ -2364,7 +2364,7 @@ class DiscreteEmpirical:
         """
 
         # convert to array first
-        self.values = np.asarray(values)
+        self.values = np.asarray(list(values))
         self.freq = np.asarray(freq)
 
         validate(self.freq, "freq", is_positive_array)
