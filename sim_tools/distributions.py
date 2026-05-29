@@ -2413,9 +2413,8 @@ class DiscreteEmpirical:
             - A numpy array of values with shape determined by size parameter
         """
         sample = self.rng.choice(self.values, p=self.probabilities, size=size)
-
         if size is None:
-            return sample.item()
+            return sample.tolist()
         return sample
 
 
