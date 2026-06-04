@@ -84,7 +84,6 @@ All distribution parameters follow the conventions described in "Simulation
 Modeling and Analysis" (Law, 2007) where applicable.
 """
 
-
 import math
 
 import inspect
@@ -402,10 +401,7 @@ class DistributionRegistry:
         -------
         bool
         """
-        return (
-            isinstance(obj, dict)
-            and set(obj.keys()) == {"class_name", "params"}
-        )
+        return isinstance(obj, dict) and set(obj.keys()) == {"class_name", "params"}
 
     @classmethod
     def create_batch(
@@ -662,27 +658,19 @@ class DistributionRegistry:
             for param_name, param in signature.parameters.items():
                 if param_name not in ["self", "random_seed"]:
                     # If parameter has a default value and it's not None
-                    if (
-                        param.default is not param.empty
-                        and param.default is not None
-                    ):
+                    if param.default is not param.empty and param.default is not None:
                         params[param_name] = param.default
                     else:
                         # Use appropriate dummy values based on parameter name
                         if "mean" in param_name:
                             params[param_name] = 1.0
                         elif any(
-                            name in param_name
-                            for name in ["std", "scale", "lambda"]
+                            name in param_name for name in ["std", "scale", "lambda"]
                         ):
                             params[param_name] = 1.0
-                        elif any(
-                            name in param_name for name in ["low", "min"]
-                        ):
+                        elif any(name in param_name for name in ["low", "min"]):
                             params[param_name] = 0.0
-                        elif any(
-                            name in param_name for name in ["high", "max"]
-                        ):
+                        elif any(name in param_name for name in ["high", "max"]):
                             params[param_name] = 10.0
                         elif "mode" in param_name:
                             params[param_name] = 5.0
@@ -872,9 +860,7 @@ class Lognormal:
     def __repr__(self):
         return f"Lognormal(mean={self.mean}, stdev={self.stdev})"
 
-    def normal_moments_from_lognormal(
-        self, m: float, v: float
-    ) -> Tuple[float, float]:
+    def normal_moments_from_lognormal(self, m: float, v: float) -> Tuple[float, float]:
         """
         Calculate mu and sigma of the normal distribution underlying
         a lognormal with mean m and variance v.
@@ -979,8 +965,10 @@ class Normal:
     def __repr__(self):
         if self.minimum is None:
             return f"Normal(mean={self.mean}, sigma={self.sigma})"
-        return (f"Normal(mean={self.mean}, sigma={self.sigma}, " +
-                f"minimum={self.minimum})")
+        return (
+            f"Normal(mean={self.mean}, sigma={self.sigma}, "
+            + f"minimum={self.minimum})"
+        )
 
     def sample(
         self, size: Optional[Union[int, Tuple[int, ...]]] = None
@@ -1139,9 +1127,7 @@ class Triangular:
         self.mode = mode
 
     def __repr__(self):
-        return (
-            f"Triangular(low={self.low}, mode={self.mode}, high={self.high})"
-        )
+        return f"Triangular(low={self.low}, mode={self.mode}, high={self.high})"
 
     def sample(
         self, size: Optional[Union[int, Tuple[int, ...]]] = None
@@ -1353,8 +1339,10 @@ class GroupedContinuousEmpirical:
             if len(self.upper_bounds) < 4
             else f"[{', '.join(str(x) for x in self.upper_bounds[:3])}, ...]"
         )
-        return (f"ContinuousEmpirical(lower_bounds={lb_repr}, " +
-                f"upper_bounds={ub_repr}, freq=...)")
+        return (
+            f"ContinuousEmpirical(lower_bounds={lb_repr}, "
+            + f"upper_bounds={ub_repr}, freq=...)"
+        )
 
     @property
     def mean(self) -> float:
@@ -1625,7 +1613,7 @@ class RawContinuousEmpirical:
         line_width: Optional[float] = None,  # e.g., 2
         trace_name: Optional[str] = "Standard ECDF",
         showlegend: bool = True,
-        layout_options: Optional[Dict] = None
+        layout_options: Optional[Dict] = None,
     ) -> go.Figure:
         """
         Plots the standard Empirical Cumulative Distribution Function (ECDF)
@@ -1665,7 +1653,7 @@ class RawContinuousEmpirical:
                 yaxis_title=yaxis_title,
                 # Hide axes lines/ticks for empty plot
                 xaxis={"visible": False},
-                yaxis={"visible": False}
+                yaxis={"visible": False},
             )
             if layout_options:
                 fig.update_layout(layout_options)
@@ -1676,7 +1664,7 @@ class RawContinuousEmpirical:
             x=self.data,
             # px.ecdf uses 'y' internally for the probability axis label key
             labels={"x": xaxis_title, "y": yaxis_title},
-            title=title  # Set title via px directly
+            title=title,  # Set title via px directly
         )
 
         # Apply trace customizations
@@ -1687,8 +1675,8 @@ class RawContinuousEmpirical:
             showlegend=showlegend,
             line={
                 "color": line_color,  # Plotly handles None: uses default
-                "width": line_width  # Plotly handles None: uses default
-            }
+                "width": line_width,  # Plotly handles None: uses default
+            },
         )
 
         # Apply general layout updates (including potential overrides for
@@ -1699,7 +1687,7 @@ class RawContinuousEmpirical:
             showlegend=showlegend,
             # Explicitly set again in case user wants to override px default
             # via layout_options
-            title=title
+            title=title,
         )
         # Apply any extra custom layout options
         if layout_options:
@@ -1719,7 +1707,7 @@ class RawContinuousEmpirical:
         marker_color: Optional[str] = None,
         trace_name: Optional[str] = "Piecewise Linear CDF",
         showlegend: bool = True,
-        layout_options: Optional[Dict] = None
+        layout_options: Optional[Dict] = None,
     ) -> go.Figure:
         """
         Plots the piecewise linear CDF implied by the Law & Kelton sampling
@@ -1767,7 +1755,7 @@ class RawContinuousEmpirical:
                 xaxis_title=xaxis_title,
                 yaxis_title=yaxis_title,
                 xaxis={"visible": False},
-                yaxis={"visible": False}
+                yaxis={"visible": False},
             )
             if layout_options:
                 fig.update_layout(layout_options)
@@ -1775,21 +1763,26 @@ class RawContinuousEmpirical:
 
         if n == 1:
             # Plot a vertical line segment using go.Scatter
-            fig = go.Figure(data=go.Scatter(
-                x=[self.data[0], self.data[0]],
-                y=[0, 1],
-                mode='lines+markers',
-                name=trace_name,
-                line={"color": line_color, "width": line_width},
-                marker={"symbol": marker_symbol, "size": marker_size,
-                        "color": marker_color},
-                showlegend=showlegend
-            ))
+            fig = go.Figure(
+                data=go.Scatter(
+                    x=[self.data[0], self.data[0]],
+                    y=[0, 1],
+                    mode="lines+markers",
+                    name=trace_name,
+                    line={"color": line_color, "width": line_width},
+                    marker={
+                        "symbol": marker_symbol,
+                        "size": marker_size,
+                        "color": marker_color,
+                    },
+                    showlegend=showlegend,
+                )
+            )
             fig.update_layout(
                 title=title,
                 xaxis_title=xaxis_title,
                 yaxis_title=yaxis_title,
-                showlegend=showlegend
+                showlegend=showlegend,
             )
             # Optional: Adjust x-axis range for visibility if needed
             # fig.update_xaxes(range=[self.data[0] - 1, self.data[0] + 1])
@@ -1809,14 +1802,13 @@ class RawContinuousEmpirical:
             x=x_linear,
             y=y_linear,
             # Enable markers if symbol is specified
-            markers= (marker_symbol is not None),
-            labels={'x': xaxis_title, 'y': yaxis_title},
-            title=title
+            markers=(marker_symbol is not None),
+            labels={"x": xaxis_title, "y": yaxis_title},
+            title=title,
         )
 
         # Determine marker color (use line color if marker color not specified)
-        final_marker_color = (
-            marker_color if marker_color is not None else line_color)
+        final_marker_color = marker_color if marker_color is not None else line_color
 
         # Apply trace customizations
         fig.update_traces(
@@ -1829,10 +1821,10 @@ class RawContinuousEmpirical:
                 "symbol": marker_symbol,
                 "size": marker_size,
                 # Apply potentially derived marker colour
-                "color": final_marker_color
+                "color": final_marker_color,
                 # You could also add marker line properties here if needed:
                 # line=dict(color='black', width=1)
-            }
+            },
         )
 
         # Apply general layout updates
@@ -1841,7 +1833,7 @@ class RawContinuousEmpirical:
             yaxis_title=yaxis_title,
             showlegend=showlegend,
             # Ensure title consistency
-            title=title
+            title=title,
         )
         if layout_options:
             fig.update_layout(layout_options)
@@ -1920,8 +1912,10 @@ class Erlang:
     def __repr__(self):
         if self.location == 0.0:
             return f"Erlang(mean={self.mean}, stdev={self.stdev})"
-        return (f"Erlang(mean={self.mean}, stdev={self.stdev}, " +
-                f"location={self.location})")
+        return (
+            f"Erlang(mean={self.mean}, stdev={self.stdev}, "
+            + f"location={self.location})"
+        )
 
     def sample(
         self, size: Optional[Union[int, Tuple[int, ...]]] = None
@@ -2026,8 +2020,10 @@ class Weibull:
     def __repr__(self):
         if self.location == 0.0:
             return f"Weibull(alpha={self.shape}, beta={self.scale})"
-        return (f"Weibull(alpha={self.shape}, beta={self.scale}, " +
-                f"location={self.location})")
+        return (
+            f"Weibull(alpha={self.shape}, beta={self.scale}, "
+            + f"location={self.location})"
+        )
 
     @property
     def mean(self) -> float:
@@ -2139,8 +2135,10 @@ class Gamma:
     def __repr__(self):
         if self.location == 0.0:
             return f"Gamma(alpha={self.alpha}, beta={self.beta})"
-        return (f"Gamma(alpha={self.alpha}, beta={self.beta}, " +
-                f"location={self.location})")
+        return (
+            f"Gamma(alpha={self.alpha}, beta={self.beta}, "
+            + f"location={self.location})"
+        )
 
     @property
     def mean(self) -> float:
@@ -2167,9 +2165,7 @@ class Gamma:
         return self.alpha * (self.beta**2)
 
     @staticmethod
-    def params_from_mean_and_var(
-        mean: float, var: float
-    ) -> Tuple[float, float]:
+    def params_from_mean_and_var(mean: float, var: float) -> Tuple[float, float]:
         """
         Derive shape (α) and scale (β) parameters from mean and variance.
 
@@ -2287,8 +2283,10 @@ class Beta:
     def __repr__(self):
         if self.min == 0.0 and self.max == 1.0:
             return f"Beta(alpha1={self.alpha1}, alpha2={self.alpha2})"
-        return (f"Beta(alpha1={self.alpha1}, alpha2={self.alpha2}, " +
-                f"lower_bound={self.min}, upper_bound={self.max})")
+        return (
+            f"Beta(alpha1={self.alpha1}, alpha2={self.alpha2}, "
+            + f"lower_bound={self.min}, upper_bound={self.max})"
+        )
 
     def sample(
         self, size: Optional[Union[int, Tuple[int, ...]]] = None
@@ -2312,8 +2310,7 @@ class Beta:
             - A numpy array of floats with shape determined by size parameter
         """
         return self.min + (
-            (self.max - self.min)
-            * self.rng.beta(self.alpha1, self.alpha2, size)
+            (self.max - self.min) * self.rng.beta(self.alpha1, self.alpha2, size)
         )
 
 
@@ -2370,9 +2367,7 @@ class DiscreteEmpirical:
         validate(self.freq, "freq", is_positive_array)
 
         if len(self.values) != len(self.freq):
-            raise ValueError(
-                "values and freq arguments must be of equal length"
-            )
+            raise ValueError("values and freq arguments must be of equal length")
 
         self.rng = np.random.default_rng(random_seed)
         self.probabilities = self.freq / self.freq.sum()
@@ -2449,8 +2444,10 @@ class TruncatedDistribution:
         self.lower_bound = lower_bound
 
     def __repr__(self):
-        return (f"TruncatedDistribution(dist_to_truncate={repr(self.dist)}, " +
-                f"lower_bound={self.lower_bound})")
+        return (
+            f"TruncatedDistribution(dist_to_truncate={repr(self.dist)}, "
+            + f"lower_bound={self.lower_bound})"
+        )
 
     def sample(
         self, size: Optional[Union[int, Tuple[int, ...]]] = None
@@ -2675,9 +2672,7 @@ class PearsonV:
             If alpha <= 2.0, as the variance is not defined in this case.
         """
         if self.alpha > 2.0:
-            return (self.beta**2) / (
-                ((self.alpha - 1) ** 2) * (self.alpha - 2)
-            )
+            return (self.beta**2) / (((self.alpha - 1) ** 2) * (self.alpha - 2))
         msg = "Cannot directly compute var when alpha <= 2.0"
         raise ValueError(msg)
 
@@ -2777,8 +2772,10 @@ class PearsonVI:
         self.beta = beta
 
     def __repr__(self):
-        return (f"PearsonVI(alpha1={self.alpha1}, alpha2={self.alpha2}, " +
-                f"beta={self.beta})")
+        return (
+            f"PearsonVI(alpha1={self.alpha1}, alpha2={self.alpha2}, "
+            + f"beta={self.beta})"
+        )
 
     @property
     def mean(self) -> float:
@@ -2815,9 +2812,9 @@ class PearsonVI:
             If alpha2 <= 2.0, as the variance is not defined in this case.
         """
         if self.alpha2 > 2.0:
-            return (
-                (self.beta**2) * self.alpha1 * (self.alpha1 + self.alpha2 - 1)
-            ) / (((self.alpha2 - 1) ** 2) * (self.alpha2 - 2))
+            return ((self.beta**2) * self.alpha1 * (self.alpha1 + self.alpha2 - 1)) / (
+                ((self.alpha2 - 1) ** 2) * (self.alpha2 - 2)
+            )
         msg = "Cannot directly compute var when alpha2 <= 2.0"
         raise ValueError(msg)
 
@@ -2909,8 +2906,9 @@ class ErlangK:
     def __repr__(self):
         if self.location == 0.0:
             return f"ErlangK(k={self.k}, theta={self.theta})"
-        return (f"ErlangK(k={self.k}, theta={self.theta}, " +
-                f"location={self.location})")
+        return (
+            f"ErlangK(k={self.k}, theta={self.theta}, " + f"location={self.location})"
+        )
 
     @property
     def mean(self) -> float:
@@ -3147,9 +3145,7 @@ class Hyperexponential:
             output_shape = size
 
         # Choose components for all samples
-        components = self.rng.choice(
-            len(self.probs), size=total_samples, p=self.probs
-        )
+        components = self.rng.choice(len(self.probs), size=total_samples, p=self.probs)
 
         # Generate samples from corresponding exponential distributions
         samples = np.zeros(total_samples)

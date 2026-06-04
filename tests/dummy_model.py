@@ -1,14 +1,14 @@
-"""Dummy simulation model used for testing
-"""
+"""Dummy simulation model used for testing"""
 
 import numpy as np
 
 
 # pylint: disable=too-few-public-methods
-class DummySimulationModel():
+class DummySimulationModel:
     """
     Dummy simulation model used for testing.
     """
+
     def __init__(self, mean=100, std_dev=5):
         """
         Initialises the dummy model.

@@ -13,7 +13,7 @@ import numpy as np
 
 
 # pylint: disable=too-many-instance-attributes
-class KNPlusPlus():
+class KNPlusPlus:
     """
     KN++ algorithm for Ranking and Selection
 
@@ -25,6 +25,7 @@ class KNPlusPlus():
     https://www2.isye.gatech.edu/~skim/KimNelson.pdf
 
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
@@ -100,8 +101,10 @@ class KNPlusPlus():
         )
 
     def __str__(self):
-        return (f"KN(n_designs={self._k}, delta={self._delta}, " +
-                f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"KN(n_designs={self._k}, delta={self._delta}, "
+            + f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def reset(self):
         """Resets all attributes"""
@@ -273,10 +276,11 @@ class KNPlusPlus():
         self._means[design_index] = new_mean
 
 
-class KN():
+class KN:
     """
     KN - (Kim-Nelson) sequential Ranking and Selection Algorithm
     """
+
     # pylint: disable = too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
@@ -343,8 +347,10 @@ class KN():
         self._variance_of_diffs = None
 
     def __str__(self):
-        return (f"KN(n_designs={self._k}, delta={self._delta}, " +
-                f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"KN(n_designs={self._k}, delta={self._delta}, "
+            + f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def reset(self):
         """
@@ -393,8 +399,7 @@ class KN():
         pairwise_diffs = self._init_obs[:, None] - self._init_obs
         variance_of_diffs = pairwise_diffs.var(axis=-1, ddof=1)
         # flattens array and drops differences with same design
-        return variance_of_diffs[
-            ~np.eye(variance_of_diffs.shape[0], dtype=bool)]
+        return variance_of_diffs[~np.eye(variance_of_diffs.shape[0], dtype=bool)]
 
     # need to check if this is correct...
     # possibly a bug.  Works when in designs are ordered, but not otherwise...
@@ -408,13 +413,11 @@ class KN():
         for i, design_i in enumerate(self._contenders_old):
             for l, design_l in enumerate(self._contenders_old):
                 if i != l:
-                    if not self._design_still_in_contention(design_i,
-                                                            design_l):
+                    if not self._design_still_in_contention(design_i, design_l):
                         contenders_mask[i] = False
                         break
 
         self._contenders = self._contenders[contenders_mask]
-
 
     def _design_still_in_contention(self, design_i, design_l):
         w_il = self._limit_to_distance_from_sample_means(design_i, design_l)
@@ -435,8 +438,7 @@ class KN():
         index = design_i * (self._k - 1) + (design_l - 1)
 
         w_il = (self._delta / (2 * self._r)) * (
-            ((self._h_squared * self._variance_of_diffs[index])
-             / self._delta**2)
+            ((self._h_squared * self._variance_of_diffs[index]) / self._delta**2)
             - self._r
         )
 

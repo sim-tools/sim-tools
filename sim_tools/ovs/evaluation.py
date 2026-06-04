@@ -14,7 +14,7 @@ from sklearn.model_selection import ParameterGrid
 
 
 # pylint: disable=too-few-public-methods
-class AgentSimulation():
+class AgentSimulation:
     """
     Encapsulates a Monte-Carlo simulation framework for agents in
     multi-arm bandit environment.
@@ -50,16 +50,13 @@ class AgentSimulation():
 
 
 # pylint: disable=too-few-public-methods
-class ExperimentResults():
+class ExperimentResults:
     """
     Results Container for an Agent Experiment
     """
+
     def __init__(
-        self,
-        selections,
-        correct_selections,
-        p_correct_selections,
-        opportunity_cost
+        self, selections, correct_selections, p_correct_selections, opportunity_cost
     ):
         """
         Initialises the ExperimentResults object with the given results.
@@ -70,11 +67,12 @@ class ExperimentResults():
         self.expected_opportunity_cost = opportunity_cost
 
 
-class Experiment():
+class Experiment:
     """
     Tests the power of a given configuration of an agent to select the best
     design in an environment based on a specific objective ("max" or "min").
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self, env, procedure, best_index=0, objective="max", replications=1000
@@ -85,8 +83,7 @@ class Experiment():
         """
         self._env = env
         self._agent = procedure
-        self._sim = AgentSimulation(
-            env, agent=procedure, replications=replications)
+        self._sim = AgentSimulation(env, agent=procedure, replications=replications)
         self._best_index = best_index
         self._objective = objective
         self._reps = replications
@@ -104,10 +101,7 @@ class Experiment():
         opportunity_cost = self._calculate_exp_opportunity_cost(selections)
 
         return ExperimentResults(
-            selections,
-            correct_selections,
-            p_correct_selections,
-            opportunity_cost
+            selections, correct_selections, p_correct_selections, opportunity_cost
         )
 
     def _calculate_exp_opportunity_cost(self, selections):
@@ -123,20 +117,14 @@ class Experiment():
         return oc / len(selections)
 
 
-class GridExperiment():
+class GridExperiment:
     """
     Performs grid search search-based experiments by varying the parameters of
     an agent and executing experiments for each configuration.
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
-    def __init__(
-            self,
-            agent,
-            environment,
-            param_grid,
-            best_index=0,
-            replications=1000
-    ):
+    def __init__(self, agent, environment, param_grid, best_index=0, replications=1000):
         """
         Initialises the GridExperiment with the given agent, environment, and
         parameter grid.
@@ -159,8 +147,7 @@ class GridExperiment():
         columns.append("correct_selections")
         columns.append("p_correct_selections")
 
-        df_results = pd.DataFrame(
-            index=np.arange(0, num_rows), columns=columns)
+        df_results = pd.DataFrame(index=np.arange(0, num_rows), columns=columns)
 
         # simulate each of the agent configurations
         for index, param_dict in enumerate(self._param_grid):
@@ -179,9 +166,7 @@ class GridExperiment():
 
             results = experiment.execute()
 
-            df_results.loc[index]["correct_selections"] = (
-                results.correct_selections)
-            df_results.loc[index]["p_correct_selections"] = (
-                results.p_correct_selections)
+            df_results.loc[index]["correct_selections"] = results.correct_selections
+            df_results.loc[index]["p_correct_selections"] = results.p_correct_selections
 
         return df_results

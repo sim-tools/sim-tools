@@ -10,15 +10,12 @@ Credit: Some of these tests are adapted from-
 import pytest
 
 from tests.dummy_model import DummySimulationModel
-from sim_tools.output_analysis import (ReplicationsAlgorithm,
-                                       confidence_interval_method)
+from sim_tools.output_analysis import ReplicationsAlgorithm, confidence_interval_method
 
 
-@pytest.mark.parametrize("mean, std_dev, expected_n_reps", [
-    (7, 0.2, 5),
-    (10, 2, 58),
-    (50, 1, 4)
-])
+@pytest.mark.parametrize(
+    "mean, std_dev, expected_n_reps", [(7, 0.2, 5), (10, 2, 58), (50, 1, 4)]
+)
 def test_ci_method(mean, std_dev, expected_n_reps):
     """
     Use DummySimulationModel to check that results from
@@ -42,17 +39,17 @@ def test_ci_method(mean, std_dev, expected_n_reps):
         alpha=0.05,
         desired_precision=0.05,
         min_rep=3,
-        decimal_places=2)
+        decimal_places=2,
+    )
 
     assert n_reps == expected_n_reps, (
-        f"Expected {expected_n_reps} replications but got {n_reps}")
+        f"Expected {expected_n_reps} replications but got {n_reps}"
+    )
 
 
-@pytest.mark.parametrize("mean, std_dev, expected_n_reps", [
-    (100, 4, 3),
-    (1, 1, 332),
-    (44, 27, 171)
-])
+@pytest.mark.parametrize(
+    "mean, std_dev, expected_n_reps", [(100, 4, 3), (1, 1, 332), (44, 27, 171)]
+)
 def test_algorithm(mean, std_dev, expected_n_reps):
     """
     Use DummySimulationModel to check that results from ReplicationsAlgorithm
@@ -75,10 +72,11 @@ def test_algorithm(mean, std_dev, expected_n_reps):
         initial_replications=5,
         look_ahead=10,
         replication_budget=500,
-        verbose=False
+        verbose=False,
     )
 
     n_reps, _ = analyser.select(model, metrics=["metric"])
 
     assert n_reps["metric"] == expected_n_reps, (
-        f"Expected {expected_n_reps} replications but got {n_reps['metric']}")
+        f"Expected {expected_n_reps} replications but got {n_reps['metric']}"
+    )

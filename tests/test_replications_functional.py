@@ -11,9 +11,11 @@ import pandas as pd
 import pytest
 
 from tests.dummy_model import DummySimulationModel
-from sim_tools.output_analysis import (confidence_interval_method,
-                                       ReplicationsAlgorithm,
-                                       ReplicationTabulizer)
+from sim_tools.output_analysis import (
+    confidence_interval_method,
+    ReplicationsAlgorithm,
+    ReplicationTabulizer,
+)
 
 
 def test_consistent_methods():
@@ -37,7 +39,8 @@ def test_consistent_methods():
         alpha=alpha,
         desired_precision=desired_precision,
         min_rep=0,
-        decimal_places=decimal_places)
+        decimal_places=decimal_places,
+    )
     # Add "metric" column and reset index(to be consistent with algorithm)
     ci_method_summary_table["metric"] = "metric"
     ci_method_summary_table.reset_index(inplace=True, drop=True)
@@ -50,15 +53,13 @@ def test_consistent_methods():
         look_ahead=0,
         replication_budget=reps,
         verbose=False,
-        observer_factory=ReplicationTabulizer
+        observer_factory=ReplicationTabulizer,
     )
     _, algorithm_summary_table = analyser.select(model, metrics=["metric"])
     algorithm_summary_table = round(algorithm_summary_table, decimal_places)
 
     # Compare the summary tables
-    pd.testing.assert_frame_equal(
-        ci_method_summary_table, algorithm_summary_table
-    )
+    pd.testing.assert_frame_equal(ci_method_summary_table, algorithm_summary_table)
 
 
 def test_ci_method_output():
@@ -75,7 +76,7 @@ def test_ci_method_output():
 
     # Run the model
     model = DummySimulationModel(mean=10, std_dev=0.5)
-    results = [model.single_run(rep)["metric"] for rep in range(1, reps+1)]
+    results = [model.single_run(rep)["metric"] for rep in range(1, reps + 1)]
 
     # Run the confidence interval method
     n_reps, summary_table = confidence_interval_method(
@@ -83,26 +84,30 @@ def test_ci_method_output():
         alpha=0.05,
         desired_precision=0.05,
         min_rep=3,
-        decimal_places=2)
+        decimal_places=2,
+    )
 
     # Check that the results dataframe contains the right number of rows
     if not len(summary_table) == reps:
         errors.append(
-            f"Ran {reps} replications but summary_table only has " +
-            f"{len(summary_table)} entries.")
+            f"Ran {reps} replications but summary_table only has "
+            + f"{len(summary_table)} entries."
+        )
 
     # Check that the replications are appropriately numbered
     if not min(summary_table.index) == 1:
         errors.append(
-            "Minimum replication in summary_table should be 1 but it is " +
-            f"{min(summary_table.index)}.")
+            "Minimum replication in summary_table should be 1 but it is "
+            + f"{min(summary_table.index)}."
+        )
 
     # Check that min_reps is no more than the number run
     if not n_reps <= reps:
         errors.append(
-            "The minimum number of replications required as returned by the " +
-            "confidence_interval_method should be less than the number we " +
-            f"ran ({reps}) but it was {n_reps}.")
+            "The minimum number of replications required as returned by the "
+            + "confidence_interval_method should be less than the number we "
+            + f"ran ({reps}) but it was {n_reps}."
+        )
 
     # Check if there were any errors
     assert not errors, "Errors occurred:\n{}".format("\n".join(errors))
@@ -126,7 +131,7 @@ def test_algorithm_initial():
         look_ahead=0,
         replication_budget=1000,
         verbose=False,
-        observer_factory=ReplicationTabulizer
+        observer_factory=ReplicationTabulizer,
     )
 
     # Run the algorithm and get results
@@ -156,7 +161,7 @@ def test_algorithm_nosolution():
         look_ahead=0,
         replication_budget=reps,
         verbose=False,
-        observer_factory=ReplicationTabulizer
+        observer_factory=ReplicationTabulizer,
     )
 
     # Run algorithm, checking that it produces a warning

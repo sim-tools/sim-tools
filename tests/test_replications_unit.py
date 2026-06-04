@@ -19,7 +19,7 @@ from sim_tools.output_analysis import (
     confidence_interval_method,
     OnlineStatistics,
     ReplicationsAlgorithm,
-    ReplicationTabulizer
+    ReplicationTabulizer,
 )
 
 
@@ -27,11 +27,10 @@ from sim_tools.output_analysis import (
 # ReplicationsAlgorithm
 # -----------------------------------------------------------------------------
 
-@pytest.mark.parametrize("look_ahead, n, exp", [
-    (100, 100, 100),
-    (100, 101, 101),
-    (0, 500, 0)
-])
+
+@pytest.mark.parametrize(
+    "look_ahead, n, exp", [(100, 100, 100), (100, 101, 101), (0, 500, 0)]
+)
 def test_klimit(look_ahead, n, exp):
     """
     Check that the _klimit() calculations are as expected.
@@ -47,22 +46,24 @@ def test_klimit(look_ahead, n, exp):
         Expected number of replications for _klimit() to return.
     """
     # Calculate additional replications that would be required
-    calc = ReplicationsAlgorithm(
-        look_ahead=100, initial_replications=100)._klimit()
+    calc = ReplicationsAlgorithm(look_ahead=100, initial_replications=100)._klimit()
     # Check that this meets our expected value
     assert calc == 100, (
-        f"With look_ahead {look_ahead} and n={n}, the additional " +
-        f"replications required should be {exp} but _klimit() returned {calc}."
+        f"With look_ahead {look_ahead} and n={n}, the additional "
+        + f"replications required should be {exp} but _klimit() returned {calc}."
     )
 
 
-@pytest.mark.parametrize("arg, value", [
-    ("initial_replications", -1),
-    ("initial_replications", 0.5),
-    ("look_ahead", -1),
-    ("look_ahead", 0.5),
-    ("half_width_precision", 0)
-])
+@pytest.mark.parametrize(
+    "arg, value",
+    [
+        ("initial_replications", -1),
+        ("initial_replications", 0.5),
+        ("look_ahead", -1),
+        ("look_ahead", 0.5),
+        ("half_width_precision", 0),
+    ],
+)
 def test_algorithm_invalid(arg, value):
     """
     Ensure that ReplicationsAlgorithm responds appropriately to invalid inputs.
@@ -84,19 +85,21 @@ def test_algorithm_invalid_budget():
     replication_budget is less than initial_replications.
     """
     with pytest.raises(ValueError):
-        ReplicationsAlgorithm(initial_replications=10,
-                              replication_budget=9)
+        ReplicationsAlgorithm(initial_replications=10, replication_budget=9)
 
 
-@pytest.mark.parametrize("lst, exp, look_ahead", [
-    ([None, None, 0.8, 0.4, 0.3], 4, 0),  # Normal case
-    ([0.4, 0.3, 0.2, 0.1], 1, 0),  # No None values
-    ([0.8, 0.9, 0.8, 0.7], None, 0),  # No values below threshold
-    ([None, None, None, None], None, 0),  # No values
-    ([], None, 0),  # Empty list
-    ([None, None, 0.8, 0.8, 0.3, 0.3, 0.3], None, 3),  # Not full lookahead
-    ([None, None, 0.8, 0.8, 0.3, 0.3, 0.3, 0.3], 5, 3)  # Meets lookahead
-])
+@pytest.mark.parametrize(
+    "lst, exp, look_ahead",
+    [
+        ([None, None, 0.8, 0.4, 0.3], 4, 0),  # Normal case
+        ([0.4, 0.3, 0.2, 0.1], 1, 0),  # No None values
+        ([0.8, 0.9, 0.8, 0.7], None, 0),  # No values below threshold
+        ([None, None, None, None], None, 0),  # No values
+        ([], None, 0),  # Empty list
+        ([None, None, 0.8, 0.8, 0.3, 0.3, 0.3], None, 3),  # Not full lookahead
+        ([None, None, 0.8, 0.8, 0.3, 0.3, 0.3, 0.3], 5, 3),  # Meets lookahead
+    ],
+)
 def test_find_position(lst, exp, look_ahead):
     """
     Test the find_position() method from ReplicationsAlgorithm.
@@ -112,8 +115,7 @@ def test_find_position(lst, exp, look_ahead):
         threshold.
     """
     # Set threshold to 0.5, with provided look_ahead
-    alg = ReplicationsAlgorithm(half_width_precision=0.5,
-                                look_ahead=look_ahead)
+    alg = ReplicationsAlgorithm(half_width_precision=0.5, look_ahead=look_ahead)
     # Get result from algorithm and compare to expected
     result = alg.find_position(lst)
     assert result == exp, (
@@ -125,6 +127,7 @@ def test_find_position(lst, exp, look_ahead):
 # -----------------------------------------------------------------------------
 # OnlineStatistics
 # -----------------------------------------------------------------------------
+
 
 def test_onlinestat_data():
     """
@@ -148,29 +151,32 @@ def test_onlinestat_computations():
     expected_mean = np.mean(values)
     expected_std = np.std(values, ddof=1)
     expected_lci, expected_uci = st.t.interval(
-        confidence=0.95,
-        df=len(values)-1,
-        loc=np.mean(values),
-        scale=st.sem(values)
+        confidence=0.95, df=len(values) - 1, loc=np.mean(values), scale=st.sem(values)
     )
     expected_dev = (expected_uci - expected_mean) / expected_mean
 
     # Assertions
     assert np.isclose(stats.mean, expected_mean), (
-        f"Expected mean {expected_mean}, got {stats.mean}")
+        f"Expected mean {expected_mean}, got {stats.mean}"
+    )
     assert np.isclose(stats.std, expected_std), (
-        f"Expected std dev {expected_std}, got {stats.std}")
+        f"Expected std dev {expected_std}, got {stats.std}"
+    )
     assert np.isclose(stats.lci, expected_lci), (
-        f"Expected lower confidence interval {expected_lci}, got {stats.lci}")
+        f"Expected lower confidence interval {expected_lci}, got {stats.lci}"
+    )
     assert np.isclose(stats.uci, expected_uci), (
-        f"Expected upper confidence interval {expected_uci}, got {stats.uci}")
+        f"Expected upper confidence interval {expected_uci}, got {stats.uci}"
+    )
     assert np.isclose(stats.deviation, expected_dev), (
-        f"Expected deviation {expected_dev}, got {stats.deviation}")
+        f"Expected deviation {expected_dev}, got {stats.deviation}"
+    )
 
 
 # -----------------------------------------------------------------------------
 # ReplicationTabulizer
 # -----------------------------------------------------------------------------
+
 
 def test_tabulizer_initial_state():
     """
@@ -240,27 +246,29 @@ def test_tabulizer_summary_table():
 # confidence_interval_method
 # -----------------------------------------------------------------------------
 
-@pytest.mark.parametrize("input_type", [
-    pd.Series([1, 2, 3, 4, 5]),
-    [1, 2, 3, 4, 5],
-    pd.DataFrame({"metric_a": [1, 2, 3, 4, 5], "metric_b": [2, 3, 4, 5, 6]}),
-    {"metric_a": [1, 2, 3, 4, 5]},
-    [[1, 2, 3, 4, 5], [2, 3, 4, 5, 6]]
-])
+
+@pytest.mark.parametrize(
+    "input_type",
+    [
+        pd.Series([1, 2, 3, 4, 5]),
+        [1, 2, 3, 4, 5],
+        pd.DataFrame({"metric_a": [1, 2, 3, 4, 5], "metric_b": [2, 3, 4, 5, 6]}),
+        {"metric_a": [1, 2, 3, 4, 5]},
+        [[1, 2, 3, 4, 5], [2, 3, 4, 5, 6]],
+    ],
+)
 def test_confidence_interval_various_inputs(input_type):
     """
     Check the output type from different inputs to confidence_interval_method.
     """
     warnings.filterwarnings(
-        "ignore",
-        message="WARNING: the replications do not reach desired precision"
+        "ignore", message="WARNING: the replications do not reach desired precision"
     )
     result = confidence_interval_method(
         replications=input_type, alpha=0.05, desired_precision=0.1, min_rep=3
     )
-    if (
-        isinstance(input_type, (pd.Series, list))
-        and not (isinstance(input_type[0], (list, np.ndarray, pd.Series)))
+    if isinstance(input_type, (pd.Series, list)) and not (
+        isinstance(input_type[0], (list, np.ndarray, pd.Series))
     ):
         # Single metric returns tuple
         assert isinstance(result, tuple)

@@ -14,6 +14,7 @@ dependencies:
   - pylint=3.3.4
   - pytest=8.3.4
   - python=3.11
+  - ruff=0.15.15
   - scipy=1.15.1
   - simpy=4.1.1
   - pip:

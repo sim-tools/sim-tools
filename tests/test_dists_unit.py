@@ -16,15 +16,31 @@ import sim_tools.distributions as dists
 SEED_1 = 42
 
 
-@pytest.mark.parametrize("dist_class", [
-    dists.Exponential, dists.Bernoulli, dists.Lognormal, dists.Normal,
-    dists.Uniform, dists.Triangular, dists.FixedDistribution,
-    dists.CombinationDistribution, dists.GroupedContinuousEmpirical,
-    dists.Erlang, dists.Weibull, dists.Gamma, dists.Beta,
-    dists.DiscreteEmpirical, dists.TruncatedDistribution,
-    dists.RawDiscreteEmpirical, dists.PearsonV, dists.PearsonVI, dists.ErlangK,
-    dists.Poisson, dists.Hyperexponential
-    ]
+@pytest.mark.parametrize(
+    "dist_class",
+    [
+        dists.Exponential,
+        dists.Bernoulli,
+        dists.Lognormal,
+        dists.Normal,
+        dists.Uniform,
+        dists.Triangular,
+        dists.FixedDistribution,
+        dists.CombinationDistribution,
+        dists.GroupedContinuousEmpirical,
+        dists.Erlang,
+        dists.Weibull,
+        dists.Gamma,
+        dists.Beta,
+        dists.DiscreteEmpirical,
+        dists.TruncatedDistribution,
+        dists.RawDiscreteEmpirical,
+        dists.PearsonV,
+        dists.PearsonVI,
+        dists.ErlangK,
+        dists.Poisson,
+        dists.Hyperexponential,
+    ],
 )
 def test_inheritance(dist_class):
     """
@@ -48,28 +64,39 @@ def test_inheritance(dist_class):
         (dists.Uniform, [5, 15], True, 10, float),
         (dists.Triangular, [5, 10, 15], True, 10, float),
         (dists.FixedDistribution, [42], False, 42, int),
-        (dists.CombinationDistribution,
-         [dists.FixedDistribution(10), dists.FixedDistribution(5)],
-         False, 15, float),
-        (dists.GroupedContinuousEmpirical,
-         [[0, 5, 10], [5, 10, 15], [1, 2, 1]],
-         True, 7.5, float),
+        (
+            dists.CombinationDistribution,
+            [dists.FixedDistribution(10), dists.FixedDistribution(5)],
+            False,
+            15,
+            float,
+        ),
+        (
+            dists.GroupedContinuousEmpirical,
+            [[0, 5, 10], [5, 10, 15], [1, 2, 1]],
+            True,
+            7.5,
+            float,
+        ),
         (dists.Erlang, [10, 5], True, 10, float),
         (dists.Weibull, [2, 10], True, 8.862, float),
         (dists.Gamma, [2, 5], True, 10, float),
-        (dists.Beta, [2, 5], True, 2/7, float),
-        (dists.DiscreteEmpirical, [[1, 2, 3], [0.2, 0.5, 0.3]],
-         True, 2.1, int),
-        (dists.TruncatedDistribution,
-         [dists.Normal(mean=0, sigma=1), 0],
-         False, 0.4, float | int),
+        (dists.Beta, [2, 5], True, 2 / 7, float),
+        (dists.DiscreteEmpirical, [[1, 2, 3], [0.2, 0.5, 0.3]], True, 2.1, int),
+        (
+            dists.TruncatedDistribution,
+            [dists.Normal(mean=0, sigma=1), 0],
+            False,
+            0.4,
+            float | int,
+        ),
         (dists.RawDiscreteEmpirical, [[1, 2, 3, 4, 5]], True, 3, int),
         (dists.PearsonV, [3, 10], True, 5, float),
         (dists.PearsonVI, [2, 3, 5], True, 5, float),
         (dists.ErlangK, [2, 5], True, 10, float),
         (dists.Poisson, [5], True, 5, int),
-        (dists.Hyperexponential, [[0.3, 0.7], [2.0, 1.0]], True, 0.85, float)
-    ]
+        (dists.Hyperexponential, [[0.3, 0.7], [2.0, 1.0]], True, 0.85, float),
+    ],
 )
 def test_sample(dist_class, params, random_seed, expected_mean, expected_type):
     """
@@ -145,18 +172,17 @@ def test_lognormal_moments():
 
     # Initialise distribution and get calculated parameters
     dist = dists.Lognormal(mean=mean, stdev=stdev, random_seed=42)
-    calculated_mu, calculated_sigma = (
-        dist.normal_moments_from_lognormal(mean, stdev**2))
+    calculated_mu, calculated_sigma = dist.normal_moments_from_lognormal(mean, stdev**2)
 
     # Verify calculated parameters match expected mathematical formulas
     # Formula for mu: ln(mean²/√(stdev² + mean²))
-    assert np.isclose(calculated_mu,
-                      np.log(mean**2 / np.sqrt(stdev**2 + mean**2)),
-                      rtol=1e-5)
+    assert np.isclose(
+        calculated_mu, np.log(mean**2 / np.sqrt(stdev**2 + mean**2)), rtol=1e-5
+    )
     # Formula for sigma: √ln(1 + stdev²/mean²)
-    assert np.isclose(calculated_sigma,
-                      np.sqrt(np.log(1 + stdev**2 / mean**2)),
-                      rtol=1e-5)
+    assert np.isclose(
+        calculated_sigma, np.sqrt(np.log(1 + stdev**2 / mean**2)), rtol=1e-5
+    )
 
 
 def test_fixed_value():
@@ -216,8 +242,7 @@ def test_discrete_uneven_probabilities():
     low-probability value.
     """
     # Create distribution with extremely uneven probabilities
-    dist = dists.DiscreteEmpirical(
-        values=[1, 2], freq=[1, 1e-10], random_seed=42)
+    dist = dists.DiscreteEmpirical(values=[1, 2], freq=[1, 1e-10], random_seed=42)
 
     # Generate a large sample
     samples = dist.sample(size=10000)
