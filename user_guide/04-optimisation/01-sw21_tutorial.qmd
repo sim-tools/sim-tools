@@ -1,0 +1,630 @@
+---
+title: An Introduction to Optimisation via Simulation.
+jupyter: python3
+---
+
+# How to choose the best setup for a system.
+## A tutorial for the Simulation Workshop 2021
+
+**Dr Christine S.M Currie and Tom Monks**
+
+This tutorial introduces Ranking and Selection procedures for stochastic computer simulation.  We focus on in difference zone and optimal computer budget allocation procedures. The procedures are:
+
+* KN and KN++
+* OCBA and OCBA-m
+
+> The code implementing the Ranking and Selection procedures explored in this tutorial is available online with an MIT license https://github.com/TomMonks/sim-tools
+
+
+```{python}
+# pylint: disable=missing-module-docstring,invalid-name
+
+# run this first to install the OvS procedures so we can use them in the
+# tutorial.
+# !pip install sim-tools
+```
+
+```{python}
+import numpy as np
+```
+
+```{python}
+from sim_tools.ovs.evaluation import Experiment
+from sim_tools.ovs.fixed_budget import OCBA, OCBAM
+from sim_tools.ovs.indifference_zone import KN, KNPlusPlus
+from sim_tools.ovs.toy_models import (
+    custom_gaussian_model,
+    gaussian_sequence_model,
+    random_gaussian_model,
+    ManualOptimiser,
+)
+```
+
+## Simulation Models
+
+To keep the focus of this tutorial on Ranking and Selection procedures and what they do, and how they perform in practice, the models we introduce are deliberately simple.   The following sections describe how to create a a set of simulation models where the outputs are independent guassian distributions.  There are three options:
+
+* the means of these outputs distributions follow a sequence (e.g. 1, 2, 3, 4, 5) variance is 1.0. 
+* the means and variances are user specified.
+* the means and variances are randomly generated.
+
+### Creating a simple sequence of normal distributions
+
+A simple model can be created using the `guassian_sequance_model()` function.  This creates a simulation model where the output of each design follows a $N - (\mu_{i}, 1.0)$ :
+
+The function accepts three keyword arguments:
+
+* **start** - int, the first mean in the sequence (inclusive)
+* **end** - int, the last mean int the sequence (inclusive)
+* **step** - int, the difference between mean i and mean i + 1.
+
+For example, the following code creates a simulation model with 10 designs with means 1 to 10 and unit variance.
+
+```python
+model = guassian_sequence_model(1, 10)
+```
+
+To create a simulation model with 5 designs where $\mu_{i+1} - \mu_i = 2 $ :
+
+```python
+model = guassian_sequence_model(1, 10, step=2)
+```
+
+### Creating a custom model with known designs
+Instead of a sequence of normal distributions with unit variance, it is possible to create a custom set of designs with varying variances. Use the `custom_guassian_model` function for this task.  For example to create a custom set of designs: 
+
+```python
+means = [5, 8, 1, 2, 1, 7]
+variances = [0.1, 1.2, 1.4, 0.3, 0.8]
+
+custom_model = custom_guassian_model(means, variances)
+```
+
+The following code demonstrates how to create a sequence of 100 designs with variances that are 10% of the mean. 
+
+```python
+n_designs = 100
+means = [i for i in range(n_designs+1)]
+variances = [j*0.1 for j in range(n_designs+1)]
+
+custom_model = custom_guassian_model(means, variances)
+```
+
+
+### Creating a model with randomly sampled designs
+
+To create a model with a set of unknown designs (within a specified mean and variance tolerance) use 
+
+```python
+mean_low = 1.0
+mean_high = 15.0
+var_low = 0.1
+var_high = 2.0
+n_designs = 15
+
+model = random_guassian_model(mean_low, mean_high, var_low, var_high, n_designs)
+```
+
+Where:
+* **mean_low** - float, a lower bound on the means of the output distributions
+* **mean_high** - float, an upper bound on the means
+* **var_low** - float, a lower bound on the variance of the output distributions
+* **var_high** - float, an upper bound on the variances.
+* **n_designs** - int, the number of designs to create.
+
+---
+
+## A manual optimisation framework
+
+Before using the **Optimisation via Simulation** (OvS) procedures, it is recommended that you get a feel for the framework in which the OvS procedures operate.  To do this we will create some models and explore them using a `ManualOptimiser`.  This allows the user to run independent and multiple replications of the model yourself independent of any algorithm.  The `ManualOptimiser` keeps track of the means, variances and number of replications run for each design.
+
+A `ManualOptimiser` object requires two parameters when it is created.  
+
+* model - object, e.g. a model that is a sequence of normal distributions
+* n_designs - the number of designs to be considered.
+
+```{python}
+manual_opt = ManualOptimiser(model=gaussian_sequence_model(1, 10), n_designs=10)
+```
+
+* We can print the optimiser object to help us remember what parameters we set.
+
+```{python}
+print(manual_opt)
+```
+
+* Follow Law and Kelton's advice and run 3 initial replications of each design.
+
+```{python}
+manual_opt.simulate_designs(replications=3)
+```
+
+The optimiser keeps track of the allocation of replications across each design.  For efficiency it doesn't store each individual observation, but it does compute a running mean and variance.
+
+* Let's have a look at the replication allocation between and results of each design.
+
+```{python}
+print(manual_opt.allocations)
+```
+
+```{python}
+np.set_printoptions(precision=1)  # this is a hack to view at 1 decimal place.
+print(manual_opt.means)
+```
+
+```{python}
+print(manual_opt.vars)
+```
+
+Now let's run 1 additional replication of the top 3 designs. 
+Note - in python arrays are **zero indexed**.  This means that design 1 has index 0.
+
+```{python}
+manual_opt.simulate_designs(design_indexes=[7, 8, 9], replications=1)
+```
+
+```{python}
+print(manual_opt.allocations)
+```
+
+```{python}
+print(manual_opt.means)
+```
+
+```{python}
+print(manual_opt.vars)
+```
+
+### Manual Optimisation of a model with unknown means.
+
+**Now have a go yourself**.  This time create a model with random designs.  Run as many replications of each design as you think is neccessary to make a decision about which design is best.  Here we define best as the design with the largest mean value.
+
+```{python}
+# create random problem
+rnd_model = random_gaussian_model(
+    mean_low=5, mean_high=25, var_low=0.5, var_high=2.5, n_designs=10
+)
+
+# create manual optimiser for you to use.
+manual_opt = ManualOptimiser(model=rnd_model, n_designs=10)
+```
+
+```{python}
+# insert your code here...
+```
+
+---
+# Indifference Zone Ranking and Selection
+
+## Procedure **KN**
+The first Ranking and Selection (R&S) algorithm we will explore is **Procedure KN** developed by Kim and Nelson. This is an *Indifference Zone* (IZ) approach to R&S.  IZ procedures exploit the the idea that the performance of one or more of the sub-optimal designs are in fact so close to the best performing system that a user does not care which one is chosen (the decision maker is said to be *indifferent* to this choice).  To do this a user must specify a quantity $\delta$.  Procedure KN provides a theorectical guarantee to select the best system or a system within $\delta$ of the best with probability of $1 - \alpha$.
+
+A key feature of KN is that it only estimates the variance of each design once.  This happens after an initial number of replications (specified by the user) $n_0$.  
+
+To run Kim and Nelson's R&S procedure KN, create an instance of `ovs.indifference_zone.KN`
+
+An object of type KN takes the following parameters:
+
+* **model** - a simulation model
+* **n_designs** - int, the number of competing designs to compare
+* **delta** - float, the indifference zone
+* **alpha** - float, $PCS = 1-\alpha$ (default=0.05)
+* **n_0** - int, $n_0$ the number of initial replications (default=2)
+
+```
+from sim_tools.ovs.indifference_zone import KN, KNPlusPlus
+```
+
+### Example 1.  A simple sequence of normal distributions.
+
+The first problem we will test KN against is selecting the largest mean from a sequence of 10 normal distributions (means raning from 1 to 10) with unit variance.  We want a $PCS = 0.95$ and are indifferent to designs that are within an average of 1.0 of the best.  
+
+For this simple problem, we will follow Law's longstanding advice of setting $n_0 = 5$ i.e 5 initial replications of each design.
+
+#### Setting up KN
+
+```{python}
+N_DESIGNS = 10
+DELTA = 1.0
+ALPHA = 0.05
+N_0 = 5
+
+# first we create the simulation model.
+model = gaussian_sequence_model(1, N_DESIGNS)
+
+# then we create the KN R&S object and pass in our parameters.
+# note that this doesn't run the optimisation yet.
+kn = KN(model=model, n_designs=N_DESIGNS, delta=DELTA, alpha=ALPHA, n_0=N_0)
+```
+
+```{python}
+# quickly check if KN is parameterised as expected
+print(kn)
+```
+
+#### Running KN
+Now that we have created the KN object we can run the solver at any time we choose.  To do this call the `KN.solve()` method.  This method returns a design within the indifference zone $(1 - alpha$) of the time.
+
+```{python}
+# this runs KN (you can run this cell multiple times if you wish)
+best_design = kn.solve()
+
+# print out the results
+print(f"best design\t{best_design}")
+print(f"allocations\t{kn._allocations}")
+print(f"total reps\t{kn._allocations.sum()}")
+```
+
+In general you should see that KN simulates the top 2-3 designs the most with the lower performing designs eliminated early on (possibly after the initial stage of replication).
+
+## Procedure **KN++**
+
+Kim and Nelson's KN++ procedure is an enhancement on KN.  KN++ introduces an **update** step that recalculates the variance of the differences between designs.  
+
+To run procedure KN++, create an instance of `ovs.indifference_zone.KNPlusPlus`
+
+### Example 2. Solving the simple problem using KN++
+
+We will run KN++ on the same simulation model as KN.  In general you should see that KN++ uses less replication to find a design within the indifference zone.
+
+```{python}
+knpp = KNPlusPlus(model=model, n_designs=N_DESIGNS, delta=DELTA, alpha=ALPHA, n_0=N_0)
+
+best_design = knpp.solve()
+print(f"best design\t{best_design}")
+print(f"allocations\t{knpp._allocations}")
+print(f"total reps\t{knpp._allocations.sum()}")
+```
+
+## Exercise 1. Comparing KN and KN++ on a larger design.
+
+Your task is to compare KN and KN++ optimising a simulation model with 100 competing designs.  These designs are a sequence of 100 normal distributions with unit variance.  The objective is to find the design with the maximum mean.
+
+What do you notice about the replications required from each method?
+
+```{python}
+# the code to set up the simulation model has been provided below.
+N_DESIGNS = 100
+DELTA = 1.0
+ALPHA = 0.05
+N_0 = 5
+
+# first we create the simulation model.
+model = gaussian_sequence_model(1, N_DESIGNS)
+```
+
+```{python}
+# Your code goes here...
+
+# Hint 1. you need to create KN and KNPlusPlus objects, pass in the simulation
+# model and run them.
+
+# Hint 2. try running the models a few times.
+
+```
+
+## Exercise 2: A more difficult optimisation problem
+
+We will now explore how the IZ procedures perform on a slightly harder optimisation problem where the mean of the designs are closer together and have differing variances.
+
+The problem is: 
+
+```python
+means = [4, 4.1, 4.2, 4, 4.1, 4.3, 4, 4.1, 4.2, 4.2]
+variances = [1, 1, 1, 0.1, 0.1, 10, 10, 10, 10, 0.1]
+```
+
+The 'optimal' mean design is at index 5 (4.3). It is a very noisy design.   We will set a $\delta$ so that there are multiple designs within the IZ.
+
+Your task is to compare the performance of KN and KN++ given the following parameters:
+
+```python
+N_DESIGNS = 10
+N_0 = 10
+DELTA = 0.15
+ALPHA = 0.05
+```
+
+We are also setting a random seed before running each procedure.  This ensures that the first stage of replications returns the same samples.
+
+Questions: 
+* Do the methods return the 'optimal' design or another design within the indifference zone?
+* Which procedure require the most replication effort?  Does it vary?
+* Are there any differences in designs selected and the number of replications needed?  Try different values of `SEED`.
+* What happens if you try difference values of $n_0$ e.g. 20 and 50?
+* What happens if you change $\alpha$ to 0.1? 
+
+
+<div class="alert alert-block alert-info">
+<b>RUNTIME WARNING!</b> This problem requires many more replications.  It will take a few seconds for the procedures to return a design.</div>
+
+```{python}
+# set problem parameters and create simulation model.
+
+N_DESIGNS = 10
+N_0 = 20
+DELTA = 0.15
+ALPHA = 0.05
+
+# change the value of seed.
+SEED = 999
+
+means = [4, 4.1, 4.2, 4, 4.1, 4.3, 4, 4.1, 4.2, 4.2]
+variances = [1, 1, 1, 0.1, 0.1, 10, 10, 10, 10, 0.1]
+
+guass_model = custom_gaussian_model(means, variances)
+
+# print out which design indexes are in the indifference zone
+print(np.where(4.3 - np.array(means) <= DELTA)[0])
+```
+
+```{python}
+# create an instance of KN and solve.
+
+kn = KN(model=guass_model, n_designs=N_DESIGNS, delta=DELTA, alpha=ALPHA, n_0=N_0)
+
+np.random.seed(SEED)
+best_design = kn.solve()
+
+# print out the results
+print(f"best design\t{best_design}")
+print(f"allocations\t{kn._allocations}")
+print(f"total reps\t{kn._allocations.sum()}")
+```
+
+```{python}
+# use KN++ on the same problem
+knpp = KNPlusPlus(
+    model=guass_model, n_designs=N_DESIGNS, delta=DELTA, alpha=ALPHA, n_0=N_0
+)
+
+# we use the same random seed to help with comparison.
+np.random.seed(SEED)
+best_design = knpp.solve()
+
+# print out the results
+print(f"best design\t{best_design}")
+print(f"allocations\t{knpp._allocations}")
+print(f"total reps\t{knpp._allocations.sum()}")
+```
+
+# Optimal Computing Budget Allocation (OCBA)
+
+We will first consider the scenario where the objective is find the optimal design.  The distinguishing feature of OCBA procedures from IZ procedures a fixed budget formulation of the optimisation problem.  I.e. achieve the best $PCS$ with the budget available.
+
+Single solution OCBA object can be created by importing `ovs.fixed_budget.OCBA`
+
+An object of type `OCBA` takes the following parameters:
+
+* **model** - a simulation model
+* **n_designs** - int, the number of competing designs to compare
+* **budget** - int, the total number of replications to allocate across designs
+* **delta** - int, the incremental amount of replications to allocate at each round
+* **n_0** - int, $n_0$ the number of initial replications (default=5)
+* **obj** - str, 'min' if minimisation; 'max' if maximisation (default='min')
+
+```
+from sim_tools.ovs.fixed_budget import OCBA, OCBAM
+```
+
+## Example 3. Applying OCBA to the simple problem.
+
+We will first apply OCBA to the simple sequence of normal random variables that we used in Example 1.  
+
+Initially we will set a simulation budget of 1000 replications. This is overkill, but makes it easier to see what OCBA is doing.
+
+```{python}
+N_DESIGNS = 10
+
+# remember that delta is not the same as in IZ!
+# it is the amount of replication to allocate at each stage.
+DELTA = 5
+
+# the initial stage will run 5 reps of each design.
+N_0 = 5
+
+BUDGET = 1000
+
+# first we create the simulation model.
+model = gaussian_sequence_model(1, N_DESIGNS)
+
+ocba = OCBA(
+    model=model, n_designs=N_DESIGNS, budget=BUDGET, delta=DELTA, n_0=N_0, obj="max"
+)
+```
+
+```{python}
+print(ocba)
+```
+
+call the `solve()` method to run the optimisation.  If needed, run OCBA a few times.
+
+```{python}
+best_design = ocba.solve()
+
+# print out the results
+print(f"best design\t{best_design}")
+print(f"allocations\t{ocba._allocations}")
+print(f"total reps\t{ocba._allocations.sum()}")
+```
+
+* Run the cell above a few times.  You should see that OCBA is allocating most of the budget across the top 3 designs.
+
+## Exercise 3. Exploring OCBA and $PCS$
+
+OCBA conceptualises optimisation as a fixed budget problem.  Let's run an experiment where we estimate what $PCS$ is actually being achieved under a given budget.  KN++ was reporting a range of 70-80 replications.  Let's try 75.
+
+To help with this test you can import an Experiment object: `ovs.evaluation.Experiment`
+
+An `Experiment` object takes the following parameters:
+
+* **env** - the simulated environment aka the model.
+* **procedure** - the method to test e.g. KNPlusPlus or OCBA
+* **best_index** - the index of the best design in the simulation model (zero based).
+* **objective** - 'max' or 'min'
+* **replications** - the number of repeats of the experiment to run.
+
+**Your task is to run the experiment with different budgets.  E.g. 60, 70 and 75.  Remember that you cannot go lower than N_0 + DELTA**
+
+```
+from sim_tools.ovs.evaluation import Experiment
+```
+
+
+<div class="alert alert-block alert-info">
+<b>RUNTIME WARNING!</b> The experiment will will take a few seconds to complete. </div>
+
+```{python}
+# this is the budget you can vary.
+BUDGET = 75
+
+# you could also vary delta.  What happens if delta = 1?
+DELTA = 5
+
+N_DESIGNS = 10
+N_0 = 5
+
+ocba = OCBA(
+    model=model, n_designs=N_DESIGNS, budget=BUDGET, delta=DELTA, n_0=N_0, obj="max"
+)
+
+# create an experiment and repeat 1000 times.
+exp = Experiment(
+    env=model, procedure=ocba, best_index=9, objective="max", replications=1000
+)
+
+results = exp.execute()
+
+# print the probability of correct selection achieved.
+print(f"PCS={results.p_correct_selections}")
+```
+
+## Exercise 4. Calculating the Expected Opportunity Cost.
+
+Another way to evaluate a procedures performance is to calculate the Expected Opportunity Cost.  This is the average difference between the best mean and the selected mean in each repeat of the experiment.
+
+**Task: try varying the budget, delta and n_0.  What is the effect?**
+
+We will only run a small number of repeats of the experiments to save runtime!
+
+```{python}
+# KN++ needed a large budget to reach its desired precision.
+# We will try a smaller budgets here
+BUDGET = 20000
+DELTA = 5
+N_DESIGNS = 10
+N_0 = 5
+
+means = [4, 4.1, 4.2, 4, 4.1, 4.3, 4, 4.1, 4.2, 4.2]
+variances = [1, 1, 1, 0.1, 0.1, 10, 10, 10, 10, 0.1]
+
+guass_model = custom_gaussian_model(means, variances)
+
+ocba = OCBA(
+    model=guass_model, n_designs=N_DESIGNS, budget=BUDGET, delta=5, n_0=50, obj="max"
+)
+
+# create an experiment and repeat 10 times (in practice we would use more!)
+exp = Experiment(
+    env=guass_model, procedure=ocba, best_index=5, objective="max", replications=10
+)
+
+results = exp.execute()
+
+# the probability of correct selection achieved.
+print(f"PCS={results.p_correct_selections}")
+
+# IF YOU REMEMBER FROM Example 2 THE DESIGNS IN THE IZ WERE [2 5 8 9]
+# Let's print out the selections made...
+print(f"selected designs: {results.selections}")
+
+# the average of the best_mean - selected_design_mean for each rep of the exp.
+print(f"EOC={results.expected_opportunity_cost}")
+```
+
+## Optimal Computing Budget Allocation Top M (OCBA-m)
+
+In many situations it is not possible or desirable to model all of the detail in a simulation model.   A procedure that offers a top performing group of designs is more useful in these circumstances.  It allows a decision maker to choose between good designs while taking other factors into account.
+
+So far we have only considered selecting the best system.  OCBA-m extended OCBA to identify the **top m designs**.  
+
+A top-m solution OCBA object can be created by importing `ovs.fixed_budget.OCBAM`
+
+An object of type `OCBAM` takes the following parameters:
+
+* **model** - a simulation model
+* **n_designs** - int, the number of competing designs to compare
+* **budget** - int, the total number of replications to allocate across designs
+* **delta** - int, the incremental amount of replications to allocate at each round
+* **n_0** - int, $n_0$ the number of initial replications (default=5)
+* **m** - int, $m$ the number of top designs to return.  m must be >=2.  For m = 1 see OCBA.
+* **obj** - str, 'min' if minimisation; 'max' if maximisation (default='min')
+
+## Example 4. Selecting the top 2 designs.
+
+```{python}
+N_DESIGNS = 10
+BUDGET = 1000
+DELTA = 5
+N_0 = 5
+
+# you can vary this parameter to change the number selected.
+M = 3
+
+guass_model = gaussian_sequence_model(1, N_DESIGNS)
+
+ocbam = OCBAM(
+    model=guass_model,
+    n_designs=N_DESIGNS,
+    budget=BUDGET,
+    delta=DELTA,
+    n_0=N_0,
+    m=M,
+    obj="max",
+)
+```
+
+```{python}
+print(ocbam)
+```
+
+```{python}
+# print out the results
+best_designs = ocbam.solve()
+print(f"best designs\t{best_designs}")
+print(f"allocations\t{ocbam._allocations}")
+print(f"total reps\t{ocbam._allocations.sum()}")
+```
+
+## Exercise 5. Select the top 3 designs out of 100 designs.
+
+Task: Use OCBA-m to select the **smallest** 3 designs from the example problem.  What impact does varying the budget, delta and $n_0$ have on performance?
+
+```{python}
+N_DESIGNS = 100
+BUDGET = 1000
+DELTA = 1
+N_0 = 5
+
+# you can vary this parameter to change the number selected.
+M = 3
+
+guass_model = gaussian_sequence_model(1, N_DESIGNS)
+
+
+# insert your code here
+# ocbam = ?
+```
+
+```{python}
+# print out the results
+best_designs = ocbam.solve()
+print(f"best designs\t{best_designs}")
+print(f"allocations\t{ocbam._allocations}")
+print(f"total reps\t{ocbam._allocations.sum()}")
+```
+
+# THE END
+
+What did you think of the procedures?
+

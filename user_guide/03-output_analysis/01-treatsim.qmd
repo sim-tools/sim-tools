@@ -1,0 +1,57 @@
+---
+title: Using the example `treat-sim` model
+jupyter: python3
+---
+
+
+For examples in this section, we'll use the `treat-sim` simulation model. This is an example model of a terminating system based on exercise 13 from page 170 of:
+
+> Nelson. B.L. (2013). Foundations and methods of stochastic simulation. Springer.
+
+## Installing the model
+
+The model is available on [GitHub](https://github.com/pythonhealthdatascience/stars-treat-sim), and can be installed from [PyPI](https://pypi.org/project/treat-sim/):
+
+```bash
+pip install treat-sim
+```
+
+
+```{python}
+# pylint: disable=missing-module-docstring
+from treat_sim.model import Scenario, single_run, multiple_replications
+```
+
+## Running a single replication
+
+1. **Create an instance of `Scenario`**. This contains all the parameters used in the model (e.g. resources and statistical distributions for arrivals and activities).
+2. **Run the model once with `single_run()`**. This function is passed an instance of `Scenario` and an integer to set the random numbers used.
+
+This returns a `pandas.DataFrame` with all performance measures for that replication, e.g. waiting times, utilisation, throughput.
+
+```{python}
+scenario = Scenario()
+
+# Run a single replication
+results = single_run(scenario, random_no_set=1)
+print(results.T)
+```
+
+You can extract a single metric like this:
+
+```{python}
+print(results["01a_triage_wait"].iloc[0])
+```
+
+## Running multiple replications
+
+Running several replications at once is very similar to running a single replication — you just use the `multiple_replications()` function instead. You'll need to provide an instance of `Scenario`, along with the number of replications you want to run.
+
+```{python}
+scenario = Scenario()
+
+# Run multiple replications
+results = multiple_replications(scenario, n_reps=20)
+results.head()
+```
+

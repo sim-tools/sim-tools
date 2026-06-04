@@ -1,0 +1,89 @@
+---
+title: Choosing the number of replications
+jupyter: python3
+---
+
+
+When running a simulation, you need to decide how many replications (runs) are enough. The **confidence interval method** can be used to help guide this choice.
+
+**Note:** The examples below use the `treat-sim` model. If you haven't run it before, see [Using the example `treat-sim` model](01-treatsim.qmd) for set-up and basic usage.
+
+
+## Imports
+
+```{python}
+# pylint: disable=missing-module-docstring
+from treat_sim.model import Scenario, multiple_replications
+from sim_tools.output_analysis import (
+    confidence_interval_method,
+    plotly_confidence_interval_method,
+)
+```
+
+## Confidence interval method
+
+In this method, you first **run the simulation** for a set number of replications. Due to stochasticity, each will produce slightly different averages for each performance metric.
+
+Once the runs are complete, you go step-by-step (for the first run, then the first two runs, the first three runs, and so on) calculating:
+
+* **Cumulative mean**
+* **Confidence interval** around that mean
+
+As the number of replications included increases, you'll typically see the interval narrows. The required number of replications is the point where you feel results are **stable** - i.e. that doing more replications is unlikely to change your conclusions in a meaningful way.
+
+You can decided this by setting a **desired precision**. Precision here means the **percentage deviation** of the confidence interval's half-width from the mean. For example, if the precision is set to `0.1`, it will identify the point where the half-width of the confidence interval is less than or equal to 10% of the mean.
+
+## Example: Single performance metric
+
+The function returns a **tuple** consisting of:
+
+1. The minimum number of replications to achieve the desired precision.
+2. A detailed DataFrame of statistics for each stage.
+
+```{python}
+scenario = Scenario()
+rep_results = multiple_replications(scenario, n_reps=150)
+
+confint_result = confidence_interval_method(
+    replications=rep_results["01a_triage_wait"], desired_precision=0.1
+)
+
+# View results
+print(confint_result[0])
+confint_result[1].head()
+```
+
+## Visualise results
+
+You can plot how the confidence interval narrows as you add more runs using the `plotly_confidence_interval_method` function.
+
+```{python}
+plotly_confidence_interval_method(
+    n_reps=confint_result[0], conf_ints=confint_result[1], metric_name="01a_triage_wait"
+)
+```
+
+## Running on multiple performance metrics
+
+You can check several outcomes at once. Just pass multiple columns to `confidence_interval_method`.
+
+This will return a dictionary, with a tuple for each metric.
+
+```{python}
+confint_multiple = confidence_interval_method(
+    replications=rep_results[
+        ["01a_triage_wait", "01b_triage_util", "02a_registration_wait"]
+    ],
+    desired_precision=0.1,
+)
+
+# View output dictionary keys
+print(confint_multiple.keys())
+```
+
+```{python}
+# View results from one of the metrics
+print(confint_multiple["02a_registration_wait"][0])
+confint_multiple["02a_registration_wait"][1].head()
+```
+

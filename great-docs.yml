@@ -28,7 +28,7 @@ dynamic: true
 # Logo & Favicon
 # ---------------
 # Point to a single logo file (replaces the text title in the navbar):
-# logo: assets/logo.svg
+# logo: assets/simtools_logo_purple.png
 #
 # For light/dark variants:
 # logo:
@@ -44,24 +44,24 @@ dynamic: true
 authors:
   - name: Thomas Monks
     role: Author
-    # affiliation: 
+    affiliation: University of Exeter
     email: t.m.w.monks@exeter.ac.uk
-    # github: 
-    # orcid: 
+    github: https://github.com/TomMonks
+    orcid: 0000-0003-2631-4481
     # homepage: 
   - name: Amy Heather
     role: Author
-    # affiliation: 
+    affiliation: University of Exeter
     email: A.Heather2@exeter.ac.uk
-    # github: 
-    # orcid: 
-    # homepage: 
+    github: https://github.com/amyheather
+    orcid: 0000-0002-6596-3479
+    homepage: https://amyheather.github.io/
   - name: Alison Harper
     role: Author
-    # affiliation: 
+    affiliation: University of Exeter
     email: A.L.Harper@exeter.ac.uk
-    # github: 
-    # orcid: 
+    github: https://github.com/AliHarp
+    orcid: 0000-0001-5274-5037
     # homepage: 
 
 # Funding / Copyright Holder
@@ -180,6 +180,8 @@ reference:
 #   toc: true                  # Show table of contents (default: true)
 #   toc-depth: 2               # TOC heading depth (default: 2)
 #   toc-title: On this page    # TOC title (default: "On this page")
+
+navbar_style: prism
 
 # Jupyter Kernel
 # --------------
