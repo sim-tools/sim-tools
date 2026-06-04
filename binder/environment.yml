@@ -2,6 +2,7 @@ name: sim_tools
 channels:
   - conda-forge
 dependencies:
+  - great-docs=0.13.0
   - jupyter-book=1.0.3
   - jupyterlab=4.3.5
   - jupyterlab-plotly-extension=1.0.0

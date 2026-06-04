@@ -1,0 +1,199 @@
+# Great Docs Configuration
+# See https://posit-dev.github.io/great-docs/user-guide/configuration.html
+
+# Module Name (optional)
+# ----------------------
+# Set this if your importable module name differs from the project name.
+# Example: project 'py-yaml12' with module name 'yaml12'
+# module: yaml12
+
+# Docstring Parser
+# ----------------
+# The docstring format used in your package (numpy, google, or sphinx)
+parser: numpy
+
+# Dynamic Introspection
+# ---------------------
+# Use runtime introspection for more accurate documentation (default: true)
+# Set to false if your package has cyclic alias issues (e.g., PyO3/Rust bindings)
+dynamic: true
+
+# API Discovery Settings
+# ----------------------
+# Exclude items from auto-documentation
+# exclude:
+#   - InternalClass
+#   - helper_function
+
+# Logo & Favicon
+# ---------------
+# Point to a single logo file (replaces the text title in the navbar):
+# logo: assets/simtools_logo_purple.png
+#
+# For light/dark variants:
+# logo:
+#   light: assets/logo-light.svg
+#   dark: assets/logo-dark.svg
+#
+# To show the text title alongside the logo, add: show_title: true
+
+# Author Information
+# ------------------
+# Author metadata for display in the landing page sidebar
+# You can add additional fields: github, orcid, affiliation, homepage
+authors:
+  - name: Thomas Monks
+    role: Author
+    affiliation: University of Exeter
+    email: t.m.w.monks@exeter.ac.uk
+    github: https://github.com/TomMonks
+    orcid: 0000-0003-2631-4481
+    # homepage: 
+  - name: Amy Heather
+    role: Author
+    affiliation: University of Exeter
+    email: A.Heather2@exeter.ac.uk
+    github: https://github.com/amyheather
+    orcid: 0000-0002-6596-3479
+    homepage: https://amyheather.github.io/
+  - name: Alison Harper
+    role: Author
+    affiliation: University of Exeter
+    email: A.L.Harper@exeter.ac.uk
+    github: https://github.com/AliHarp
+    orcid: 0000-0001-5274-5037
+    # homepage: 
+
+# Funding / Copyright Holder
+# --------------------------
+# Credit the organization that funds or holds copyright for this package.
+# Displays in sidebar and footer. Homepage and ROR provide links.
+# funding:
+#   name: "Posit Software, PBC"
+#   roles:
+#     - Copyright holder
+#     - funder
+#   homepage: https://posit.co
+#   ror: https://ror.org/03wc8by49
+
+# API Reference Structure
+# -----------------------
+# Customize the sections below to organize your API documentation.
+# - Reorder items within a section to change their display order
+# - Move items between sections or create new sections
+# - Use 'members: false' to exclude methods from documentation
+# - Add 'desc:' to sections for descriptions
+
+reference:
+  - title: Classes
+    desc: Main classes provided by the package
+    contents:
+      - distributions.Bernoulli  # 1 method(s)
+      - distributions.Beta  # 1 method(s)
+      - distributions.CombinationDistribution  # 1 method(s)
+      - distributions.DiscreteEmpirical  # 1 method(s)
+      - distributions.DistributionRegistry  # 5 method(s)
+      - distributions.Erlang  # 1 method(s)
+      - distributions.ErlangK  # 1 method(s)
+      - distributions.Exponential  # 1 method(s)
+      - distributions.FixedDistribution  # 1 method(s)
+      - distributions.Gamma  # 2 method(s)
+      - distributions.GroupedContinuousEmpirical  # 2 method(s)
+      - distributions.Hyperexponential  # 1 method(s)
+      - distributions.Lognormal  # 2 method(s)
+      - distributions.Normal  # 1 method(s)
+      - distributions.PearsonV  # 1 method(s)
+      - distributions.PearsonVI  # 1 method(s)
+      - distributions.Poisson  # 1 method(s)
+      - distributions.RawContinuousEmpirical  # 3 method(s)
+      - distributions.RawDiscreteEmpirical  # 1 method(s)
+      - distributions.Triangular  # 1 method(s)
+      - distributions.TruncatedDistribution  # 1 method(s)
+      - distributions.Uniform  # 1 method(s)
+      - distributions.Weibull  # 1 method(s)
+      - output_analysis.OnlineStatistics  # 3 method(s)
+      - output_analysis.ReplicationTabulizer  # 2 method(s)
+      - output_analysis.ReplicationsAlgorithm  # 3 method(s)
+      - time_dependent.DistributionRegistry  # 5 method(s)
+      - time_dependent.NSPPThinning  # 1 method(s)
+
+  - title: Abstract Classes
+    desc: Abstract base classes
+    contents:
+      - trace.Traceable  # 1 method(s)
+
+  - title: Protocols
+    desc: Protocol / structural-typing interfaces
+    contents:
+      - distributions.Distribution  # 1 method(s)
+      - output_analysis.AlgorithmObserver  # 2 method(s)
+      - output_analysis.ReplicationObserver  # 1 method(s)
+      - output_analysis.ReplicationsAlgorithmModelAdapter  # 1 method(s)
+
+  - title: Functions
+    desc: Utility functions
+    contents:
+      - datasets.load_banks_et_al_nspp
+      - distributions.is_integer
+      - distributions.is_non_negative
+      - distributions.is_numeric
+      - distributions.is_ordered_pair
+      - distributions.is_ordered_triplet
+      - distributions.is_positive
+      - distributions.is_positive_array
+      - distributions.is_probability
+      - distributions.is_probability_vector
+      - distributions.spawn_seeds
+      - distributions.validate
+      - output_analysis.confidence_interval_method
+      - output_analysis.plotly_confidence_interval_method
+      - time_dependent.nspp_plot
+      - time_dependent.nspp_simulation
+
+  - title: Constants
+    desc: Module-level constants and data
+    contents:
+      - datasets.FILE_NAME_NSPP_1
+      - datasets.PATH_NSPP_1
+      - distributions.T
+      - output_analysis.ALG_INTERFACE_ERROR
+      - output_analysis.OBSERVER_INTERFACE_ERROR
+      - trace.CONFIG_ERROR
+      - trace.DEFAULT_DEBUG
+
+  - title: Other
+    desc: Additional exports
+    contents:
+      - ovs
+
+# Site URL
+# --------
+# Canonical address of the deployed documentation site.
+# Required for subdirectory deployments, skills page install commands,
+# .well-known/ discovery, and sitemaps.
+# site_url: "https://your-org.github.io/your-package/"
+
+# Site Settings
+# -------------
+# site:
+#   theme: flatly              # Quarto theme (default: flatly)
+#   toc: true                  # Show table of contents (default: true)
+#   toc-depth: 2               # TOC heading depth (default: 2)
+#   toc-title: On this page    # TOC title (default: "On this page")
+
+navbar_style: prism
+
+# Jupyter Kernel
+# --------------
+# Jupyter kernel to use for executing code cells in .qmd files.
+# This is set at the project level so it applies to all pages, including
+# auto-generated API reference pages. Can be overridden in individual .qmd
+# file frontmatter if needed for special cases.
+jupyter: python3
+
+# CLI Documentation
+# -----------------
+# cli:
+#   enabled: true              # Enable CLI documentation
+#   module: my_package.cli     # Module containing Click commands
+#   name: cli                  # Name of the Click command object

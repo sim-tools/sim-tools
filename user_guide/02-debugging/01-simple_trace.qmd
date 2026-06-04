@@ -1,0 +1,321 @@
+---
+title: A simple trace
+jupyter: python3
+---
+
+
+For debugging code based models such as those using `simpy` it is sometimes useful to do informal debugging by printing events as the simulation executes.  Python's built in `print` function can be used. Alternatively `sim-tools.trace` can be used.
+
+For small models the `trace` module offers the function `trace()`. It provides easy to use functionality with defaults.
+
+This notebooks illustrates simple tracing of simulation using some small models.
+
+## 1. Imports
+
+
+```{python}
+# pylint: disable=missing-module-docstring,invalid-name
+
+import itertools
+from typing import Optional
+
+import simpy
+from sim_tools.trace import trace
+from sim_tools.distributions import Exponential
+```
+
+## 2. A trace using default colouring
+
+In this first example we simulate patient arrivals to a treatment facility.  Arrivals are at random with a mean inter-arrival time of 5 minutes.
+Rather than using python's print command we instead make use of `trace`. We pass the following arguments:
+
+1. `time`: the current simulation time
+2. `debug`: if we toggle to `False` this hides the trace or `True` to show (default = False)
+3. `msg`: the string message to display. This can include emoji 
+4. `process_id`: an optional string to identify the process. Ideally this should be unique to aid debugging.
+
+```{python}
+def patient_generator(
+    env: simpy.Environment, dist: Exponential, debug: Optional[bool] = False
+):
+    """Generate patient arrivals to the treatment clinic"""
+    for patient_count in itertools.count(1):
+        # sample inter-arrival time
+        iat = dist.sample()
+        yield env.timeout(iat)
+        trace(time=env.now, debug=debug, msg="new arrival 🤒", identifier=patient_count)
+```
+
+```{python}
+# script to run model
+DEBUG = True
+SEED = 42
+arrival_dist = Exponential(5.0, random_seed=SEED)
+env = simpy.Environment()
+env.process(patient_generator(env, arrival_dist, DEBUG))
+env.run(50.0)
+```
+
+## 3. Configure colouring of output
+
+
+In `trace` the `config` parameter is a user settable dictionary object. It can be used to change the colour of text in the trace.  We will first show a simple demonstration of setting options. and then use to illustrate how it is useful in practice.
+
+The default`config` is
+
+```python
+config = {
+    "class":None, 
+    "class_colour":"bold blue", 
+    "time_colour":'bold blue', 
+    "time_dp":2,
+    "message_colour":'black',
+    "tracked":None
+}
+```
+
+* `class`: a string representing the class or type of trace event occuring.  This could be a process type for example, "patient", "stroke patient" or "arrival" or "treatment".
+* `class_colour`: choose a colour to display the class name e.g. "green" or "bold green"
+* `time_colour`: choose a colour to display the time
+* `time_dp`: choose the number of decimal places for time (default=2)
+* `message_color`: colour of the message text
+* `tracked`: a list containing identifiers (e.g. `[1, 2, 25]`) that limits what is tracked.  Works with `identiifier` parameters of `trace`
+
+> Note: you do not need to set all of the parameters.  Just set what you need and the defaults will be used for other parameters.
+
+```{python}
+def get_config():
+    """Returns a custom trace configuration"""
+    config = {
+        "class": "Arrival",
+        "class_colour": "green",
+        "time_colour": "bold black",
+        "message_colour": "red",
+    }
+    return config
+
+
+# pylint: disable=function-redefined
+def patient_generator(
+    env: simpy.Environment, dist: Exponential, debug: Optional[bool] = False
+):
+    """Generate patient arrivals to the treatment clinic"""
+    for patient_count in itertools.count(1):
+        # sample inter-arrival time
+        iat = dist.sample()
+        yield env.timeout(iat)
+        trace(
+            time=env.now,
+            debug=debug,
+            msg="new patient 🤒",
+            identifier=patient_count,
+            config=get_config(),
+        )
+```
+
+```{python}
+# script to run model
+DEBUG = True
+SEED = 42
+arrival_dist = Exponential(5.0, random_seed=SEED)
+env = simpy.Environment()
+env.process(patient_generator(env, arrival_dist, DEBUG))
+env.run(50.0)
+```
+
+## 4. Configuring multiple processes/ activities
+
+We modify the `simpy` example to include a `treatment` process.  We wish for treatment events to be easily seen in the trace output.  We therefore modify `get_config()` as follows:
+
+```{python}
+def get_config():
+    """Returns a custom trace configuration for arrivals"""
+    config = {
+        "arrivals": {
+            "class": "Patient",
+            "class_colour": "green",
+            "time_colour": "bold black",
+            "message_colour": "green",
+        },
+        "treatment": {
+            "class": "Patient",
+            "class_colour": "magenta",
+            "time_colour": "bold black",
+            "message_colour": "magenta",
+        },
+    }
+
+    return config
+```
+
+The function now returns a nested dictionary containing trace configurations for both arrivals and treatment processes.
+
+The modified `simpy` model is below.  We have included an `Experiment` class to hold our simulation input parameters. Note this has also been used to store the debug toggle.  This reduces the number of arguments each function requires.
+
+When we run the new model is it simple to distinguish between the trace for arrivals and the treatment.  
+
+> Note: this could be further fine tuned by manipulating which processes have `debug=True`
+
+```{python}
+# pylint: disable=too-few-public-methods
+class Experiment:
+    """Parameter container"""
+
+    def __init__(
+        self, mean_iat: float, mean_service: float, debug: Optional[bool] = False
+    ):
+        self.arrival_dist = Exponential(mean_iat, random_seed=42)
+        self.treat_dist = Exponential(mean_service, random_seed=101)
+        self.debug = debug
+
+
+def treatment(env: simpy.Environment, exp: Experiment, patient_id: int):
+    """Simulate a uncapacitated treatment process"""
+    trace(
+        time=env.now,
+        debug=exp.debug,
+        msg="enter treatment 👩🏻‍⚕️",
+        identifier=patient_id,
+        config=get_config()["treatment"],
+    )
+
+    # delay
+    service_time = exp.treat_dist.sample()
+    yield env.timeout(service_time)
+
+    trace(
+        time=env.now,
+        debug=exp.debug,
+        msg="treatment complete ⛔",
+        identifier=patient_id,
+        config=get_config()["treatment"],
+    )
+
+
+# pylint: disable=function-redefined
+def patient_generator(env: simpy.Environment, exp: Experiment):
+    """Generate patient arrivals to the treatment clinic"""
+    for patient_count in itertools.count(1):
+        # sample inter-arrival time
+        iat = exp.arrival_dist.sample()
+        yield env.timeout(iat)
+        trace(
+            time=env.now,
+            debug=exp.debug,
+            msg="new arrival 🤒",
+            identifier=patient_count,
+            config=get_config()["arrivals"],
+        )
+        env.process(treatment(env, exp, patient_count))
+```
+
+```{python}
+# script to run model
+DEBUG = True
+experiment = Experiment(5.0, 10.0, DEBUG)
+env = simpy.Environment()
+env.process(patient_generator(env, experiment))
+env.run(40.0)
+```
+
+## Tracking
+
+Assume we wish to track patients 4 and 5.  The `config['tracking']` option accepts a list of identifiers and will limit trace output. For simple models it is best to add this as a parameter in the Experiment class.
+
+The script below declares the variable `TRACKED=[4, 5]`
+
+> Note that when there are a lot of processes to track it may be become simplier to use the object orientated interface to trace functionality.
+
+```{python}
+# pylint: disable=too-few-public-methods
+class Experiment:
+    """Parameter container"""
+
+    def __init__(
+        self,
+        mean_iat: float,
+        mean_service: float,
+        debug: Optional[bool] = False,
+        tracked: Optional[list] = None,
+    ):
+        self.arrival_dist = Exponential(mean_iat, random_seed=42)
+        self.treat_dist = Exponential(mean_service, random_seed=101)
+        self.debug = debug
+        self.tracked = tracked
+
+
+def get_config(exp: Experiment):
+    """Returns a custom trace configuration for arrivals
+    and treatment
+
+    Modified to add tracking information to each config"""
+    config = {
+        "arrivals": {
+            "class": "Patient",
+            "class_colour": "green",
+            "time_colour": "bold black",
+            "message_colour": "green",
+            "tracked": exp.tracked,
+        },
+        "treatment": {
+            "class": "Patient",
+            "class_colour": "magenta",
+            "time_colour": "bold black",
+            "message_colour": "magenta",
+            "tracked": exp.tracked,
+        },
+    }
+
+    return config
+
+
+def treatment(env: simpy.Environment, exp: Experiment, patient_id: int):
+    """Simulate a uncapacitated treatment process"""
+    trace(
+        time=env.now,
+        debug=exp.debug,
+        msg="enter treatment 👩🏻‍⚕️",
+        identifier=patient_id,
+        config=get_config(exp)["treatment"],
+    )
+
+    # delay
+    service_time = exp.treat_dist.sample()
+    yield env.timeout(service_time)
+
+    trace(
+        time=env.now,
+        debug=exp.debug,
+        msg="treatment complete ⛔",
+        identifier=patient_id,
+        config=get_config(exp)["treatment"],
+    )
+
+
+def patient_generator(env: simpy.Environment, exp: Experiment):
+    """Generate patient arrivals to the treatment clinic"""
+    for patient_count in itertools.count(1):
+        # sample inter-arrival time
+        iat = exp.arrival_dist.sample()
+        yield env.timeout(iat)
+        trace(
+            time=env.now,
+            debug=exp.debug,
+            msg="new arrival 🤒",
+            identifier=patient_count,
+            config=get_config(exp)["arrivals"],
+        )
+        env.process(treatment(env, exp, patient_count))
+```
+
+```{python}
+# script to run model
+DEBUG = True
+TRACKED = [4, 5]
+experiment = Experiment(5.0, 10.0, DEBUG, TRACKED)
+env = simpy.Environment()
+env.process(patient_generator(env, experiment))
+env.run(50.0)
+```
+
+
