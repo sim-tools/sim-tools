@@ -32,6 +32,15 @@ dependencies = [
 
 ]
 
+[dependency-groups]
+dev = [
+  "great-docs",
+  "pytest",
+  "ruff",
+  "simpy",
+  "treat-sim"
+]
+
 [project.urls]
 Homepage = "https://github.com/sim-tools/sim-tools"
 "Bug Tracker" = "https://github.com/sim-tools/sim-tools/issues"
