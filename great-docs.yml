@@ -197,3 +197,6 @@ jupyter: python3
 #   enabled: true              # Enable CLI documentation
 #   module: my_package.cli     # Module containing Click commands
 #   name: cli                  # Name of the Click command object
+
+mcp:
+  enabled: false
