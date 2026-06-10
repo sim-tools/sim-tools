@@ -37,9 +37,7 @@ REGISTRY_DISTS = [
     },
     {
         "name": "CombinationDistribution",
-        "params": {
-            "dists": [dists.FixedDistribution(10), dists.FixedDistribution(5)]
-        },
+        "params": {"dists": [dists.FixedDistribution(10), dists.FixedDistribution(5)]},
     },
     {
         "name": "GroupedContinuousEmpirical",
@@ -151,7 +149,7 @@ def test_batch_sorting():
     """Check that DistributionRegistry.create_batch() sorting works."""
     d_config = {
         "b_dist": {"class_name": "Exponential", "params": {"mean": 1}},
-        "a_dist": {"class_name": "Exponential", "params": {"mean": 1}}
+        "a_dist": {"class_name": "Exponential", "params": {"mean": 1}},
     }
     d_sorted = dists.DistributionRegistry.create_batch(d_config, sort=True)
     d_unsorted = dists.DistributionRegistry.create_batch(d_config, sort=False)
@@ -159,13 +157,16 @@ def test_batch_sorting():
     assert list(d_unsorted.keys()) == ["b_dist", "a_dist"]
 
 
-@pytest.mark.parametrize("conf, should_pass", [
-    ({"class_name": "Exponential", "params": {"mean": 1}}, True),
-    ({"class_name": "Exponential"}, False),
-    ({"params": {"mean": 1}}, False),
-    ({"class_name": "Exponential", "params": {"mean": 1}, "foo": 123}, False),
-    ({"CLASS_NAME": "Exponential", "params": {"mean": 1}}, False),
-])
+@pytest.mark.parametrize(
+    "conf, should_pass",
+    [
+        ({"class_name": "Exponential", "params": {"mean": 1}}, True),
+        ({"class_name": "Exponential"}, False),
+        ({"params": {"mean": 1}}, False),
+        ({"class_name": "Exponential", "params": {"mean": 1}, "foo": 123}, False),
+        ({"CLASS_NAME": "Exponential", "params": {"mean": 1}}, False),
+    ],
+)
 def test_batch_validation(conf, should_pass):
     """
     Check that DistributionRegistry.create_batch() warns for unsuitable

@@ -2,6 +2,7 @@ name: sim_tools
 channels:
   - conda-forge
 dependencies:
+  - great-docs=0.13.0
   - jupyter-book=1.0.3
   - jupyterlab=4.3.5
   - jupyterlab-plotly-extension=1.0.0
@@ -14,6 +15,7 @@ dependencies:
   - pylint=3.3.4
   - pytest=8.3.4
   - python=3.11
+  - ruff=0.15.15
   - scipy=1.15.1
   - simpy=4.1.1
   - pip:

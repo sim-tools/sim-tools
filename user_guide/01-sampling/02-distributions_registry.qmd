@@ -1,0 +1,252 @@
+---
+title: Using the DistributionRegistry
+jupyter: python3
+---
+
+
+## Overview
+
+This notebook demonstrates how to use the `DistributionRegistry` class for managing probability distributions in `sim-tools`.
+
+The `DistributionRegistry` aims to support simulation modellers set their models up to easily be parameterised with statistical distributions.  It offers the following features:
+
+- **Configuration flexibility**: Define distributions through simple dictionaries or JSON files
+- **Reproducibility**: Generate statistically independent random streams with controlled seeds
+- **Extensibility**: Easily add new distribution types without changing existing code
+- **Batch creation**: Create multiple related distributions with a single command
+
+The approach is useful for building discrete event simulations, Monte Carlo analyses, statistical models, or any system that requires configurable random behavior. The registry pattern provides a clean, maintainable approach that separates configuration from implementation.
+
+In this notebook, we'll cover:
+
+1. Importing the `DistributionRegistry`.
+2. Creating distributions from configuration data.
+3. Working with JSON configurations.
+4. Define and add your own distribution to the registry.
+5. Using the `sort` argument in `create_batch`.
+
+## 1. Importing
+
+The `DistributionRegistry` is part of the `distributions` module.  You can think of the registry as a factory that takes distribution orders and delivers ready to use distribution objects.  We do not need to create an instance of the `DistributionRegistry`. Instead we will use its class methods.
+
+
+```{python}
+# pylint: disable=missing-module-docstring,invalid-name
+import json
+
+import numpy as np
+from sim_tools.distributions import DistributionRegistry
+```
+
+## 2. Creating batches of distributions from configuration data
+
+`DistributionRegistry` allows a user to create a batch of statistical distributions in one go using `create_batch`.  A user can either pass in a `dict` or a `list`.
+
+> `DistributionRegistry` sets up non-overlapping pseudo random number streams for the distributions using the `distributions.spawn_seeds()` function. For reproducibile results a user should se the `main_seed` parameter of `create_batch`.
+
+```{python}
+# Dictionary-based configuration (named distributions)
+config_dict = {
+    "customer_arrivals": {"class_name": "Exponential", "params": {"mean": 4.5}},
+    "service_times": {"class_name": "Normal", "params": {"mean": 10.0, "sigma": 2.0}},
+    "satisfaction_scores": {
+        "class_name": "Triangular",
+        "params": {"low": 1.0, "high": 10.0, "mode": 8.0},
+    },
+}
+
+# Create all distributions with a master seed
+distributions = DistributionRegistry.create_batch(config_dict, main_seed=12345)
+
+# Access distributions by name
+arrivals = distributions["customer_arrivals"]
+service = distributions["service_times"]
+satisfaction = distributions["satisfaction_scores"]
+
+print("Created distributions:")
+for name, dist in distributions.items():
+    print(f"- {name}: {dist}")
+
+# Generate samples from all distributions
+for name, dist in distributions.items():
+    print(f"{name} samples: {dist.sample()}")
+```
+
+```{python}
+# List-based configuration (unnamed distributions)
+config_list = [
+    {"class_name": "Exponential", "params": {"mean": 2.0}},
+    {"class_name": "Uniform", "params": {"low": 0.0, "high": 1.0}},
+]
+
+# Create distributions from the list
+dist_list = DistributionRegistry.create_batch(config_list, main_seed=54321)
+
+# Access by index
+print("\nList-based distributions:")
+for i, dist in enumerate(dist_list):
+    print(f"Distribution {i}: {dist}")
+    print(f"Sample: {dist.sample()}")
+```
+
+## 3. Working with JSON Configurations
+
+JSON is a natural format for storing distribution configurations for your model.  First we will create an example JSON file.
+
+```{python}
+# Example JSON configuration
+json_config = """
+{
+    "simulation_parameters": {
+        "customer_arrivals": {
+            "class_name": "Exponential",
+            "params": {"mean": 5.0}
+        },
+        "checkout_times": {
+            "class_name": "Lognormal",
+            "params": {"mean": 3.5, "stdev": 0.8}
+        },
+        "browse_duration": {
+            "class_name": "Triangular",
+            "params": {"low": 2.0, "high": 45.0, "mode": 15.0}
+        },
+        "purchase_amount": {
+            "class_name": "Normal",
+            "params": {"mean": 75.0, "sigma": 2.0}
+        }
+    }
+}
+"""
+
+# Parse the JSON
+config_data = json.loads(json_config)
+
+# write JSON to file
+with open("example_sim_config.json", "w", encoding="utf-8") as f:
+    json.dump(json_config, f, indent=4)
+```
+
+Let's assume we want to run out model with the distributions specified in the JSON file.  We need to
+
+1. Load and parse the JSON file
+2. Extract the simulation parameters
+3. Batch create the distributions
+
+```{python}
+# read in file
+with open("example_sim_config.json", "r", encoding="utf-8") as f:
+    config = json.load(f)
+
+# Extract the distributions configuration
+distributions_config = config_data["simulation_parameters"]
+
+# Create all distributions with reproducible seed
+distributions = DistributionRegistry.create_batch(distributions_config, main_seed=42)
+
+# Now we can use these distributions in a simulation
+print("JSON-configured distributions:")
+for name, dist in distributions.items():
+    print(f"- {name}: {dist}")
+    print(f"  Sample: {dist.sample()}")
+```
+
+### Using the built in JSON template
+
+`DistributionRegistry` also contains a built in template to enable quick setup of the distributions you want to use in your model.  Access it via the `get_template()` function. Set `format` to `"json"`.  
+
+> Note: The template contains all distributions in the registry with example parameters. An example of each type is included once. You will need to modify it before passing to `batch_create`.
+
+```{python}
+# Generate a JSON template
+template_json = DistributionRegistry.get_template(format="json")
+print("\nJSON Template (first 200 characters):")
+print(template_json[:200] + "...")
+```
+
+```{.python}
+# You can save the template to a file for reference
+with open("distribution_template.json", "w", encoding="utf-8") as f:
+    f.write(template_json)
+```
+
+## 4. Define and add your own distribution to the registry
+
+If `sim_tools` does not contain the distribution you need you can still make use of the `DistributionRegistry` by registering your own custom class.  Instances of the class can then be created in the same way as standard `sim_tools` distributions.
+
+```{python}
+# Define and register common probability distributions
+@DistributionRegistry.register()
+class CustomDistribution:
+    """My own custom distribution"""
+
+    def __init__(self, param1, param2, random_seed=None):
+        """Initialise"""
+        self.param1 = param1
+        self.param2 = param2
+        self.rng = np.random.default_rng(random_seed)
+
+    def __repr__(self):
+        """Print parameters."""
+        return f"CustomDistribution({self.param1}, {self.param2})"
+
+    def sample(self):
+        """Sample - replace with any sampling mechanism."""
+        return 1.0
+```
+
+```{python}
+# Dictionary-based configuration (named distributions)
+config_dict = {
+    "customer_arrivals": {"class_name": "Exponential", "params": {"mean": 4.5}},
+    "service_times": {
+        "class_name": "CustomDistribution",
+        "params": {"param1": 10.0, "param2": 2.0},
+    },
+    "treatment_times": {
+        "class_name": "CustomDistribution",
+        "params": {"param1": 25.0, "param2": 3.0},
+    },
+}
+
+# Create all distributions with a master seed
+distributions = DistributionRegistry.create_batch(config_dict, main_seed=12345)
+
+print("Created distributions:")
+for name, dist in distributions.items():
+    print(f"- {name}: {dist}")
+
+# Generate samples from all distributions
+for name, dist in distributions.items():
+    print(f"{name} samples: {dist.sample()}")
+```
+
+## 5. `sort` argument in `DistributionRegistry.create_batch()`
+
+The `sort` argument controls whether named distributions (when a config dictionary is used) are ordered by key before assigning random seeds.
+
+If `sort=True` (default), distributions always get the same seeds as long as their names/definitions are unchanged, regardless of insertion order - improving reproducibility when config order is unstable (e.g., from JSON files).
+
+If `sort=False`, seeds are based directly on the config's item order—this can result in different streams if dictionary ordering changes.
+
+**Example:**
+
+```{python}
+config = {
+    "B": {"class_name": "Exponential", "params": {"mean": 2.0}},
+    "A": {"class_name": "Normal", "params": {"mean": 10.0, "sigma": 1.0}},
+}
+
+# Example with sort=True (default)
+dists_sorted = DistributionRegistry.create_batch(config, main_seed=42, sort=True)
+print("Sort=True: ", dists_sorted)
+
+# Example with sort=False (order depends on dict)
+dists_unsorted = DistributionRegistry.create_batch(config, main_seed=42, sort=False)
+print("Sort=False: ", dists_unsorted)
+```
+
+**Why use `sort=True`?**
+
+* **Ensures reproducibility**: named distributions always get the same random seeds, regardless of how the configuration dictionary is ordered.
+* **Avoids subtle, hard-to-diagnose bugs**: Without sorting, changing the order of keys (e.g., by editing a JSON file) can silently change the random seeds, and thus your simulation results, unless you use `sort=True`.
+

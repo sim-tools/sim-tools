@@ -1,0 +1,13 @@
+---
+title: User Guide
+---
+
+The User Guide is organised into four themes:
+
+* **Sampling:** Generate reproducible random input for your models.
+
+* **Debugging:** Lightweight tracing to help you understand and fix simulation logic.
+
+* **Output analysis:** Tools to help you plan the number of replications.
+
+* **Optimisation:** Optimisation via simulation procedures.

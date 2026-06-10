@@ -11,7 +11,7 @@ import numpy as np
 
 
 # pylint: disable=too-many-instance-attributes
-class OCBAM():
+class OCBAM:
     """
     Optimal Computer Budget Allocation Top M (OCBA-m)
 
@@ -26,6 +26,7 @@ class OCBAM():
 
 
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, budget, delta, n_0=5, m=2, obj="min"):
         """
@@ -82,8 +83,10 @@ class OCBAM():
             self._min = False
 
     def __str__(self):
-        return (f"OCBA(n_designs={self._k}, m={self._m}, budget={self._T}, " +
-                f"delta={self._delta}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"OCBA(n_designs={self._k}, m={self._m}, budget={self._T}, "
+            + f"delta={self._delta}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def solve(self):
         """
@@ -91,9 +94,7 @@ class OCBAM():
         include negatation! What am I doing wrong!
         """
 
-        new_allocations = np.full(shape=self._k,
-                                  fill_value=self._n_0,
-                                  dtype=np.int16)
+        new_allocations = np.full(shape=self._k, fill_value=self._n_0, dtype=np.int16)
 
         while self._allocations.sum() < self._T:
             # simulate systems using new allocation of budget
@@ -108,9 +109,7 @@ class OCBAM():
             # deltas *= self._negate
 
             # allocate
-            new_allocations = np.full(shape=self._k,
-                                      fill_value=0,
-                                      dtype=np.int16)
+            new_allocations = np.full(shape=self._k, fill_value=0, dtype=np.int16)
 
             for _ in range(self._delta):
                 values = np.divide(
@@ -139,8 +138,7 @@ class OCBAM():
         s_means = self._means[order]
 
         return (
-            (s_ses[k - m + 1] * s_means[k - m]) +
-            (s_ses[k - m] * s_means[k - m + 1])
+            (s_ses[k - m + 1] * s_means[k - m]) + (s_ses[k - m] * s_means[k - m + 1])
         ) / (s_ses[k - m] + s_ses[k - m + 1])
 
     def feedback(self, *args):
@@ -185,8 +183,7 @@ class OCBAM():
                 observation - abs(new_mean)
             )
             self._vars[design_index] = self._sq[design_index] / (n - 1)
-            self._ses[design_index] = (
-                np.sqrt(self._vars[design_index]) / np.sqrt(n))
+            self._ses[design_index] = np.sqrt(self._vars[design_index]) / np.sqrt(n)
 
         self._means[design_index] = new_mean
 
@@ -212,7 +209,7 @@ def get_ranks(array):
     return ranks
 
 
-class OCBA():
+class OCBA:
     """
     Optimal Computer Budget Allocation (OCBA)
 
@@ -231,6 +228,7 @@ class OCBA():
     Page 215 - for example C code.
 
     """
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, budget, delta, n_0=5, obj="min"):
         """
@@ -262,8 +260,7 @@ class OCBA():
             raise ValueError("n_0 must be >= 5")
 
         if (budget - (n_designs * n_0)) % delta != 0:
-            raise ValueError(
-                "(budget - (n_designs * n_0)) must be multiple of delta")
+            raise ValueError("(budget - (n_designs * n_0)) must be multiple of delta")
 
         types = ["min", "max"]
         if obj not in types:
@@ -292,8 +289,10 @@ class OCBA():
             self._negate = -1.0
 
     def __str__(self):
-        return (f"OCBA(n_designs={self._k}, budget={self._T}, " +
-                f"delta={self._delta}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"OCBA(n_designs={self._k}, budget={self._T}, "
+            + f"delta={self._delta}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def reset(self):
         """
@@ -355,8 +354,7 @@ class OCBA():
 
         # Part 1: Ratio N_i / N_s
         # 'select' just excludes best and second best from arraywise calcs
-        select = [
-            i for i in range(self._k) if i not in [best_index, s_best_index]]
+        select = [i for i in range(self._k) if i not in [best_index, s_best_index]]
 
         temp = (self._means[best_index] - self._means[s_best_index]) / (
             self._means[best_index] - self._means[select]
@@ -383,8 +381,9 @@ class OCBA():
 
             ratio_s = (more_runs * self._ratios).sum()
 
-            additional_runs[more_runs] = (
-                budget_to_allocate / ratio_s) * self._ratios[more_runs]
+            additional_runs[more_runs] = (budget_to_allocate / ratio_s) * self._ratios[
+                more_runs
+            ]
 
             # additional_runs = additional_runs.astype(int)
             additional_runs = np.around(additional_runs).astype(int)

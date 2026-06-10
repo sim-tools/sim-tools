@@ -7,7 +7,7 @@ import numpy as np
 
 
 # pylint: disable=too-many-instance-attributes
-class ManualOptimiser():
+class ManualOptimiser:
     """
     A class to manually run individual and multiple replications
     from competiting simulated designs of a system.
@@ -38,8 +38,10 @@ class ManualOptimiser():
         self.allocations = np.zeros(n_designs, np.int32)
 
     def __str__(self):
-        return (f"ManualOptimiser(model={self._model.__str__()}, " +
-                f"n_designs={self._n_designs}, verbose={self.verbose})")
+        return (
+            f"ManualOptimiser(model={self._model.__str__()}, "
+            + f"n_designs={self._n_designs}, verbose={self.verbose})"
+        )
 
     def simulate_designs(self, design_indexes=None, replications=1):
         """
@@ -105,18 +107,14 @@ class ManualOptimiser():
         """
         n = self.allocations[design_index]
         current_mean = self.means[design_index]
-        new_mean = ((n - 1) / float(n)) * current_mean + (
-            1 / float(n)
-        ) * observation
+        new_mean = ((n - 1) / float(n)) * current_mean + (1 / float(n)) * observation
 
         if n > 1:
             self._sq[design_index] += (observation - abs(current_mean)) * (
                 observation - abs(new_mean)
             )
             self.vars[design_index] = self._sq[design_index] / (n - 1)
-            self._ses[design_index] = np.sqrt(
-                self.vars[design_index]
-            ) / np.sqrt(n)
+            self._ses[design_index] = np.sqrt(self.vars[design_index]) / np.sqrt(n)
 
         self.means[design_index] = new_mean
 
@@ -211,7 +209,7 @@ def custom_gaussian_model(mus, sigmas):
     return BanditCasino(bandits)
 
 
-class GaussianBandit():
+class GaussianBandit:
     """
     Classic one armed bandit gambling machine.
 
@@ -263,10 +261,11 @@ class GaussianBandit():
         self._total_reward = 0
 
 
-class BanditCasino():
+class BanditCasino:
     """
     Bandit Casino
     """
+
     def __init__(self, bandits):
         """
         Casino constructor method

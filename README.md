@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/TomMonks/sim-tools"><img src="./docs/img/simtools_logo_purple.png" alt="Sim-tools" width="300"></a>
+  <a href="https://github.com/sim-tools/sim-tools"><img src="./assets/simtools_logo_purple.png" alt="Sim-tools" width="300"></a>
 </h1>
 
 <p align="center">

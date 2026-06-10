@@ -60,20 +60,22 @@ class NSPPThinning:
         """
 
         # -- Defensive parameter check added by TM as part of fix v1.0.4 --
-    
+
         # data must be a dataframe
         if not isinstance(data, pd.DataFrame):
-            raise TypeError(f"Data should be a DataFrame, but got {type(data).__name__}")
-        
-        # Check required columns t and mean_iat are provided. 
+            raise TypeError(
+                f"Data should be a DataFrame, but got {type(data).__name__}"
+            )
+
+        # Check required columns t and mean_iat are provided.
         required_cols = ["t", "mean_iat"]
         missing_cols = [col for col in required_cols if col not in data.columns]
         if missing_cols:
             raise ValueError(f"Missing required columns: {missing_cols}")
-        
+
         # empty dataframe or only a single row.
         if data.empty:
-            raise ValueError(f"Dataframe does not contain any rows. Add at least 2.")
+            raise ValueError("Dataframe does not contain any rows. Add at least 2.")
         elif len(data) == 1:
             msg = "Dataframe contains a single time point. Add more of use Exponential class."
             raise ValueError(msg)
@@ -120,10 +122,9 @@ class NSPPThinning:
 
         # Return class name with both data and interval information
         return (
-            f"{self.__class__.__name__}(data={data_str}, " +
-            f"interval={self.interval})"
+            f"{self.__class__.__name__}(data={data_str}, "
+            + f"interval={self.interval})"
         )
-    
 
     def sample(self, simulation_time: float) -> float:
         """
@@ -133,16 +134,16 @@ class NSPPThinning:
         Parameters
         ----------
         simulation_time: float
-            The current simulation time. 
+            The current simulation time.
 
         Returns
         -------
         float
             The inter-arrival time
         """
-        
+
         interarrival_time = 0.0
-        
+
         for self.rejects_last_sample in itertools.count(start=0):
             # sample the next inter-arrival time and calculate clock time
             interarrival_time += self.arr_rng.exponential(self.min_iat)
@@ -201,7 +202,6 @@ def nspp_simulation(
 
     # multiple replications
     for rep in range(n_reps):
-
         # method for producing n non-overlapping streams
         seed_sequence = np.random.SeedSequence(rep)
 
@@ -216,8 +216,7 @@ def nspp_simulation(
         # if no run length has been set....
         if run_length is None:
             run_length = (
-                arrival_profile["t"].iloc[len(arrival_profile) - 1] +
-                nspp_rng.interval
+                arrival_profile["t"].iloc[len(arrival_profile) - 1] + nspp_rng.interval
             )
 
         # list - each item is an interval in the arrival profile
@@ -230,9 +229,8 @@ def nspp_simulation(
             if simulation_time < run_length:
                 # data collection: add one to count for hour of the day
                 # note list NSPPThinning this assume equal intervals
-                interval_of_day = (
-                    int(simulation_time // nspp_rng.interval) %
-                    len(arrival_profile)
+                interval_of_day = int(simulation_time // nspp_rng.interval) % len(
+                    arrival_profile
                 )
                 interval_samples[interval_of_day] += 1
 
@@ -280,8 +278,7 @@ def nspp_plot(
     # is it a dataframe
     if not isinstance(arrival_profile, pd.DataFrame):
         raise ValueError(
-            "arrival_profile expected pd.DataFrame " +
-            f"got {type(arrival_profile)}"
+            "arrival_profile expected pd.DataFrame " + f"got {type(arrival_profile)}"
         )
 
     # all columns are present
@@ -309,9 +306,7 @@ def nspp_plot(
 
     # plot in this case returns a 2D line plot object
     _ = ax.plot(arrival_profile["t"], interval_means, label="Mean")
-    _ = ax.fill_between(
-        arrival_profile["t"], lower, upper, alpha=0.2, label="+-1SD"
-    )
+    _ = ax.fill_between(arrival_profile["t"], lower, upper, alpha=0.2, label="+-1SD")
 
     # chart appearance
     _ = ax.legend(loc="best", ncol=3)
