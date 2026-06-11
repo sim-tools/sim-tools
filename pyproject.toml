@@ -35,6 +35,7 @@ dependencies = [
 [dependency-groups]
 dev = [
   "great-docs",
+  "lintquarto",
   "pytest",
   "ruff",
   "simpy",
@@ -56,3 +57,11 @@ include = [
 
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.10", "3.11", "3.12", "3.13"]
+
+[tool.ruff]
+line-length=88
+format.quote-style="double"
+lint.select = [
+    "F",    # pyflakes
+    "E",    # pycodestyle
+]

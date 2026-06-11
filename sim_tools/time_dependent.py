@@ -77,7 +77,10 @@ class NSPPThinning:
         if data.empty:
             raise ValueError("Dataframe does not contain any rows. Add at least 2.")
         elif len(data) == 1:
-            msg = "Dataframe contains a single time point. Add more of use Exponential class."
+            msg = (
+                "Dataframe contains a single time point. Add more of use "
+                + "Exponential class."
+            )
             raise ValueError(msg)
 
         # -- end of defensive code --

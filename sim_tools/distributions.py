@@ -1625,7 +1625,7 @@ class RawContinuousEmpirical:
             The main title of the plot.
         xaxis_title : Optional[str], default="Data Value"
             The title for the x-axis.
-        yaxis_title : Optional[str], default="Cumulative Probability (P(X <= x))"  # pylint: disable=line-too-long
+        yaxis_title : Optional[str], default="Cumulative Probability (P(X <= x))"
             The title for the y-axis.
         line_color : Optional[str], default=None
             Color of the ECDF line (Plotly default if None). Accepts CSS color
@@ -1719,7 +1719,7 @@ class RawContinuousEmpirical:
             The main title of the plot.
         xaxis_title : Optional[str], default="Data Value"
             The title for the x-axis.
-        yaxis_title : Optional[str], default="Cumulative Probability (Sampler's CDF)"  # pylint: disable=line-too-long
+        yaxis_title : Optional[str], default="Cumulative Probability (Sampler's CDF)"
             The title for the y-axis.
         line_color : Optional[str], default=None
             Color of the line segments (Plotly default if None). Examples:

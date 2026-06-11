@@ -55,12 +55,13 @@ Open in your browser:
 great-docs preview
 ```
 
-## Linting
+## Style
 
-To lint the repository, run:
+We use Ruff, with the configuration defined in `pyproject.toml`. To lint and format the repository, run:
 
 ```bash
-bash lint.sh
+ruff format
+ruff check --fix .
 ```
 
 NumPy style docstrings are used.
