@@ -96,34 +96,4 @@ If you use sim-tools for research, a practical report, education or any reason p
 
 ## Contributing to sim-tools
 
-Please fork Dev, make your modifications, run the unit tests and submit a pull request for review.
-
-Development environment:
-
-* `conda env create -f binder/environment.yml`
-
-* `conda activate sim_tools`
-
-**All contributions are welcome!**
-
-## Tips
-
-Once in the `sim_tools` environment, you can run tests using the following command:
-
-```
-pytest
-```
-
-To view the documentation, navigate to the top level directory of the code repository in your terminal and issue the following command to build the Jupyter Book:
-
-```
-jb build docs/
-```
-
-To lint the repository, run:
-
-```
-bash lint.sh
-```
-
-NumPy style docstrings are used.
+**All contributions are welcome!** Please see `CONTRIBUTING.md` for instructions on how to contribute.
