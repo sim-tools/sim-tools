@@ -57,11 +57,17 @@ great-docs preview
 
 ## Style
 
-We use Ruff, with the configuration defined in `pyproject.toml`. To lint and format the repository, run:
+We use Ruff to the lint Python files, with the configuration defined in `pyproject.toml`. To lint and format the repository, run:
 
 ```bash
 ruff format
 ruff check --fix .
+```
+
+To lint Python code in the Quarto files, we use `lintquarto`, with configuration likewise in `pyproject.toml`. To run:
+
+```bash
+lintquarto
 ```
 
 NumPy style docstrings are used.

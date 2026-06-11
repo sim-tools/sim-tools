@@ -65,3 +65,11 @@ lint.select = [
     "F",    # pyflakes
     "E",    # pycodestyle
 ]
+
+[tool.lintquarto]
+linters = [
+    "ruff",
+]
+paths = [
+    ".",
+]
