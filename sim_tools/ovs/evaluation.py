@@ -13,7 +13,6 @@ import pandas as pd
 from sklearn.model_selection import ParameterGrid
 
 
-# pylint: disable=too-few-public-methods
 class AgentSimulation:
     """
     Encapsulates a Monte-Carlo simulation framework for agents in
@@ -49,7 +48,6 @@ class AgentSimulation:
         return best_indexes
 
 
-# pylint: disable=too-few-public-methods
 class ExperimentResults:
     """
     Results Container for an Agent Experiment
@@ -73,7 +71,6 @@ class Experiment:
     design in an environment based on a specific objective ("max" or "min").
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self, env, procedure, best_index=0, objective="max", replications=1000
     ):
@@ -123,7 +120,6 @@ class GridExperiment:
     an agent and executing experiments for each configuration.
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, agent, environment, param_grid, best_index=0, replications=1000):
         """
         Initialises the GridExperiment with the given agent, environment, and

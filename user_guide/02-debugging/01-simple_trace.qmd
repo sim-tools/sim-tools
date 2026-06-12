@@ -14,14 +14,15 @@ This notebooks illustrates simple tracing of simulation using some small models.
 
 
 ```{python}
-# pylint: disable=missing-module-docstring,invalid-name
-
 import itertools
 from typing import Optional
 
 import simpy
-from sim_tools.trace import trace
+
 from sim_tools.distributions import Exponential
+from sim_tools.trace import trace
+
+
 ```
 
 ## 2. A trace using default colouring
@@ -95,7 +96,6 @@ def get_config():
     return config
 
 
-# pylint: disable=function-redefined
 def patient_generator(
     env: simpy.Environment, dist: Exponential, debug: Optional[bool] = False
 ):
@@ -157,7 +157,6 @@ When we run the new model is it simple to distinguish between the trace for arri
 > Note: this could be further fine tuned by manipulating which processes have `debug=True`
 
 ```{python}
-# pylint: disable=too-few-public-methods
 class Experiment:
     """Parameter container"""
 
@@ -192,7 +191,6 @@ def treatment(env: simpy.Environment, exp: Experiment, patient_id: int):
     )
 
 
-# pylint: disable=function-redefined
 def patient_generator(env: simpy.Environment, exp: Experiment):
     """Generate patient arrivals to the treatment clinic"""
     for patient_count in itertools.count(1):
@@ -227,7 +225,6 @@ The script below declares the variable `TRACKED=[4, 5]`
 > Note that when there are a lot of processes to track it may be become simplier to use the object orientated interface to trace functionality.
 
 ```{python}
-# pylint: disable=too-few-public-methods
 class Experiment:
     """Parameter container"""
 

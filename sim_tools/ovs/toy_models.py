@@ -6,7 +6,6 @@ for running models.
 import numpy as np
 
 
-# pylint: disable=too-many-instance-attributes
 class ManualOptimiser:
     """
     A class to manually run individual and multiple replications

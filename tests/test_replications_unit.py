@@ -7,8 +7,8 @@ Credit: Some of these tests are adapted from-
     https://github.com/pythonhealthdatascience/rap_template_python_des.
 """
 
-from unittest.mock import MagicMock
 import warnings
+from unittest.mock import MagicMock
 
 import numpy as np
 import pandas as pd
@@ -16,12 +16,11 @@ import pytest
 import scipy.stats as st
 
 from sim_tools.output_analysis import (
-    confidence_interval_method,
     OnlineStatistics,
     ReplicationsAlgorithm,
     ReplicationTabulizer,
+    confidence_interval_method,
 )
-
 
 # -----------------------------------------------------------------------------
 # ReplicationsAlgorithm

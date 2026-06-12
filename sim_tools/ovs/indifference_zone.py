@@ -12,7 +12,6 @@ update the variance estimate of designs at each stage.
 import numpy as np
 
 
-# pylint: disable=too-many-instance-attributes
 class KNPlusPlus:
     """
     KN++ algorithm for Ranking and Selection
@@ -26,7 +25,6 @@ class KNPlusPlus:
 
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
         Constructor method for KN++  Ranking and Selection Procedure.
@@ -281,7 +279,6 @@ class KN:
     KN - (Kim-Nelson) sequential Ranking and Selection Algorithm
     """
 
-    # pylint: disable = too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
         Constructor method for KN  Ranking and Selection Procedure.

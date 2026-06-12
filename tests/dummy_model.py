@@ -3,7 +3,6 @@
 import numpy as np
 
 
-# pylint: disable=too-few-public-methods
 class DummySimulationModel:
     """
     Dummy simulation model used for testing.

@@ -9,7 +9,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 FILE_NAME_NSPP_1 = "nspp_example1.csv"
 PATH_NSPP_1 = Path(__file__).parent.joinpath("data", FILE_NAME_NSPP_1)
 

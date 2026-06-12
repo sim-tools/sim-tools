@@ -12,12 +12,13 @@ When running a simulation, you need to decide how many replications (runs) are e
 ## Imports
 
 ```{python}
-# pylint: disable=missing-module-docstring
 from treat_sim.model import Scenario, multiple_replications
+
 from sim_tools.output_analysis import (
     confidence_interval_method,
     plotly_confidence_interval_method,
 )
+
 ```
 
 ## Confidence interval method

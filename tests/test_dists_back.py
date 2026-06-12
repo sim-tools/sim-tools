@@ -7,7 +7,6 @@ import pytest
 
 import sim_tools.distributions as dists
 
-
 SEED = 18
 
 

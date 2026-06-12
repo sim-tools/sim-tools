@@ -39,6 +39,7 @@ Validation functions raise appropriate exceptions with descriptive messages:
 """
 
 from typing import Any, Callable
+
 import numpy as np
 
 # Type for validator functions
@@ -91,7 +92,6 @@ def is_ordered_pair(
         )
 
 
-# pylint: disable=too-many-arguments,too-many-positional-arguments
 def is_ordered_triplet(
     low: Any,
     middle: Any,

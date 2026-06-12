@@ -17,8 +17,6 @@ This tutorial introduces Ranking and Selection procedures for stochastic compute
 
 
 ```{python}
-# pylint: disable=missing-module-docstring,invalid-name
-
 # run this first to install the OvS procedures so we can use them in the
 # tutorial.
 # !pip install sim-tools
@@ -26,18 +24,17 @@ This tutorial introduces Ranking and Selection procedures for stochastic compute
 
 ```{python}
 import numpy as np
-```
 
-```{python}
 from sim_tools.ovs.evaluation import Experiment
 from sim_tools.ovs.fixed_budget import OCBA, OCBAM
 from sim_tools.ovs.indifference_zone import KN, KNPlusPlus
 from sim_tools.ovs.toy_models import (
+    ManualOptimiser,
     custom_gaussian_model,
     gaussian_sequence_model,
     random_gaussian_model,
-    ManualOptimiser,
 )
+
 ```
 
 ## Simulation Models

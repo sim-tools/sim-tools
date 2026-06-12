@@ -19,18 +19,19 @@ If you make use of this code in your work **please cite the `sim-tools` as well 
 ## Imports
 
 ```{python}
-# pylint: disable=missing-module-docstring,invalid-name
-
 from collections.abc import Callable
 from typing import Optional
 
 from treat_sim.model import Scenario, single_run
+
 from sim_tools.output_analysis import (
     ReplicationsAlgorithm,
     ReplicationsAlgorithmModelAdapter,
     ReplicationTabulizer,
     plotly_confidence_interval_method,
 )
+
+
 ```
 
 ##  Replications Algorithm overview
@@ -161,7 +162,6 @@ class ReplicationsAlgorithmModelAdapter(Protocol):
 Below is an adapter for the `treat-sim` model.
 
 ```{python}
-# pylint: disable=too-few-public-methods
 class TreatSimAdapter:
     """
     treat-sim multi-metric single_run interface adapter for the

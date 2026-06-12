@@ -64,6 +64,7 @@ format.quote-style="double"
 lint.select = [
     "F",    # pyflakes
     "E",    # pycodestyle
+    "I",    # isort
 ]
 lint.per-file-ignores."user_guide/*" = [
     "F811",  # Redefinition of unused {name} from {row}

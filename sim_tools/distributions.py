@@ -1,4 +1,3 @@
-# pylint: disable=too-many-lines
 """
 Statistical distribution classes for simulation modeling.
 
@@ -84,48 +83,44 @@ All distribution parameters follow the conventions described in "Simulation
 Modeling and Analysis" (Law, 2007) where applicable.
 """
 
-import math
-
 import inspect
 import json
-
+import math
 from typing import (
-    Protocol,
-    Optional,
-    Union,
-    Tuple,
     Any,
-    List,
-    Dict,
-    runtime_checkable,
-    TypeVar,
     Callable,
+    Dict,
+    List,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+    runtime_checkable,
 )
 
 import numpy as np
-from numpy.typing import NDArray, ArrayLike
-from numpy.random import SeedSequence
-
-import plotly.graph_objects as go
 import plotly.express as px
+import plotly.graph_objects as go
+from numpy.random import SeedSequence
+from numpy.typing import ArrayLike, NDArray
 
 from sim_tools._validation import (
-    is_positive,  # > 0
+    is_integer,
     is_non_negative,  # >= 0 e.g. for location
     is_numeric,
-    is_probability,
-    is_integer,
-    validate,
     is_ordered_pair,
     is_ordered_triplet,
-    is_probability_vector,
+    is_positive,  # > 0
     is_positive_array,
+    is_probability,
+    is_probability_vector,
+    validate,
 )
 
 T = TypeVar("T", bound=type)
 
 
-# pylint: disable=too-few-public-methods
 @runtime_checkable
 class Distribution(Protocol):
     """
@@ -690,7 +685,6 @@ class DistributionRegistry:
         return template
 
 
-# pylint: disable=too-few-public-methods
 @DistributionRegistry.register()
 class Exponential:
     """
@@ -753,7 +747,6 @@ class Exponential:
         return self.rng.exponential(self.mean, size=size)
 
 
-# pylint: disable=too-few-public-methods
 @DistributionRegistry.register()
 class Bernoulli:
     """

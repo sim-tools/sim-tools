@@ -9,8 +9,8 @@ Credit: Some of these tests are adapted from-
 
 import pytest
 
-from tests.dummy_model import DummySimulationModel
 from sim_tools.output_analysis import ReplicationsAlgorithm, confidence_interval_method
+from tests.dummy_model import DummySimulationModel
 
 
 @pytest.mark.parametrize(

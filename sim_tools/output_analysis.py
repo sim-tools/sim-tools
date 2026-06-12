@@ -1,4 +1,3 @@
-# pylint: disable=too-many-lines
 """
 module: output_analysis
 
@@ -10,6 +9,7 @@ The Confidence Interval Method (tables and visualisation)
 The Replications Algorithm (Hoad et al. 2010).
 """
 
+import warnings
 from typing import (
     Any,
     Callable,
@@ -17,17 +17,15 @@ from typing import (
     List,
     Optional,
     Protocol,
-    runtime_checkable,
     Sequence,
     Union,
+    runtime_checkable,
 )
-import warnings
 
-import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 from scipy.stats import t
-
 
 OBSERVER_INTERFACE_ERROR = (
     "Observers of OnlineStatistics must implement "
@@ -42,7 +40,6 @@ ALG_INTERFACE_ERROR = (
 )
 
 
-# pylint: disable=too-few-public-methods
 @runtime_checkable
 class ReplicationObserver(Protocol):
     """
@@ -696,7 +693,6 @@ class ReplicationsAlgorithmModelAdapter(Protocol):
         """
 
 
-# pylint: disable=too-many-instance-attributes
 class ReplicationsAlgorithm:
     """
     Automatically determine the number of simulation replications needed
@@ -746,7 +742,6 @@ class ReplicationsAlgorithm:
     https://www.jstor.org/stable/40926090
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
         alpha: Optional[float] = 0.05,
@@ -919,7 +914,6 @@ class ReplicationsAlgorithm:
                     return i + 1
         return None
 
-    # pylint: disable=too-many-branches
     def select(
         self, model: ReplicationsAlgorithmModelAdapter, metrics: list[str]
     ) -> dict[str, int]:

@@ -2,18 +2,17 @@
 Classes and functions to support time dependent samplingm in DES models.
 """
 
+import itertools
 from typing import Optional, Tuple
 
-import numpy as np
-from numpy.random import SeedSequence
-import pandas as pd
 import matplotlib.pyplot as plt
-import itertools
+import numpy as np
+import pandas as pd
+from numpy.random import SeedSequence
 
 from sim_tools.distributions import DistributionRegistry
 
 
-# pylint: disable=too-few-public-methods
 @DistributionRegistry.register()
 class NSPPThinning:
     """

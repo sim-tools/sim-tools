@@ -10,7 +10,6 @@ Fixed budget algorithms
 import numpy as np
 
 
-# pylint: disable=too-many-instance-attributes
 class OCBAM:
     """
     Optimal Computer Budget Allocation Top M (OCBA-m)
@@ -27,7 +26,6 @@ class OCBAM:
 
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, budget, delta, n_0=5, m=2, obj="min"):
         """
         Constructor method for Optimal Budget Computer Allocation Top M
@@ -229,7 +227,6 @@ class OCBA:
 
     """
 
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(self, model, n_designs, budget, delta, n_0=5, obj="min"):
         """
         Constructor method for Optimal Budget Computer Allocation

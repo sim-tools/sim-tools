@@ -10,12 +10,12 @@ Credit: Some of these tests are adapted from-
 import pandas as pd
 import pytest
 
-from tests.dummy_model import DummySimulationModel
 from sim_tools.output_analysis import (
-    confidence_interval_method,
     ReplicationsAlgorithm,
     ReplicationTabulizer,
+    confidence_interval_method,
 )
+from tests.dummy_model import DummySimulationModel
 
 
 def test_consistent_methods():

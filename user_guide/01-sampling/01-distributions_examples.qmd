@@ -251,33 +251,32 @@ class PearsonV:
 The code below creates an instance of the distributions on offer. Here we used the `size` parameter in `sample()` to produce a large number of samples to allow for visualisation.
 
 ```{python}
-# pylint: disable=missing-module-docstring,invalid-name
-
 # Import package to generate plots
 import matplotlib.pyplot as plt
 
 # Import a selection of distributions
 from sim_tools.distributions import (
-    Exponential,
-    Poisson,
     Bernoulli,
-    Lognormal,
-    Normal,
-    Uniform,
-    Triangular,
-    FixedDistribution,
+    Beta,
     CombinationDistribution,
-    GroupedContinuousEmpirical,
+    DiscreteEmpirical,
     Erlang,
     ErlangK,
-    Weibull,
+    Exponential,
+    FixedDistribution,
     Gamma,
-    Beta,
-    DiscreteEmpirical,
+    GroupedContinuousEmpirical,
+    Hyperexponential,
+    Lognormal,
+    Normal,
     PearsonV,
     PearsonVI,
-    Hyperexponential,
+    Poisson,
+    Triangular,
+    Uniform,
+    Weibull,
 )
+
 ```
 
 ### Create plots

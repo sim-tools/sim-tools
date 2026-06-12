@@ -13,19 +13,20 @@ In many applications of simulation, theoretical distributons may not be a good f
 
 
 ```{python}
-# pylint: disable=missing-module-docstring,invalid-name
 import math
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from sim_tools.distributions import (
-    RawContinuousEmpirical,
-    GroupedContinuousEmpirical,
-    RawDiscreteEmpirical,
     DistributionRegistry,
+    GroupedContinuousEmpirical,
+    RawContinuousEmpirical,
+    RawDiscreteEmpirical,
 )
+
 ```
 
 ## 1. Sampling from the raw data with interpolation
@@ -135,7 +136,6 @@ hospital_data.describe()
 The function `create_combined_plotly_figure` is included as a helper to merge four plots of the hospital datasets together.  
 
 ```{python}
-# pylint: disable=too-many-arguments,too-many-positional-arguments,too-many-locals
 def create_combined_plotly_figure(
     distributions_dict,
     plot_method_name="plotly_ecdf_linear_interpolation",
