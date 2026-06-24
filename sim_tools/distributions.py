@@ -598,6 +598,12 @@ class DistributionRegistry:
         sig = inspect.signature(distribution_class.__init__)
         if "random_seed" in sig.parameters:
             params["random_seed"] = seed
+        if "random_seed1" and "random_seed2" in sig.parameters:
+            params["random_seed1"] = seed
+            child_seq = np.random.SeedSequence(
+                seed.entropy, spawn_key=seed.spawn_key + (1,)
+            )
+            params["random_seed2"] = child_seq
 
         # Instantiate and return the distribution object.
         return cls.create(dist_config["class_name"], **params)

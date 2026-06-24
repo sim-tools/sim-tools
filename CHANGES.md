@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 Consistent identifier (represents all versions, resolves to latest): [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4553641.svg)](https://doi.org/10.5281/zenodo.4553641)
 
+## v1.3.0
+
+Bug fix for `DistributionRegistry`, new documentation with `great-docs`, and code formatting and linting with `ruff`.
+
+### Added
+
+* Add `great-docs` documentation site. This included changes to user guide, with switch from `.ipynb` to `.qmd`.
+* Add `ruff` and `great-docs` to environment.
+* Add `dev` to `pyproject.toml` and use in CI/CD.
+* Add `CONTRIBUTING.md`.
+* Add GitHub action to lint code.
+
+### Changed
+
+* Formated and linted with `ruff format` and `ruff check --fix`.
+
+### Fixed
+
+* Fixed `NSPPThinning` bug when used with `DistributionRegistry` (wasn't assigning random seed) - and add regression tests for this bug.
+
 ## v1.2.0
 
 Bug fixes for `DistributionRegistry` and `DiscreteEmpirical`, and tests for `DistributionRegistry`.
