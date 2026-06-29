@@ -74,7 +74,7 @@ class NSPPThinning:
         # empty dataframe or only a single row.
         if data.empty:
             raise ValueError("Dataframe does not contain any rows. Add at least 2.")
-        elif len(data) == 1:
+        if len(data) == 1:
             msg = (
                 "Dataframe contains a single time point. Add more of use "
                 + "Exponential class."
@@ -159,6 +159,8 @@ class NSPPThinning:
             if u <= self.accept_prob[t_idx]:
                 # accepted so return inter-arrival time
                 return interarrival_time
+
+        raise RuntimeError("Unreachable: thinning loop exited without accepting")
 
 
 def nspp_simulation(

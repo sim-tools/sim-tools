@@ -64,7 +64,7 @@ class Traceable(ABC):
         """
         Returns a default trace configuration.
         """
-        config = {
+        return {
             "class": None,
             "class_colour": "bold blue",
             "time_colour": "bold blue",
@@ -72,7 +72,6 @@ class Traceable(ABC):
             "message_colour": "black",
             "tracked": None,
         }
-        return config
 
     def _trace_config(self) -> dict:
         """

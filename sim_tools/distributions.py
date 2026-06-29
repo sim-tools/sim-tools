@@ -198,8 +198,7 @@ def spawn_seeds(n_streams: int, main_seed: int | None = None):
     >>> rng3 = np.random.default_rng(seeds[2])
     """
     seed_sequence = np.random.SeedSequence(main_seed)
-    seeds = seed_sequence.spawn(n_streams)
-    return seeds
+    return seed_sequence.spawn(n_streams)
 
 
 class DistributionRegistry:

@@ -69,6 +69,7 @@ lint.select = [
     "ICN",  # Conventions for how certain packages should be imported or aliased
     "TID",  # Tidy imports
     "UP",   # Rewrites older syntax into modern, cleaner syntax
+    "RET",  # Good return practices
 ]
 lint.per-file-ignores."user_guide/*" = [
     "F811",  # Redefinition of unused {name} from {row}

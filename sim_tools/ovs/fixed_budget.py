@@ -118,9 +118,7 @@ class OCBAM:
                 new_allocations[ranks.argmin()] += 1
 
         # return top m
-        best = np.argpartition(self._means, -self._m)[-self._m :]
-
-        return best
+        return np.argpartition(self._means, -self._m)[-self._m :]
 
     def _simulate(self, new_allocations):
         """
@@ -318,8 +316,7 @@ class OCBA:
                 for _ in range(new_allocations[design]):
                     self._env.simulate(design)
 
-        best = np.argmin(self._means)
-        return best
+        return np.argmin(self._means)
 
     def _initialise(self):
         """
