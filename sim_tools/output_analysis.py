@@ -10,15 +10,10 @@ The Replications Algorithm (Hoad et al. 2010).
 """
 
 import warnings
+from collections.abc import Callable, Sequence
 from typing import (
     Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
     Protocol,
-    Sequence,
-    Union,
     runtime_checkable,
 )
 
@@ -81,7 +76,7 @@ class AlgorithmObserver(Protocol):
         Create a DataFrame summarising all recorded replication statistics.
     """
 
-    dev: List[Any]
+    dev: list[Any]
 
     def update(self, results) -> None: ...
 
@@ -121,9 +116,9 @@ class OnlineStatistics:
 
     def __init__(
         self,
-        data: Optional[np.ndarray] = None,
-        alpha: Optional[float] = 0.1,
-        observer: Optional[ReplicationObserver] = None,
+        data: np.ndarray | None = None,
+        alpha: float | None = 0.1,
+        observer: ReplicationObserver | None = None,
     ) -> None:
         """
         Initialise a new OnlineStatistics object.
@@ -423,17 +418,15 @@ class ReplicationTabulizer:
 
 
 def confidence_interval_method(
-    replications: Union[
-        pd.Series,
-        pd.DataFrame,
-        Sequence[float],
-        Sequence[Sequence[float]],
-        Dict[str, Sequence[float]],
-    ],
-    alpha: Optional[float] = 0.05,
-    desired_precision: Optional[float] = 0.1,
-    min_rep: Optional[int] = 5,
-    decimal_places: Optional[int] = 2,
+    replications: pd.Series
+    | pd.DataFrame
+    | Sequence[float]
+    | Sequence[Sequence[float]]
+    | dict[str, Sequence[float]],
+    alpha: float | None = 0.05,
+    desired_precision: float | None = 0.1,
+    min_rep: int | None = 5,
+    decimal_places: int | None = 2,
 ):
     """
     Determine the minimum number of simulation replications required to achieve
@@ -744,13 +737,13 @@ class ReplicationsAlgorithm:
 
     def __init__(
         self,
-        alpha: Optional[float] = 0.05,
-        half_width_precision: Optional[float] = 0.1,
-        initial_replications: Optional[int] = 3,
-        look_ahead: Optional[int] = 5,
-        replication_budget: Optional[float] = 1000,
-        verbose: Optional[bool] = False,
-        observer_factory: Optional[Callable[[], AlgorithmObserver]] = None,
+        alpha: float | None = 0.05,
+        half_width_precision: float | None = 0.1,
+        initial_replications: int | None = 3,
+        look_ahead: int | None = 5,
+        replication_budget: float | None = 1000,
+        verbose: bool | None = False,
+        observer_factory: Callable[[], AlgorithmObserver] | None = None,
     ):
         """
         Initialise the replications algorithm
@@ -874,7 +867,7 @@ class ReplicationsAlgorithm:
         """
         return int((self.look_ahead / 100) * max(self.n, 100))
 
-    def find_position(self, lst: List[float]):
+    def find_position(self, lst: list[float]):
         """
         Find the first position where element is below deviation, and this is
         maintained through the lookahead period.

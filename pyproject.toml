@@ -62,9 +62,14 @@ python = ["3.10", "3.11", "3.12", "3.13"]
 line-length=88
 format.quote-style="double"
 lint.select = [
-    "F",    # pyflakes
-    "E",    # pycodestyle
-    "I",    # isort
+    "F",    # Pyflake rules
+    "E",    # Pycodestyle errors
+    "W",    # Pycodestyle warnings
+    "I",    # Sort imports
+    "ICN",  # Conventions for how certain packages should be imported or aliased
+    "TID",  # Tidy imports
+    "UP",   # Rewrites older syntax into modern, cleaner syntax
+    "RET",  # Good return practices
 ]
 lint.per-file-ignores."user_guide/*" = [
     "F811",  # Redefinition of unused {name} from {row}

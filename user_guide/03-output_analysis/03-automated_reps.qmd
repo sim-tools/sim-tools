@@ -20,7 +20,6 @@ If you make use of this code in your work **please cite the `sim-tools` as well 
 
 ```{python}
 from collections.abc import Callable
-from typing import Optional
 
 from treat_sim.model import Scenario, single_run
 
@@ -173,7 +172,7 @@ class TreatSimAdapter:
         scenario: Scenario,
         metrics: list[str],
         single_run_func: Callable,
-        run_length: Optional[float] = 1140.0,
+        run_length: float | None = 1140.0,
     ):
         """
         Parameters:

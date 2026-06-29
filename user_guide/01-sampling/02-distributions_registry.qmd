@@ -135,7 +135,7 @@ Let's assume we want to run out model with the distributions specified in the JS
 
 ```{python}
 # read in file
-with open("example_sim_config.json", "r", encoding="utf-8") as f:
+with open("example_sim_config.json", encoding="utf-8") as f:
     config = json.load(f)
 
 # Extract the distributions configuration

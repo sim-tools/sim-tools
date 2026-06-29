@@ -4,7 +4,6 @@ ability to trace and debug simulation models.
 """
 
 from abc import ABC
-from typing import Optional
 
 from rich.console import Console
 
@@ -48,7 +47,7 @@ class Traceable(ABC):
     be setup correctly.
     """
 
-    def __init__(self, debug: Optional[bool] = DEFAULT_DEBUG):
+    def __init__(self, debug: bool | None = DEFAULT_DEBUG):
         """
         Initialise Traceable
 
@@ -65,7 +64,7 @@ class Traceable(ABC):
         """
         Returns a default trace configuration.
         """
-        config = {
+        return {
             "class": None,
             "class_colour": "bold blue",
             "time_colour": "bold blue",
@@ -73,7 +72,6 @@ class Traceable(ABC):
             "message_colour": "black",
             "tracked": None,
         }
-        return config
 
     def _trace_config(self) -> dict:
         """
@@ -81,9 +79,7 @@ class Traceable(ABC):
         """
         return Traceable._default_config()
 
-    def trace(
-        self, time: float, msg: Optional[str] = None, process_id: Optional[str] = None
-    ):
+    def trace(self, time: float, msg: str | None = None, process_id: str | None = None):
         """
         Display a formatted trace of a simulated event.
 
@@ -140,10 +136,10 @@ class Traceable(ABC):
 
 def trace(
     time: float,
-    debug: Optional[bool] = DEFAULT_DEBUG,
-    msg: Optional[str] = None,
-    identifier: Optional[str] = None,
-    config: Optional[dict] = None,
+    debug: bool | None = DEFAULT_DEBUG,
+    msg: str | None = None,
+    identifier: str | None = None,
+    config: dict | None = None,
 ):
     """
     Display a formatted trace of a simulated event.

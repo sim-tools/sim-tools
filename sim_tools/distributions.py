@@ -86,16 +86,11 @@ Modeling and Analysis" (Law, 2007) where applicable.
 import inspect
 import json
 import math
+from collections.abc import Callable
 from typing import (
     Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
     Protocol,
-    Tuple,
     TypeVar,
-    Union,
     runtime_checkable,
 )
 
@@ -132,8 +127,8 @@ class Distribution(Protocol):
     """
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the distribution.
 
@@ -161,7 +156,7 @@ class Distribution(Protocol):
         """
 
 
-def spawn_seeds(n_streams: int, main_seed: Optional[int] = None):
+def spawn_seeds(n_streams: int, main_seed: int | None = None):
     """
     Generate multiple statistically independent random seeds.
 
@@ -203,8 +198,7 @@ def spawn_seeds(n_streams: int, main_seed: Optional[int] = None):
     >>> rng3 = np.random.default_rng(seeds[2])
     """
     seed_sequence = np.random.SeedSequence(main_seed)
-    seeds = seed_sequence.spawn(n_streams)
-    return seeds
+    return seed_sequence.spawn(n_streams)
 
 
 class DistributionRegistry:
@@ -308,10 +302,10 @@ class DistributionRegistry:
     dict changes between runs.
     """
 
-    _registry: Dict[str, type] = {}
+    _registry: dict[str, type] = {}
 
     @classmethod
-    def register(cls, name: Optional[str] = None) -> Callable:
+    def register(cls, name: str | None = None) -> Callable:
         """
         Decorator to register a distribution class in the registry.
 
@@ -401,11 +395,11 @@ class DistributionRegistry:
     @classmethod
     def create_batch(
         cls,
-        config: Union[List[Dict], Dict[str, Dict]],
-        main_seed: Optional[int] = None,
-        sort: Optional[bool] = True,
+        config: list[dict] | dict[str, dict],
+        main_seed: int | None = None,
+        sort: bool | None = True,
         preserve_structure: bool = False,
-    ) -> Union[List, Dict]:
+    ) -> list | dict:
         """
         Create multiple distributions from a configuration dictionary or list.
 
@@ -540,7 +534,7 @@ class DistributionRegistry:
         if not preserve_structure:
             return {"_".join(map(str, path)): obj for path, obj in created}
 
-        result: Dict = {}
+        result: dict = {}
         for path, obj in created:
             cursor = result
             for part in path[:-1]:
@@ -609,7 +603,7 @@ class DistributionRegistry:
         return cls.create(dist_config["class_name"], **params)
 
     @classmethod
-    def get_template(cls, format: str = "json", indent: int = 2) -> Union[Dict, str]:
+    def get_template(cls, format: str = "json", indent: int = 2) -> dict | str:
         """
         Generate a template configuration containing all registered
         distributions.
@@ -707,7 +701,7 @@ class Exponential:
     def __init__(
         self,
         mean: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize an exponential distribution.
@@ -730,8 +724,8 @@ class Exponential:
         return f"Exponential(mean={self.mean})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the exponential distribution.
 
@@ -765,9 +759,7 @@ class Bernoulli:
     sample from a Bernoulli distribution with a specified probability.
     """
 
-    def __init__(
-        self, p: float, random_seed: Optional[Union[int, SeedSequence]] = None
-    ):
+    def __init__(self, p: float, random_seed: int | SeedSequence | None = None):
         """
         Initialize a Bernoulli distribution.
 
@@ -788,8 +780,8 @@ class Bernoulli:
         return f"Bernoulli(p={self.p})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Bernoulli distribution.
 
@@ -830,7 +822,7 @@ class Lognormal:
         self,
         mean: float,
         stdev: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a lognormal distribution.
@@ -859,7 +851,7 @@ class Lognormal:
     def __repr__(self):
         return f"Lognormal(mean={self.mean}, stdev={self.stdev})"
 
-    def normal_moments_from_lognormal(self, m: float, v: float) -> Tuple[float, float]:
+    def normal_moments_from_lognormal(self, m: float, v: float) -> tuple[float, float]:
         """
         Calculate mu and sigma of the normal distribution underlying
         a lognormal with mean m and variance v.
@@ -888,8 +880,8 @@ class Lognormal:
         return mu, sigma
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the lognormal distribution.
 
@@ -928,8 +920,8 @@ class Normal:
         self,
         mean: float,
         sigma: float,
-        minimum: Optional[float] = None,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        minimum: float | None = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a normal distribution.
@@ -970,8 +962,8 @@ class Normal:
         )
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the normal distribution.
 
@@ -1025,7 +1017,7 @@ class Uniform:
         self,
         low: float,
         high: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a uniform distribution.
@@ -1053,8 +1045,8 @@ class Uniform:
         return f"Uniform(low={self.low}, high={self.high})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the uniform distribution.
 
@@ -1093,7 +1085,7 @@ class Triangular:
         low: float,
         mode: float,
         high: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a triangular distribution.
@@ -1129,8 +1121,8 @@ class Triangular:
         return f"Triangular(low={self.low}, mode={self.mode}, high={self.high})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the triangular distribution.
 
@@ -1180,8 +1172,8 @@ class FixedDistribution:
         return f"FixedDistribution(value={self.value})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate "samples" from the fixed distribution (always the same value).
 
@@ -1252,8 +1244,8 @@ class CombinationDistribution:
         return f"CombinationDistribution({', '.join(dist_reprs)})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the combination distribution.
 
@@ -1302,7 +1294,7 @@ class GroupedContinuousEmpirical:
         lower_bounds: ArrayLike,
         upper_bounds: ArrayLike,
         freq: ArrayLike,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a continuous empirical distribution.
@@ -1433,8 +1425,8 @@ class GroupedContinuousEmpirical:
         return np.cumsum(freq / freq.sum(), dtype="float")
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Sample from the Continuous Empirical Distribution.
 
@@ -1517,7 +1509,7 @@ class RawContinuousEmpirical:
     def __init__(
         self,
         data: ArrayLike,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a continuous empirical distribution from raw data.
@@ -1545,8 +1537,8 @@ class RawContinuousEmpirical:
         return f"ContinuousEmpirical(data={data_repr})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Sample from the Continuous Empirical Distribution.
 
@@ -1605,14 +1597,14 @@ class RawContinuousEmpirical:
 
     def plotly_ecdf_standard(
         self,
-        title: Optional[str] = "Standard Empirical CDF",
-        xaxis_title: Optional[str] = "Data Value",
-        yaxis_title: Optional[str] = "Cumulative Probability (P(X <= x))",
-        line_color: Optional[str] = None,  # e.g., 'blue', '#1f77b4'
-        line_width: Optional[float] = None,  # e.g., 2
-        trace_name: Optional[str] = "Standard ECDF",
+        title: str | None = "Standard Empirical CDF",
+        xaxis_title: str | None = "Data Value",
+        yaxis_title: str | None = "Cumulative Probability (P(X <= x))",
+        line_color: str | None = None,  # e.g., 'blue', '#1f77b4'
+        line_width: float | None = None,  # e.g., 2
+        trace_name: str | None = "Standard ECDF",
         showlegend: bool = True,
-        layout_options: Optional[Dict] = None,
+        layout_options: dict | None = None,
     ) -> go.Figure:
         """
         Plots the standard Empirical Cumulative Distribution Function (ECDF)
@@ -1696,17 +1688,17 @@ class RawContinuousEmpirical:
 
     def plotly_ecdf_linear_interpolation(
         self,
-        title: Optional[str] = "Piecewise Linear CDF used by Sampler",
-        xaxis_title: Optional[str] = "Data Value",
-        yaxis_title: Optional[str] = "Cumulative Probability (Sampler's CDF)",
-        line_color: Optional[str] = None,
-        line_width: Optional[float] = None,
-        marker_symbol: Optional[str] = "circle",
-        marker_size: Optional[float] = 6,
-        marker_color: Optional[str] = None,
-        trace_name: Optional[str] = "Piecewise Linear CDF",
+        title: str | None = "Piecewise Linear CDF used by Sampler",
+        xaxis_title: str | None = "Data Value",
+        yaxis_title: str | None = "Cumulative Probability (Sampler's CDF)",
+        line_color: str | None = None,
+        line_width: float | None = None,
+        marker_symbol: str | None = "circle",
+        marker_size: float | None = 6,
+        marker_color: str | None = None,
+        trace_name: str | None = "Piecewise Linear CDF",
         showlegend: bool = True,
-        layout_options: Optional[Dict] = None,
+        layout_options: dict | None = None,
     ) -> go.Figure:
         """
         Plots the piecewise linear CDF implied by the Law & Kelton sampling
@@ -1871,7 +1863,7 @@ class Erlang:
         mean: float,
         stdev: float,
         location: float = 0.0,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize an Erlang distribution.
@@ -1917,8 +1909,8 @@ class Erlang:
         )
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Erlang distribution.
 
@@ -1972,7 +1964,7 @@ class Weibull:
         alpha: float,
         beta: float,
         location: float = 0.0,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a three-parameter Weibull distribution.
@@ -2057,8 +2049,8 @@ class Weibull:
         return (self.scale**2) * (variance_term - mean_term**2)
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Weibull distribution.
 
@@ -2097,7 +2089,7 @@ class Gamma:
         alpha: float,
         beta: float,
         location: float = 0.0,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a Gamma distribution.
@@ -2164,7 +2156,7 @@ class Gamma:
         return self.alpha * (self.beta**2)
 
     @staticmethod
-    def params_from_mean_and_var(mean: float, var: float) -> Tuple[float, float]:
+    def params_from_mean_and_var(mean: float, var: float) -> tuple[float, float]:
         """
         Derive shape (α) and scale (β) parameters from mean and variance.
 
@@ -2191,8 +2183,8 @@ class Gamma:
         return alpha, beta
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Gamma distribution.
 
@@ -2236,7 +2228,7 @@ class Beta:
         alpha2: float,
         lower_bound: float = 0.0,
         upper_bound: float = 1.0,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a Beta distribution.
@@ -2288,8 +2280,8 @@ class Beta:
         )
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Beta distribution.
 
@@ -2333,7 +2325,7 @@ class DiscreteEmpirical:
         self,
         values: ArrayLike,
         freq: ArrayLike,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a discrete distribution.
@@ -2384,9 +2376,7 @@ class DiscreteEmpirical:
         )
         return f"Discrete(values={values_repr}, freq={freq_repr})"
 
-    def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[Any, NDArray]:
+    def sample(self, size: int | tuple[int, ...] | None = None) -> Any | NDArray:
         """
         Generate random samples from the discrete distribution.
 
@@ -2449,8 +2439,8 @@ class TruncatedDistribution:
         )
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the truncated distribution.
 
@@ -2498,7 +2488,7 @@ class RawDiscreteEmpirical:
     def __init__(
         self,
         values: ArrayLike,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a raw empirical distribution.
@@ -2538,9 +2528,7 @@ class RawDiscreteEmpirical:
         """Calculate the theoretical variance of the distribution."""
         return np.var(self.values, ddof=0)  # ddof=0 for population variance
 
-    def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[Any, NDArray]:
+    def sample(self, size: int | tuple[int, ...] | None = None) -> Any | NDArray:
         """
         Generate random samples from the raw empirical data with replacement.
 
@@ -2603,7 +2591,7 @@ class PearsonV:
         self,
         alpha: float,
         beta: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a Pearson Type V distribution.
@@ -2676,8 +2664,8 @@ class PearsonV:
         raise ValueError(msg)
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Pearson Type V distribution.
 
@@ -2736,7 +2724,7 @@ class PearsonVI:
         alpha1: float,
         alpha2: float,
         beta: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a Pearson Type VI distribution.
@@ -2818,8 +2806,8 @@ class PearsonVI:
         raise ValueError(msg)
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Pearson Type VI distribution.
 
@@ -2861,7 +2849,7 @@ class ErlangK:
         k: int,
         theta: float,
         location: float = 0.0,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize an Erlang distribution with specified k and theta.
@@ -2920,8 +2908,8 @@ class ErlangK:
         return self.k * (self.theta**2)
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the Erlang distribution.
 
@@ -2961,7 +2949,7 @@ class Poisson:
     def __init__(
         self,
         rate: float,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a Poisson distribution.
@@ -2983,8 +2971,8 @@ class Poisson:
         return f"Poisson(rate={self.rate})"
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[int, NDArray[np.int_]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> int | NDArray[np.int_]:
         """
         Generate random samples from the Poisson distribution.
 
@@ -3035,7 +3023,7 @@ class Hyperexponential:
         self,
         probs: ArrayLike,
         rates: ArrayLike,
-        random_seed: Optional[Union[int, SeedSequence]] = None,
+        random_seed: int | SeedSequence | None = None,
     ):
         """
         Initialize a hyperexponential distribution.
@@ -3110,8 +3098,8 @@ class Hyperexponential:
         return second_moment - mean**2
 
     def sample(
-        self, size: Optional[Union[int, Tuple[int, ...]]] = None
-    ) -> Union[float, NDArray[np.float64]]:
+        self, size: int | tuple[int, ...] | None = None
+    ) -> float | NDArray[np.float64]:
         """
         Generate random samples from the hyperexponential distribution.
 

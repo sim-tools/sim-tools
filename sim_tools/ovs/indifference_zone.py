@@ -216,12 +216,10 @@ class KNPlusPlus:
 
         # I think the problem is that I am not using the variance of the
         # differences.
-        w_ij = (self._delta / (2 * self._n)) * (
+        return (self._delta / (2 * self._n)) * (
             ((self._h_squared * (sum_of_vars)) / self._delta**2) - self._n
         )
-
         # return max(0, w_ij)
-        return w_ij
 
     def _update(self):
         """update step.
@@ -489,7 +487,7 @@ class KN:
         """
         n = self._allocations[design_index]
         current_value = self._means[design_index]
-        new_value = ((n - 1) / float(n)) * current_value + (
+
+        return ((n - 1) / float(n)) * current_value + (
             1 / float(n)
         ) * observation * self._negate
-        return new_value

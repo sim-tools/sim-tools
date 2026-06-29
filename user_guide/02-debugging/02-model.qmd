@@ -70,8 +70,8 @@ The data for arrival rates varies between clinic opening at 6am and closure at 1
 ```{python}
 # data are held in the Github repo and loaded from there.
 NSPP_PATH = (
-    "https://raw.githubusercontent.com/TomMonks/" +
-    "open-science-for-sim/main/src/notebooks/01_foss_sim/data/ed_arrivals.csv"
+    "https://raw.githubusercontent.com/TomMonks/"
+    + "open-science-for-sim/main/src/notebooks/01_foss_sim/data/ed_arrivals.csv"
 )
 ```
 
