@@ -1,0 +1,68 @@
+{
+  "projectName": "sim-tools",
+  "projectOwner": "sim-tools",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "TomMonks",
+      "name": "Tom Monks",
+      "avatar_url": "https://avatars.githubusercontent.com/u/881493?v=4",
+      "profile": "https://experts.exeter.ac.uk/19244-thomas-monks",
+      "contributions": [
+        "code",
+        "data",
+        "design",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "review",
+        "test",
+        "tutorial"
+      ]
+    },
+    {
+      "login": "amyheather",
+      "name": "Amy Heather",
+      "avatar_url": "https://avatars.githubusercontent.com/u/92166537?v=4",
+      "profile": "https://www.linkedin.com/in/amyheather",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "test"
+      ]
+    },
+    {
+      "login": "AliHarp",
+      "name": "Alison Harper ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32298783?v=4",
+      "profile": "https://github.com/AliHarp",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Bergam0t",
+      "name": "Sammi Rosser",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29951987?v=4",
+      "profile": "https://sammirosser.com/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
