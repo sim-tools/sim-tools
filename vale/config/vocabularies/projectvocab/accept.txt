@@ -1,0 +1,17 @@
+Colab
+config
+Currie
+docstring
+docstrings
+[Hh]yperexponential
+IATs
+Kelton
+[Ll]ognormal
+parallelisation
+Pythonic
+Rosser
+Sammi
+stochasticity
+tabularised
+upvote
+[Ww]eibull

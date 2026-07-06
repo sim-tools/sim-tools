@@ -72,7 +72,7 @@ config = {
 }
 ```
 
-* `class`: a string representing the class or type of trace event occuring.  This could be a process type for example, "patient", "stroke patient" or "arrival" or "treatment".
+* `class`: a string representing the class or type of trace event occurring.  This could be a process type for example, "patient", "stroke patient" or "arrival" or "treatment".
 * `class_colour`: choose a colour to display the class name e.g. "green" or "bold green"
 * `time_colour`: choose a colour to display the time
 * `time_dp`: choose the number of decimal places for time (default=2)
@@ -219,7 +219,7 @@ Assume we wish to track patients 4 and 5.  The `config['tracking']` option accep
 
 The script below declares the variable `TRACKED=[4, 5]`
 
-> Note that when there are a lot of processes to track it may be become simplier to use the object orientated interface to trace functionality.
+> Note that when there are a lot of processes to track it may be become simpler to use the object orientated interface to trace functionality.
 
 ```{python}
 class Experiment:

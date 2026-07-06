@@ -96,7 +96,7 @@ class AlgorithmObserver(Protocol):
 
 * There should be a `.dev` attribute containing the percentage deviation.
 * There should be an `update()` method which updates statistics after each replication.
-* There should be a `summary_table()` method which returns a dataframe summarising the replication results.
+* There should be a `summary_table()` method which returns a DataFrame summarising the replication results.
 
 </div>
 
@@ -243,7 +243,7 @@ print(nreps)
 summary_frame.head()
 ```
 
-You can visualise the tabulized results using the `plotly_confidence_interval_method` function.
+You can visualise the tabularised results using the `plotly_confidence_interval_method` function.
 
 ```{python}
 plotly_confidence_interval_method(

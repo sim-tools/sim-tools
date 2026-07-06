@@ -26,7 +26,7 @@ pip install -e .
 pip install --group dev
 ```
 
-A pinned conda environment environment is also provided:
+A pinned `conda` environment is also provided:
 
 ```bash
 conda env create -f binder/environment.yml
@@ -71,6 +71,25 @@ lintquarto
 ```
 
 NumPy style docstrings are used.
+
+## Spellcheck
+
+There is a spellcheck GitHub action.
+
+If you want to run the spellcheck locally, you need to install vale. On Linux:
+
+```
+sudo apt update
+sudo apt install snapd
+sudo snap install vale
+```
+
+With vale installed, run:
+
+```
+vale sync
+vale .
+```
 
 ## Contributors
 

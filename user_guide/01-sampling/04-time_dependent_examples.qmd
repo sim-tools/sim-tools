@@ -8,7 +8,7 @@ This notebook provides an overview of how to use the `time_dependent.NSPPThinnin
 
 Thinning is an acceptance-rejection approach to sampling inter-arrival times (IAT) from a time dependent distribution where each time period follows its own exponential distribution.
 
-There are two random variables employed in sampling: an exponential distribution (used to sample IAT) and a uniform distibution (used to accept/reject samples).
+There are two random variables employed in sampling: an exponential distribution (used to sample IAT) and a uniform distribution (used to accept/reject samples).
 
 All IATs are sampled from an Exponential distribution with the highest arrival rate (most frequent). These arrivals are then rejected (thinned) proportional to the ratio of the current arrival rate to the maximum arrival rate.  The algorithm executes until a sample is accepted.  The IAT returned is the sum of all the IATs that were sampled.
 

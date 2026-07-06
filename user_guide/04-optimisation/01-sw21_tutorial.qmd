@@ -38,7 +38,7 @@ from sim_tools.ovs.toy_models import (
 
 ## Simulation Models
 
-To keep the focus of this tutorial on Ranking and Selection procedures and what they do, and how they perform in practice, the models we introduce are deliberately simple.   The following sections describe how to create a a set of simulation models where the outputs are independent guassian distributions.  There are three options:
+To keep the focus of this tutorial on Ranking and Selection procedures and what they do, and how they perform in practice, the models we introduce are deliberately simple.   The following sections describe how to create a set of simulation models where the outputs are independent Gaussian distributions.  There are three options:
 
 * the means of these outputs distributions follow a sequence (e.g. 1, 2, 3, 4, 5) variance is 1.0. 
 * the means and variances are user specified.
@@ -46,7 +46,7 @@ To keep the focus of this tutorial on Ranking and Selection procedures and what 
 
 ### Creating a simple sequence of normal distributions
 
-A simple model can be created using the `guassian_sequance_model()` function.  This creates a simulation model where the output of each design follows a $N - (\mu_{i}, 1.0)$ :
+A simple model can be created using the `gaussian_sequance_model()` function.  This creates a simulation model where the output of each design follows a $N - (\mu_{i}, 1.0)$ :
 
 The function accepts three keyword arguments:
 
@@ -57,23 +57,23 @@ The function accepts three keyword arguments:
 For example, the following code creates a simulation model with 10 designs with means 1 to 10 and unit variance.
 
 ```{.python}
-model = guassian_sequence_model(1, 10)
+model = gaussian_sequence_model(1, 10)
 ```
 
 To create a simulation model with 5 designs where $\mu_{i+1} - \mu_i = 2 $ :
 
 ```{.python}
-model = guassian_sequence_model(1, 10, step=2)
+model = gaussian_sequence_model(1, 10, step=2)
 ```
 
 ### Creating a custom model with known designs
-Instead of a sequence of normal distributions with unit variance, it is possible to create a custom set of designs with varying variances. Use the `custom_guassian_model` function for this task.  For example to create a custom set of designs:
+Instead of a sequence of normal distributions with unit variance, it is possible to create a custom set of designs with varying variances. Use the `custom_gaussian_model` function for this task.  For example to create a custom set of designs:
 
 ```{.python}
 means = [5, 8, 1, 2, 1, 7]
 variances = [0.1, 1.2, 1.4, 0.3, 0.8]
 
-custom_model = custom_guassian_model(means, variances)
+custom_model = custom_gaussian_model(means, variances)
 ```
 
 The following code demonstrates how to create a sequence of 100 designs with variances that are 10% of the mean. 
@@ -83,7 +83,7 @@ n_designs = 100
 means = [i for i in range(n_designs+1)]
 variances = [j*0.1 for j in range(n_designs+1)]
 
-custom_model = custom_guassian_model(means, variances)
+custom_model = custom_gaussian_model(means, variances)
 ```
 
 
@@ -98,15 +98,15 @@ var_low = 0.1
 var_high = 2.0
 n_designs = 15
 
-model = random_guassian_model(mean_low, mean_high, var_low, var_high, n_designs)
+model = random_gaussian_model(mean_low, mean_high, var_low, var_high, n_designs)
 ```
 
 Where:
-* **mean_low** - float, a lower bound on the means of the output distributions
-* **mean_high** - float, an upper bound on the means
-* **var_low** - float, a lower bound on the variance of the output distributions
-* **var_high** - float, an upper bound on the variances.
-* **n_designs** - int, the number of designs to create.
+* `mean_low` - float, a lower bound on the means of the output distributions
+* `mean_high` - float, an upper bound on the means
+* `var_low` - float, a lower bound on the variance of the output distributions
+* `var_high` - float, an upper bound on the variances.
+* `n_designs` - int, the number of designs to create.
 
 ---
 
@@ -116,8 +116,8 @@ Before using the **Optimisation via Simulation** (OvS) procedures, it is recomme
 
 A `ManualOptimiser` object requires two parameters when it is created.  
 
-* model - object, e.g. a model that is a sequence of normal distributions
-* n_designs - the number of designs to be considered.
+* `model` - object, e.g. a model that is a sequence of normal distributions
+* `n_designs` - the number of designs to be considered.
 
 ```{python}
 manual_opt = ManualOptimiser(model=gaussian_sequence_model(1, 10), n_designs=10)
@@ -173,7 +173,7 @@ print(manual_opt.vars)
 
 ### Manual Optimisation of a model with unknown means.
 
-**Now have a go yourself**.  This time create a model with random designs.  Run as many replications of each design as you think is neccessary to make a decision about which design is best.  Here we define best as the design with the largest mean value.
+**Now have a go yourself**.  This time create a model with random designs.  Run as many replications of each design as you think is necessary to make a decision about which design is best.  Here we define best as the design with the largest mean value.
 
 ```{python}
 # create random problem
@@ -193,7 +193,7 @@ manual_opt = ManualOptimiser(model=rnd_model, n_designs=10)
 # Indifference Zone Ranking and Selection
 
 ## Procedure **KN**
-The first Ranking and Selection (R&S) algorithm we will explore is **Procedure KN** developed by Kim and Nelson. This is an *Indifference Zone* (IZ) approach to R&S.  IZ procedures exploit the the idea that the performance of one or more of the sub-optimal designs are in fact so close to the best performing system that a user does not care which one is chosen (the decision maker is said to be *indifferent* to this choice).  To do this a user must specify a quantity $\delta$.  Procedure KN provides a theorectical guarantee to select the best system or a system within $\delta$ of the best with probability of $1 - \alpha$.
+The first Ranking and Selection (R&S) algorithm we will explore is **Procedure KN** developed by Kim and Nelson. This is an *Indifference Zone* (IZ) approach to R&S.  IZ procedures exploit the idea that the performance of one or more of the sub-optimal designs are in fact so close to the best performing system that a user does not care which one is chosen (the decision maker is said to be *indifferent* to this choice).  To do this a user must specify a quantity $\delta$.  Procedure KN provides a theoretical guarantee to select the best system or a system within $\delta$ of the best with probability of $1 - \alpha$.
 
 A key feature of KN is that it only estimates the variance of each design once.  This happens after an initial number of replications (specified by the user) $n_0$.  
 
@@ -201,11 +201,11 @@ To run Kim and Nelson's R&S procedure KN, create an instance of `ovs.indifferenc
 
 An object of type KN takes the following parameters:
 
-* **model** - a simulation model
-* **n_designs** - int, the number of competing designs to compare
-* **delta** - float, the indifference zone
-* **alpha** - float, $PCS = 1-\alpha$ (default=0.05)
-* **n_0** - int, $n_0$ the number of initial replications (default=2)
+* `model` - a simulation model
+* `n_designs` - int, the number of competing designs to compare
+* `delta` - float, the indifference zone
+* `alpha` - float, $PCS = 1-\alpha$ (default=0.05)
+* `n_0` - int, $n_0$ the number of initial replications (default=2)
 
 ```
 from sim_tools.ovs.indifference_zone import KN, KNPlusPlus
@@ -213,7 +213,7 @@ from sim_tools.ovs.indifference_zone import KN, KNPlusPlus
 
 ### Example 1.  A simple sequence of normal distributions.
 
-The first problem we will test KN against is selecting the largest mean from a sequence of 10 normal distributions (means raning from 1 to 10) with unit variance.  We want a $PCS = 0.95$ and are indifferent to designs that are within an average of 1.0 of the best.  
+The first problem we will test KN against is selecting the largest mean from a sequence of 10 normal distributions (means ranging from 1 to 10) with unit variance.  We want a $PCS = 0.95$ and are indifferent to designs that are within an average of 1.0 of the best.  
 
 For this simple problem, we will follow Law's longstanding advice of setting $n_0 = 5$ i.e 5 initial replications of each design.
 
@@ -392,12 +392,12 @@ Single solution OCBA object can be created by importing `ovs.fixed_budget.OCBA`
 
 An object of type `OCBA` takes the following parameters:
 
-* **model** - a simulation model
-* **n_designs** - int, the number of competing designs to compare
-* **budget** - int, the total number of replications to allocate across designs
-* **delta** - int, the incremental amount of replications to allocate at each round
-* **n_0** - int, $n_0$ the number of initial replications (default=5)
-* **obj** - str, 'min' if minimisation; 'max' if maximisation (default='min')
+* `model` - a simulation model
+* `n_designs` - int, the number of competing designs to compare
+* `budget` - int, the total number of replications to allocate across designs
+* `delta` - int, the incremental amount of replications to allocate at each round
+* `n_0` - int, $n_0$ the number of initial replications (default=5)
+* `obj` - str, 'min' if minimisation; 'max' if maximisation (default='min')
 
 ```
 from sim_tools.ovs.fixed_budget import OCBA, OCBAM
@@ -454,11 +454,11 @@ To help with this test you can import an Experiment object: `ovs.evaluation.Expe
 
 An `Experiment` object takes the following parameters:
 
-* **env** - the simulated environment aka the model.
-* **procedure** - the method to test e.g. KNPlusPlus or OCBA
-* **best_index** - the index of the best design in the simulation model (zero based).
-* **objective** - 'max' or 'min'
-* **replications** - the number of repeats of the experiment to run.
+* `env` - the simulated environment aka the model.
+* `procedure` - the method to test e.g. KNPlusPlus or OCBA
+* `best_index` - the index of the best design in the simulation model (zero based).
+* `objective` - 'max' or 'min'
+* `replications` - the number of repeats of the experiment to run.
 
 **Your task is to run the experiment with different budgets.  E.g. 60, 70 and 75.  Remember that you cannot go lower than N_0 + DELTA**
 
@@ -468,7 +468,7 @@ from sim_tools.ovs.evaluation import Experiment
 
 
 <div class="alert alert-block alert-info">
-<b>RUNTIME WARNING!</b> The experiment will will take a few seconds to complete. </div>
+<b>RUNTIME WARNING!</b> The experiment will take a few seconds to complete. </div>
 
 ```{python}
 # this is the budget you can vary.
@@ -548,13 +548,13 @@ A top-m solution OCBA object can be created by importing `ovs.fixed_budget.OCBAM
 
 An object of type `OCBAM` takes the following parameters:
 
-* **model** - a simulation model
-* **n_designs** - int, the number of competing designs to compare
-* **budget** - int, the total number of replications to allocate across designs
-* **delta** - int, the incremental amount of replications to allocate at each round
-* **n_0** - int, $n_0$ the number of initial replications (default=5)
-* **m** - int, $m$ the number of top designs to return.  m must be >=2.  For m = 1 see OCBA.
-* **obj** - str, 'min' if minimisation; 'max' if maximisation (default='min')
+* `model` - a simulation model
+* `n_designs` - int, the number of competing designs to compare
+* `budget` - int, the total number of replications to allocate across designs
+* `delta` - int, the incremental amount of replications to allocate at each round
+* `n_0` - int, $n_0$ the number of initial replications (default=5)
+* `m` - int, $m$ the number of top designs to return.  m must be >=2.  For m = 1 see OCBA.
+* `obj` - str, 'min' if minimisation; 'max' if maximisation (default='min')
 
 ## Example 4. Selecting the top 2 designs.
 

@@ -20,7 +20,7 @@
 ## Vision for sim-tools
 
  1. Deliver high quality reliable code for DES and Monte-Carlo Simulation education and practice with full documentation.
- 2. Provide a simple to use pythonic interface.
+ 2. Provide a simple to use Pythonic interface.
  3. To improve the quality of simulation education using FOSS tools and encourage the use of best practice.
 
 ## 👥 Authors
@@ -39,7 +39,7 @@
 
 1. Implementation of classic Optimisation via Simulation procedures such as KN, KN++, OBCA and OBCA-m
 2. Theoretical and empirical distributions module that includes classes that encapsulate a random number stream, seed, and distribution parameters.
-3. An extendable Distribution registry that provides a quick reproduible way to parameterise simulation models.
+3. An extendable Distribution registry that provides a quick reproducible way to parameterise simulation models.
 4. Implementation of Thinning to sample from Non-stationary Poisson Processes (time-dependent) in a DES.
 5. Automatic selection of the number of replications to run via the Replications Algorithm.
 6. EXPERIMENTAL: model trace functionality to support debugging of simulation models.
@@ -80,7 +80,7 @@ mamba install sim-tools
 
 If you use sim-tools for research, a practical report, education or any reason please include the following citation.
 
-> Monks, T., Heather, A., Harper, A. (2025). sim-tools: fundamental tools to support the simulation process in python. Zenodo. https://doi.org/10.5281/zenodo.4553641.
+> Monks, T., Heather, A., Harper, A. (2025). sim-tools: fundamental tools to support the simulation process in python. `Zenodo`. https://doi.org/10.5281/zenodo.4553641.
 
 ```tex
 @software{sim_tools,

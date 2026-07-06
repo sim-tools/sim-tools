@@ -42,7 +42,7 @@ from sim_tools.distributions import DistributionRegistry
 
 `DistributionRegistry` allows a user to create a batch of statistical distributions in one go using `create_batch`.  A user can either pass in a `dict` or a `list`.
 
-> `DistributionRegistry` sets up non-overlapping pseudo random number streams for the distributions using the `distributions.spawn_seeds()` function. For reproducibile results a user should se the `main_seed` parameter of `create_batch`.
+> `DistributionRegistry` sets up non-overlapping pseudo random number streams for the distributions using the `distributions.spawn_seeds()` function. For reproducible results a user should use the `main_seed` parameter of `create_batch`.
 
 ```{python}
 # Dictionary-based configuration (named distributions)
