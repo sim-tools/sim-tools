@@ -36,7 +36,6 @@ import json
 import numpy as np
 
 from sim_tools.distributions import DistributionRegistry
-
 ```
 
 ## 2. Creating batches of distributions from configuration data

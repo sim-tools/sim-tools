@@ -26,7 +26,6 @@ from sim_tools.distributions import (
     RawContinuousEmpirical,
     RawDiscreteEmpirical,
 )
-
 ```
 
 ## 1. Sampling from the raw data with interpolation

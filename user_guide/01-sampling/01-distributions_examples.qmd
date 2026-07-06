@@ -276,7 +276,6 @@ from sim_tools.distributions import (
     Uniform,
     Weibull,
 )
-
 ```
 
 ### Create plots

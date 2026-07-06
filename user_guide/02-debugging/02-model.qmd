@@ -20,7 +20,6 @@ import sim_tools
 from sim_tools.distributions import Bernoulli, Exponential, Lognormal, Normal
 from sim_tools.time_dependent import NSPPThinning
 from sim_tools.trace import Traceable
-
 ```
 
 ```{python}

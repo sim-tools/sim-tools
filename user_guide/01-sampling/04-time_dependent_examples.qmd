@@ -42,7 +42,6 @@ import numpy as np
 
 from sim_tools.datasets import load_banks_et_al_nspp
 from sim_tools.time_dependent import NSPPThinning, nspp_plot, nspp_simulation
-
 ```
 
 ```{python}

@@ -29,8 +29,6 @@ from sim_tools.output_analysis import (
     ReplicationTabulizer,
     plotly_confidence_interval_method,
 )
-
-
 ```
 
 ##  Replications Algorithm overview

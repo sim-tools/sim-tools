@@ -34,7 +34,6 @@ from sim_tools.ovs.toy_models import (
     gaussian_sequence_model,
     random_gaussian_model,
 )
-
 ```
 
 ## Simulation Models
