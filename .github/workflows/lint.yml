@@ -29,23 +29,19 @@ jobs:
           uv pip install -e .
           uv pip install --group dev
 
-      - name: Install package and dependencies
-        run: |
-          uv pip install lintquarto==0.13.0
-
       - name: Run ruff on .py files
         run: uv run ruff check .
 
       - name: List available linters
         run: uv run lintquarto list
 
+      - name: Run lintquarto on minimal file
+        run: uv run lintquarto -l ruff -p user_guide/index.qmd
+
       - name: Run lintquarto with faulthandler
         run: |
           export PYTHONFAULTHANDLER=1
-          python -m lintquarto -l ruff -p user_guide/01-sampling/01-distributions_examples.qmd -k -v
-
-      - name: Run lintquarto on minimal file
-        run: uv run lintquarto -l ruff -p user_guide/index.qmd
+          .venv/bin/python -m lintquarto -l ruff -p user_guide/01-sampling/01-distributions_examples.qmd -k -v
 
       - name: Run lintquarto on minimal file
         run: uv run lintquarto -l ruff -p user_guide/01-sampling/01-distributions_examples.qmd
