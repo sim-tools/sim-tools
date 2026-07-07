@@ -39,6 +39,11 @@ jobs:
       - name: List available linters
         run: uv run lintquarto list
 
+      - name: Run lintquarto with faulthandler
+        run: |
+          export PYTHONFAULTHANDLER=1
+          python -m lintquarto -l ruff -p user_guide/01-sampling/01-distributions_examples.qmd -k -v
+
       - name: Run lintquarto on minimal file
         run: uv run lintquarto -l ruff -p user_guide/index.qmd
 
