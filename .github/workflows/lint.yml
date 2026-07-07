@@ -32,11 +32,14 @@ jobs:
       - name: Run ruff on .py files
         run: uv run ruff check .
 
-      - name: "DEBUG: Show lintquarto version"
-        run: uv run python -m pip show lintquarto
+      - name: List available linters
+        run: uv run lintquarto list
 
-      - name: "DEBUG: Run lintquarto --help"
-        run: uv run lintquarto --help
+      - name: Run lintquarto on minimal file
+        run: uv run lintquarto -l ruff -p user_guide/index.qmd
+
+      - name: Run lintquarto on minimal file
+        run: uv run lintquarto -l ruff -p user_guide/01-sampling/01-distributions_examples.qmd
 
       - name: Run ruff on .qmd files
-        run: uv run lintquarto
+        run: uv run lintquarto -v
