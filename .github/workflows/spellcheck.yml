@@ -9,4 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: simbo/vale-action@v1
+      - uses: simbo/vale-action@v1.1.5
+        with:
+          version: "3.15.1"
