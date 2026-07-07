@@ -657,9 +657,7 @@ class DistributionRegistry:
                         params[param_name] = param.default
                     else:
                         # Use appropriate dummy values based on parameter name
-                        if "mean" in param_name:
-                            params[param_name] = 1.0
-                        elif any(
+                        if "mean" in param_name or any(
                             name in param_name for name in ["std", "scale", "lambda"]
                         ):
                             params[param_name] = 1.0

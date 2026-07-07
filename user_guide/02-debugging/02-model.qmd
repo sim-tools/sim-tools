@@ -136,13 +136,12 @@ def load_arrival_profile(profile_path):
         - 'arrival_rate': Original arrival rate from CSV.
         - 'mean_iat': Mean inter-arrival time.
     """
-    df = (
+    return (
         pd.read_csv(profile_path)
         .reset_index()
         .rename(columns={"index": "t"})
         .assign(mean_iat=lambda x: 60.0 / x.arrival_rate, t=lambda x: x.t * 60.0)
     )
-    return df
 ```
 
 ```{python}
@@ -553,13 +552,12 @@ class TraumaPathway(Traceable):
 
     def _trace_config(self):
         """Override trace config"""
-        config = {
+        return {
             "name": "Trauma",
             "name_colour": "bold magenta",
             "time_colour": "bold magenta",
             "tracked": self.args.tracked,
         }
-        return config
 ```
 
 ```{python}
@@ -730,14 +728,13 @@ class NonTraumaPathway(Traceable):
 
     def _trace_config(self):
         """Override trace config"""
-        config = {
+        return {
             "name": "Non-trauma",
             "name_colour": "bold green",
             "time_colour": "bold green",
             "message_colour": "black",
             "tracked": self.args.tracked,
         }
-        return config
 ```
 
 ## 7. Main model class
@@ -984,10 +981,9 @@ class SimulationSummary:
         patients: list
             A list of patients
         """
-        mean = np.array(
+        return np.array(
             [getattr(p, metric) for p in patients if getattr(p, metric) > -np.inf]
         ).mean()
-        return mean
 
     def get_resource_util(self, metric, n_resources, patients):
         """
@@ -1092,9 +1088,7 @@ def single_run(
 
     # run results
     summary = SimulationSummary(model)
-    summary_df = summary.summary_frame()
-
-    return summary_df
+    return summary.summary_frame()
 ```
 
 ```{python}
