@@ -34,7 +34,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "great-docs",
+  "great-docs; python_version >= '3.11'",
   "lintquarto",
   "pytest",
   "ruff",
