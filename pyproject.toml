@@ -71,6 +71,7 @@ lint.select = [
     "UP",   # Rewrites older syntax into modern, cleaner syntax
     "RET",  # Good return practices
     "SIM",  # Common simplification rules
+    "PTH",  # Use pathlib instead of os.path
 ]
 lint.ignore = [
     "SIM108",  # Change if-else to ternary or binary operator

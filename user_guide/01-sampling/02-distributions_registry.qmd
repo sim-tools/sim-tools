@@ -32,6 +32,7 @@ The `DistributionRegistry` is part of the `distributions` module.  You can think
 
 ```{python}
 import json
+from pathlib import Path
 
 import numpy as np
 
@@ -122,7 +123,7 @@ json_config = """
 config_data = json.loads(json_config)
 
 # write JSON to file
-with open("example_sim_config.json", "w", encoding="utf-8") as f:
+with Path("example_sim_config.json").open("w", encoding="utf-8") as f:
     json.dump(json_config, f, indent=4)
 ```
 
@@ -134,7 +135,7 @@ Let's assume we want to run out model with the distributions specified in the JS
 
 ```{python}
 # read in file
-with open("example_sim_config.json", encoding="utf-8") as f:
+with Path("example_sim_config.json").open(encoding="utf-8") as f:
     config = json.load(f)
 
 # Extract the distributions configuration
