@@ -39,7 +39,9 @@ dev = [
   "pytest",
   "ruff",
   "simpy",
-  "treat-sim"
+  "treat-sim",
+  "tree-sitter==0.25.2",
+  "tree-sitter-markdown==0.5.1"
 ]
 
 [project.urls]

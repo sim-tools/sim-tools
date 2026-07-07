@@ -27,13 +27,11 @@ jobs:
         run: |
           uv pip install --upgrade pip
           uv pip install -e .
-          uv pip install --group dev
+          uv pip install ruff
+          uv pip install lintquarto
 
       - name: Run ruff on .py files
         run: uv run ruff check .
-
-      - name: "DEBUG: Show lintquarto version"
-        run: uv run python -m pip show lintquarto
 
       - name: Run ruff on .qmd files
         run: uv run lintquarto
