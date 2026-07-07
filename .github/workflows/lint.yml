@@ -17,7 +17,7 @@ jobs:
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           enable-cache: true
 
       - name: Create uv virtualenv
@@ -28,6 +28,10 @@ jobs:
           uv pip install --upgrade pip
           uv pip install -e .
           uv pip install --group dev
+
+      - name: Install package and dependencies
+        run: |
+          uv pip install lintquarto==0.13.1
 
       - name: Run ruff on .py files
         run: uv run ruff check .
