@@ -185,29 +185,25 @@ def trace(
         # update with user settings.
         _config.update(config)
 
-    # if in debug mode
-    if debug:
-        # conditional logic to limit tracking to specific processes/entities
-        if _config["tracked"] is None or identifier in _config["tracked"]:
-            # display and format time stamp
-            out = (
-                f"[{_config['time_colour']}]["
-                + f"{time:.{_config['time_dp']}f}]:[/"
-                + f"{_config['time_colour']}]"
-            )
+    # If in debug mode with conditional logic to limit tracking to specific
+    # processes/entities
+    if debug and config["tracked"] is None or identifier in _config["tracked"]:
+        # display and format time stamp
+        out = (
+            f"[{_config['time_colour']}]["
+            + f"{time:.{_config['time_dp']}f}]:[/"
+            + f"{_config['time_colour']}]"
+        )
 
-            # if provided display and format a process ID
-            if _config["class"] is not None and identifier is not None:
-                out += (
-                    f"[{_config['class_colour']}]<{_config['class']} "
-                    + f"{identifier}>: [/{_config['class_colour']}]"
-                )
-
-            # format traced event message
+        # if provided display and format a process ID
+        if _config["class"] is not None and identifier is not None:
             out += (
-                f"[{_config['message_colour']}]{msg}[/"
-                + f"{_config['message_colour']}]"
+                f"[{_config['class_colour']}]<{_config['class']} "
+                + f"{identifier}>: [/{_config['class_colour']}]"
             )
 
-            # print to rich console
-            _console.print(out)
+        # format traced event message
+        out += f"[{_config['message_colour']}]{msg}[/" + f"{_config['message_colour']}]"
+
+        # print to rich console
+        _console.print(out)

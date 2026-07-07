@@ -1030,9 +1030,12 @@ class ReplicationsAlgorithm:
         # within initial replications
         for metric, dictionary in solutions.items():
             adj_nreps = self.find_position(observers[metric].dev)
-            if adj_nreps is not None and dictionary["nreps"] is not None:
-                if adj_nreps < dictionary["nreps"]:
-                    solutions[metric]["nreps"] = adj_nreps
+            if (
+                adj_nreps is not None
+                and dictionary["nreps"] is not None
+                and adj_nreps < dictionary["nreps"]
+            ):
+                solutions[metric]["nreps"] = adj_nreps
 
         # Extract minimum replications for each metric
         nreps = {metric: value["nreps"] for metric, value in solutions.items()}

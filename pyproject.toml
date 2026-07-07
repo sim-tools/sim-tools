@@ -70,6 +70,10 @@ lint.select = [
     "TID",  # Tidy imports
     "UP",   # Rewrites older syntax into modern, cleaner syntax
     "RET",  # Good return practices
+    "SIM",  # Common simplification rules
+]
+lint.ignore = [
+    "SIM108",  # Change if-else to ternary or binary operator
 ]
 lint.per-file-ignores."user_guide/*" = [
     "F811",  # Redefinition of unused {name} from {row}

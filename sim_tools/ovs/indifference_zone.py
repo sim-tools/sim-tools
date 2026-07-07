@@ -147,10 +147,8 @@ class KNPlusPlus:
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def _sequential_replication(self):
         """
@@ -407,10 +405,9 @@ class KN:
         # designs in contention for this round
         for i, design_i in enumerate(self._contenders_old):
             for j, design_j in enumerate(self._contenders_old):
-                if i != j:
-                    if not self._design_still_in_contention(design_i, design_j):
-                        contenders_mask[i] = False
-                        break
+                if i != j and not self._design_still_in_contention(design_i, design_j):
+                    contenders_mask[i] = False
+                    break
 
         self._contenders = self._contenders[contenders_mask]
 
@@ -445,10 +442,8 @@ class KN:
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def feedback(self, *args):
         """
