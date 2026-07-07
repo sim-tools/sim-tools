@@ -187,7 +187,7 @@ def trace(
 
     # If in debug mode with conditional logic to limit tracking to specific
     # processes/entities
-    if debug and config["tracked"] is None or identifier in _config["tracked"]:
+    if debug and _config["tracked"] is None or identifier in _config["tracked"]:
         # display and format time stamp
         out = (
             f"[{_config['time_colour']}]["
