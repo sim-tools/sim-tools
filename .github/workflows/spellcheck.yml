@@ -2,6 +2,7 @@ name: spellcheck
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   vale:
