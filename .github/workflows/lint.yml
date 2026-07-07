@@ -35,5 +35,8 @@ jobs:
       - name: "DEBUG: Show lintquarto version"
         run: uv run python -m pip show lintquarto
 
+      - name: "DEBUG: Run lintquarto --help"
+        run: uv run lintquarto --help
+
       - name: Run ruff on .qmd files
         run: uv run lintquarto
