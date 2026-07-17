@@ -7,7 +7,7 @@ jupyter: python3
 
 This notebook provides an overview of how to use the `Distribution` classes from the `sim_tools.distributions` module.
 
-The classes are a higher level abstract of sampling from the numpy library. They encapsulate the distribution parameters, a random number generator instance, and a random seed.  For example, the code for the Exponential class is:
+The classes are a higher level abstract of sampling from the `numpy` library. They encapsulate the distribution parameters, a random number generator instance, and a random seed.  For example, the code for the Exponential class is:
 
 ```{.python}
 class Exponential:
@@ -212,7 +212,7 @@ class PearsonV:
 
 3. **Lognormal**: This class is used when the logarithm of a variable is normally distributed. It takes the mean and standard deviation of the lognormal distribution and an optional random seed as parameters.
 
-4. **Normal**: This class models a process where a variable is normally distributed. It takes the mean and standard deviation of the normal distribution, a boolean to allow or disallow negative samples, and an optional random seed as parameters.
+4. **Normal**: This class models a process where a variable is normally distributed. It takes the mean and standard deviation of the normal distribution, a Boolean to allow or disallow negative samples, and an optional random seed as parameters.
 
 5. **Uniform**: This class models a process where all outcomes are equally likely. It takes the lower and upper range of the uniform distribution and an optional random seed as parameters.
 
@@ -224,7 +224,7 @@ class PearsonV:
 
 9. **GroupedContinuousEmpirical**: This class is used to model a process based on observed data, where the probability of an outcome is proportional to its frequency in the data. To produce a continuous value, linear interpolation between bounds is used. It takes lower bounds (of a discrete empirical distribution), upper bounds, observed frequencies, and an optional random seed as parameters.
 
-10. **Erlang**: This class is used for modeling the time between events in a Poisson process, where events occur continuously and independently at a constant average rate. The class is implemented to allow for users to input the mean, and stdev of the distribution as opposed to k and theta. This allows for compatibility of parameters with other commerical simulation packages. The mean and stdev are converted to k and theta internally. The Erlang is a special case of the gamma distribution where  is an integer.  Internally this is implemented using numpy Generator's gamma method. As k is calculated from the mean and stdev it is rounded to an integer value using python's built in 'round' function. Optionally a user can offet the original of the distribution using the location parameter.
+10. **Erlang**: This class is used for modeling the time between events in a Poisson process, where events occur continuously and independently at a constant average rate. The class is implemented to allow for users to input the mean, and standard deviation of the distribution as opposed to k and theta. This allows for compatibility of parameters with other commercial simulation packages. The mean and standard deviation are converted to k and theta internally. The Erlang is a special case of the gamma distribution where  is an integer.  Internally this is implemented using `numpy` Generator's gamma method. As k is calculated from the mean and standard deviation it is rounded to an integer value using python's built in 'round' function. Optionally a user can offset the original of the distribution using the location parameter.
 
 11. **ErlangK**: The same as **Erlang**, but `k` and `theta` are specified directly by a user. 
 
@@ -244,7 +244,7 @@ class PearsonV:
 
 19. The **PearsonVI** (Pearson Type 6) distribution, an inverted beta distribution, is defined by three parameters: alpha1 (shape parameter 1), alpha2 (shape parameter 2), and beta (scale parameter), all of which must be greater than zero. The Pearson Type VI distribution can be used to model the time to complete tasks and is sampled using the transformation Pearson6(a1, a2, b) = b * X / (1 - X), where X is a Beta-distributed random variable with parameters alpha1 and alpha2. The mean and variance can be computed directly for certain values of the second shape parameter.
 
-20. The **Hyperexoponential** distribution.  A continuous probability distribution that is a mixture (weighted sum) of exponential distributions. It has a higher coefficient of variation than a single exponential distribution, making it useful for modeling highly variable processes or heavy-tailed phenomena.
+20. The **Hyperexponential** distribution.  A continuous probability distribution that is a mixture (weighted sum) of exponential distributions. It has a higher coefficient of variation than a single exponential distribution, making it useful for modeling highly variable processes or heavy-tailed phenomena.
 
 ## Example output
 
@@ -276,7 +276,6 @@ from sim_tools.distributions import (
     Uniform,
     Weibull,
 )
-
 ```
 
 ### Create plots

@@ -38,7 +38,8 @@ Validation functions raise appropriate exceptions with descriptive messages:
 - ValueError for value constraint failures
 """
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 

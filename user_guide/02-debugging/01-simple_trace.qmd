@@ -15,14 +15,11 @@ This notebooks illustrates simple tracing of simulation using some small models.
 
 ```{python}
 import itertools
-from typing import Optional
 
 import simpy
 
 from sim_tools.distributions import Exponential
 from sim_tools.trace import trace
-
-
 ```
 
 ## 2. A trace using default colouring
@@ -37,7 +34,7 @@ Rather than using python's print command we instead make use of `trace`. We pass
 
 ```{python}
 def patient_generator(
-    env: simpy.Environment, dist: Exponential, debug: Optional[bool] = False
+    env: simpy.Environment, dist: Exponential, debug: bool | None = False
 ):
     """Generate patient arrivals to the treatment clinic"""
     for patient_count in itertools.count(1):
@@ -75,7 +72,7 @@ config = {
 }
 ```
 
-* `class`: a string representing the class or type of trace event occuring.  This could be a process type for example, "patient", "stroke patient" or "arrival" or "treatment".
+* `class`: a string representing the class or type of trace event occurring.  This could be a process type for example, "patient", "stroke patient" or "arrival" or "treatment".
 * `class_colour`: choose a colour to display the class name e.g. "green" or "bold green"
 * `time_colour`: choose a colour to display the time
 * `time_dp`: choose the number of decimal places for time (default=2)
@@ -87,17 +84,16 @@ config = {
 ```{python}
 def get_config():
     """Returns a custom trace configuration"""
-    config = {
+    return {
         "class": "Arrival",
         "class_colour": "green",
         "time_colour": "bold black",
         "message_colour": "red",
     }
-    return config
 
 
 def patient_generator(
-    env: simpy.Environment, dist: Exponential, debug: Optional[bool] = False
+    env: simpy.Environment, dist: Exponential, debug: bool | None = False
 ):
     """Generate patient arrivals to the treatment clinic"""
     for patient_count in itertools.count(1):
@@ -130,7 +126,7 @@ We modify the `simpy` example to include a `treatment` process.  We wish for tre
 ```{python}
 def get_config():
     """Returns a custom trace configuration for arrivals"""
-    config = {
+    return {
         "arrivals": {
             "class": "Patient",
             "class_colour": "green",
@@ -144,8 +140,6 @@ def get_config():
             "message_colour": "magenta",
         },
     }
-
-    return config
 ```
 
 The function now returns a nested dictionary containing trace configurations for both arrivals and treatment processes.
@@ -161,7 +155,7 @@ class Experiment:
     """Parameter container"""
 
     def __init__(
-        self, mean_iat: float, mean_service: float, debug: Optional[bool] = False
+        self, mean_iat: float, mean_service: float, debug: bool | None = False
     ):
         self.arrival_dist = Exponential(mean_iat, random_seed=42)
         self.treat_dist = Exponential(mean_service, random_seed=101)
@@ -222,7 +216,7 @@ Assume we wish to track patients 4 and 5.  The `config['tracking']` option accep
 
 The script below declares the variable `TRACKED=[4, 5]`
 
-> Note that when there are a lot of processes to track it may be become simplier to use the object orientated interface to trace functionality.
+> Note that when there are a lot of processes to track it may be become simpler to use the object orientated interface to trace functionality.
 
 ```{python}
 class Experiment:
@@ -232,8 +226,8 @@ class Experiment:
         self,
         mean_iat: float,
         mean_service: float,
-        debug: Optional[bool] = False,
-        tracked: Optional[list] = None,
+        debug: bool | None = False,
+        tracked: list | None = None,
     ):
         self.arrival_dist = Exponential(mean_iat, random_seed=42)
         self.treat_dist = Exponential(mean_service, random_seed=101)
@@ -246,7 +240,7 @@ def get_config(exp: Experiment):
     and treatment
 
     Modified to add tracking information to each config"""
-    config = {
+    return {
         "arrivals": {
             "class": "Patient",
             "class_colour": "green",
@@ -262,8 +256,6 @@ def get_config(exp: Experiment):
             "tracked": exp.tracked,
         },
     }
-
-    return config
 
 
 def treatment(env: simpy.Environment, exp: Experiment, patient_id: int):

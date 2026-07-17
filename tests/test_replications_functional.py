@@ -88,14 +88,14 @@ def test_ci_method_output():
     )
 
     # Check that the results dataframe contains the right number of rows
-    if not len(summary_table) == reps:
+    if len(summary_table) != reps:
         errors.append(
             f"Ran {reps} replications but summary_table only has "
             + f"{len(summary_table)} entries."
         )
 
     # Check that the replications are appropriately numbered
-    if not min(summary_table.index) == 1:
+    if min(summary_table.index) != 1:
         errors.append(
             "Minimum replication in summary_table should be 1 but it is "
             + f"{min(summary_table.index)}."

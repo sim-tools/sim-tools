@@ -26,7 +26,7 @@ pip install -e .
 pip install --group dev
 ```
 
-A pinned conda environment environment is also provided:
+A pinned `conda` environment is also provided:
 
 ```bash
 conda env create -f binder/environment.yml
@@ -71,3 +71,52 @@ lintquarto
 ```
 
 NumPy style docstrings are used.
+
+## Spellcheck
+
+There is a spellcheck GitHub action.
+
+If you want to run the spellcheck locally, you need to install vale. On Linux:
+
+```
+sudo apt update
+sudo apt install snapd
+sudo snap install vale
+```
+
+With vale installed, run:
+
+```
+vale sync
+vale .
+```
+
+## Contributors
+
+If your name or contributions are missing from the README, or if you contributed in ways not captured by the current role emojis, please create an issue and use:
+
+```
+@all-contributors please add @githubuser for ...
+```
+
+Then list appropriate contribution types from [allcontributors.org/docs/en/emoji-key](https://allcontributors.org/docs/en/emoji-key) (e.g., code, review, doc, content, bug, ideas, infra).
+
+Alternatively, you can update it from the command line. This may be preferable, as the bot will create GitHub issues that email people when they are added.
+
+You'll need to install the [All-Contributors CLI tool](https://allcontributors.org/cli/installation/):
+
+```
+npm i -D all-contributors-cli
+```
+
+You can then run the following and select/enter relevant information when prompted:
+
+```
+npx all-contributors
+```
+
+If you want to remove specific contributions or people, edit the `.all-contributorsrc` file then run the following to regenerate the table in `README.md`. (Don't edit `README.md`, as it is just generated based on `.all-contributorsrc`).
+
+```
+npx all-contributors generate
+```

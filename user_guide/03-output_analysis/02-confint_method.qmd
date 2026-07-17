@@ -18,7 +18,6 @@ from sim_tools.output_analysis import (
     confidence_interval_method,
     plotly_confidence_interval_method,
 )
-
 ```
 
 ## Confidence interval method

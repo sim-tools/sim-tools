@@ -23,7 +23,6 @@ from treat_sim.model import (
     multiple_replications,
     single_run,
 )
-
 ```
 
 ## Running a single replication

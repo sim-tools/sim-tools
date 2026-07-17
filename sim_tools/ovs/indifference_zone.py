@@ -147,10 +147,8 @@ class KNPlusPlus:
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def _sequential_replication(self):
         """
@@ -216,12 +214,10 @@ class KNPlusPlus:
 
         # I think the problem is that I am not using the variance of the
         # differences.
-        w_ij = (self._delta / (2 * self._n)) * (
+        return (self._delta / (2 * self._n)) * (
             ((self._h_squared * (sum_of_vars)) / self._delta**2) - self._n
         )
-
         # return max(0, w_ij)
-        return w_ij
 
     def _update(self):
         """update step.
@@ -409,10 +405,9 @@ class KN:
         # designs in contention for this round
         for i, design_i in enumerate(self._contenders_old):
             for j, design_j in enumerate(self._contenders_old):
-                if i != j:
-                    if not self._design_still_in_contention(design_i, design_j):
-                        contenders_mask[i] = False
-                        break
+                if i != j and not self._design_still_in_contention(design_i, design_j):
+                    contenders_mask[i] = False
+                    break
 
         self._contenders = self._contenders[contenders_mask]
 
@@ -447,10 +442,8 @@ class KN:
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def feedback(self, *args):
         """
@@ -489,7 +482,7 @@ class KN:
         """
         n = self._allocations[design_index]
         current_value = self._means[design_index]
-        new_value = ((n - 1) / float(n)) * current_value + (
+
+        return ((n - 1) / float(n)) * current_value + (
             1 / float(n)
         ) * observation * self._negate
-        return new_value

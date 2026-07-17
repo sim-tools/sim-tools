@@ -20,7 +20,6 @@ If you make use of this code in your work **please cite the `sim-tools` as well 
 
 ```{python}
 from collections.abc import Callable
-from typing import Optional
 
 from treat_sim.model import Scenario, single_run
 
@@ -30,8 +29,6 @@ from sim_tools.output_analysis import (
     ReplicationTabulizer,
     plotly_confidence_interval_method,
 )
-
-
 ```
 
 ##  Replications Algorithm overview
@@ -99,7 +96,7 @@ class AlgorithmObserver(Protocol):
 
 * There should be a `.dev` attribute containing the percentage deviation.
 * There should be an `update()` method which updates statistics after each replication.
-* There should be a `summary_table()` method which returns a dataframe summarising the replication results.
+* There should be a `summary_table()` method which returns a DataFrame summarising the replication results.
 
 </div>
 
@@ -173,7 +170,7 @@ class TreatSimAdapter:
         scenario: Scenario,
         metrics: list[str],
         single_run_func: Callable,
-        run_length: Optional[float] = 1140.0,
+        run_length: float | None = 1140.0,
     ):
         """
         Parameters:
@@ -246,7 +243,7 @@ print(nreps)
 summary_frame.head()
 ```
 
-You can visualise the tabulized results using the `plotly_confidence_interval_method` function.
+You can visualise the tabularised results using the `plotly_confidence_interval_method` function.
 
 ```{python}
 plotly_confidence_interval_method(

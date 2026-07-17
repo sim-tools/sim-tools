@@ -4,7 +4,6 @@ ability to trace and debug simulation models.
 """
 
 from abc import ABC
-from typing import Optional
 
 from rich.console import Console
 
@@ -48,7 +47,7 @@ class Traceable(ABC):
     be setup correctly.
     """
 
-    def __init__(self, debug: Optional[bool] = DEFAULT_DEBUG):
+    def __init__(self, debug: bool | None = DEFAULT_DEBUG):
         """
         Initialise Traceable
 
@@ -65,7 +64,7 @@ class Traceable(ABC):
         """
         Returns a default trace configuration.
         """
-        config = {
+        return {
             "class": None,
             "class_colour": "bold blue",
             "time_colour": "bold blue",
@@ -73,7 +72,6 @@ class Traceable(ABC):
             "message_colour": "black",
             "tracked": None,
         }
-        return config
 
     def _trace_config(self) -> dict:
         """
@@ -81,9 +79,7 @@ class Traceable(ABC):
         """
         return Traceable._default_config()
 
-    def trace(
-        self, time: float, msg: Optional[str] = None, process_id: Optional[str] = None
-    ):
+    def trace(self, time: float, msg: str | None = None, process_id: str | None = None):
         """
         Display a formatted trace of a simulated event.
 
@@ -140,10 +136,10 @@ class Traceable(ABC):
 
 def trace(
     time: float,
-    debug: Optional[bool] = DEFAULT_DEBUG,
-    msg: Optional[str] = None,
-    identifier: Optional[str] = None,
-    config: Optional[dict] = None,
+    debug: bool | None = DEFAULT_DEBUG,
+    msg: str | None = None,
+    identifier: str | None = None,
+    config: dict | None = None,
 ):
     """
     Display a formatted trace of a simulated event.
@@ -189,29 +185,25 @@ def trace(
         # update with user settings.
         _config.update(config)
 
-    # if in debug mode
-    if debug:
-        # conditional logic to limit tracking to specific processes/entities
-        if _config["tracked"] is None or identifier in _config["tracked"]:
-            # display and format time stamp
-            out = (
-                f"[{_config['time_colour']}]["
-                + f"{time:.{_config['time_dp']}f}]:[/"
-                + f"{_config['time_colour']}]"
-            )
+    # If in debug mode with conditional logic to limit tracking to specific
+    # processes/entities
+    if debug and _config["tracked"] is None or identifier in _config["tracked"]:
+        # display and format time stamp
+        out = (
+            f"[{_config['time_colour']}]["
+            + f"{time:.{_config['time_dp']}f}]:[/"
+            + f"{_config['time_colour']}]"
+        )
 
-            # if provided display and format a process ID
-            if _config["class"] is not None and identifier is not None:
-                out += (
-                    f"[{_config['class_colour']}]<{_config['class']} "
-                    + f"{identifier}>: [/{_config['class_colour']}]"
-                )
-
-            # format traced event message
+        # if provided display and format a process ID
+        if _config["class"] is not None and identifier is not None:
             out += (
-                f"[{_config['message_colour']}]{msg}[/"
-                + f"{_config['message_colour']}]"
+                f"[{_config['class_colour']}]<{_config['class']} "
+                + f"{identifier}>: [/{_config['class_colour']}]"
             )
 
-            # print to rich console
-            _console.print(out)
+        # format traced event message
+        out += f"[{_config['message_colour']}]{msg}[/" + f"{_config['message_colour']}]"
+
+        # print to rich console
+        _console.print(out)

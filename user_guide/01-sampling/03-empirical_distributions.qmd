@@ -1,10 +1,10 @@
 ---
-title: Empirial Distributions
+title: Empirical Distributions
 jupyter: python3
 ---
 
 
-In many applications of simulation, theoretical distributons may not be a good fit to the data; for example, if the data are bimodal. A number of empirical distribution options are provided by `sim-tools` to support modelling in these situations
+In many applications of simulation, theoretical distributions may not be a good fit to the data; for example, if the data are bimodal. A number of empirical distribution options are provided by `sim-tools` to support modelling in these situations
 
 * `RawContinuousEmpirical` 
 * `RawDiscreteEmpirical`
@@ -26,7 +26,6 @@ from sim_tools.distributions import (
     RawContinuousEmpirical,
     RawDiscreteEmpirical,
 )
-
 ```
 
 ## 1. Sampling from the raw data with interpolation
@@ -64,7 +63,7 @@ fig.show()
 
 ### 1.2 More complex data
 
-We will generate four datasets to illustrate the distributon in use.  One is approx uniform , one right skewed (exponential), one bimodal (a mix of two normal distributions) and finally one with outliers.
+We will generate four datasets to illustrate the distribution in use.  One is approx uniform , one right skewed (exponential), one bimodal (a mix of two normal distributions) and finally one with outliers.
 
 ```{python}
 # Create a dictionary of distribution configurations for batch creation
@@ -361,7 +360,7 @@ fig.show()
 
 ## 2. Sampling from the Raw data directly
 
-If the raw data is available then an alternative to Law and Kelton's interpolation method israw data directly using `RawDiscreteEmpirical`.
+If the raw data is available then an alternative to Law and Kelton's interpolation method is raw data directly using `RawDiscreteEmpirical`.
 
 ```{python}
 distributions = {}

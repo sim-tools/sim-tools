@@ -20,7 +20,6 @@ import sim_tools
 from sim_tools.distributions import Bernoulli, Exponential, Lognormal, Normal
 from sim_tools.time_dependent import NSPPThinning
 from sim_tools.trace import Traceable
-
 ```
 
 ```{python}
@@ -70,8 +69,8 @@ The data for arrival rates varies between clinic opening at 6am and closure at 1
 ```{python}
 # data are held in the Github repo and loaded from there.
 NSPP_PATH = (
-    "https://raw.githubusercontent.com/TomMonks/" +
-    "open-science-for-sim/main/src/notebooks/01_foss_sim/data/ed_arrivals.csv"
+    "https://raw.githubusercontent.com/TomMonks/"
+    + "open-science-for-sim/main/src/notebooks/01_foss_sim/data/ed_arrivals.csv"
 )
 ```
 
@@ -114,9 +113,9 @@ DEBUG = False
 TRACKED = None
 ```
 
-## 3. Model parameterisation
+## 3. Model parametrisation
 
-For convienience a container class is used to hold the large number of model parameters.  The `Scenario` class includes defaults  these can easily be changed and at runtime to experiments with different designs.
+For convenience a container class is used to hold the large number of model parameters.  The `Scenario` class includes defaults  these can easily be changed and at runtime to experiments with different designs.
 
 ```{python}
 def load_arrival_profile(profile_path):
@@ -137,13 +136,12 @@ def load_arrival_profile(profile_path):
         - 'arrival_rate': Original arrival rate from CSV.
         - 'mean_iat': Mean inter-arrival time.
     """
-    df = (
+    return (
         pd.read_csv(profile_path)
         .reset_index()
         .rename(columns={"index": "t"})
         .assign(mean_iat=lambda x: 60.0 / x.arrival_rate, t=lambda x: x.t * 60.0)
     )
-    return df
 ```
 
 ```{python}
@@ -390,7 +388,7 @@ class Scenario:
 
 ## 6. Patient Pathways Process Logic
 
-`simpy` uses a process based worldview.  We can easily create whatever logic - simple or complex  for the model.  Here the process logic for trauma and non-trauma patients is seperated into two classes `TraumaPathway`  and `NonTraumaPathway`. 
+`simpy` uses a process based worldview.  We can easily create whatever logic - simple or complex  for the model.  Here the process logic for trauma and non-trauma patients is separated into two classes `TraumaPathway`  and `NonTraumaPathway`. 
 
 ```{python}
 class TraumaPathway(Traceable):
@@ -554,13 +552,12 @@ class TraumaPathway(Traceable):
 
     def _trace_config(self):
         """Override trace config"""
-        config = {
+        return {
             "name": "Trauma",
             "name_colour": "bold magenta",
             "time_colour": "bold magenta",
             "tracked": self.args.tracked,
         }
-        return config
 ```
 
 ```{python}
@@ -731,19 +728,18 @@ class NonTraumaPathway(Traceable):
 
     def _trace_config(self):
         """Override trace config"""
-        config = {
+        return {
             "name": "Non-trauma",
             "name_colour": "bold green",
             "time_colour": "bold green",
             "message_colour": "black",
             "tracked": self.args.tracked,
         }
-        return config
 ```
 
 ## 7. Main model class
 
-The main class that a user interacts with to run the model is `TreatmentCentreModel`.  This implements a `.run()` method, contains a simple algorithm for the non-stationary poission process for patients arrivals and inits instances of `TraumaPathway` or `NonTraumaPathway` depending on the arrival type.
+The main class that a user interacts with to run the model is `TreatmentCentreModel`.  This implements a `.run()` method, contains a simple algorithm for the non-stationary Poisson process for patients arrivals and creates instances of `TraumaPathway` or `NonTraumaPathway` depending on the arrival type.
 
 ```{python}
 class TreatmentCentreModel:
@@ -985,10 +981,9 @@ class SimulationSummary:
         patients: list
             A list of patients
         """
-        mean = np.array(
+        return np.array(
             [getattr(p, metric) for p in patients if getattr(p, metric) > -np.inf]
         ).mean()
-        return mean
 
     def get_resource_util(self, metric, n_resources, patients):
         """
@@ -1051,7 +1046,7 @@ class SimulationSummary:
 
 ## 9. Model execution
 
-We note that there are **many ways** to setup a `simpy` model and execute it (that is part of its fantastic flexibility).  The organisation of code we show below is based on our experience of using the package in practice. The approach also allows for easy parallisation over multiple CPU cores using `joblib`.
+We note that there are **many ways** to setup a `simpy` model and execute it (that is part of its fantastic flexibility).  The organisation of code we show below is based on our experience of using the package in practice. The approach also allows for easy parallelisation over multiple CPU cores using `joblib`.
 
 We include two functions. `single_run()` and `multiple_replications`.  The latter is used to repeatedly call and process the results from `single_run`.
 
@@ -1093,9 +1088,7 @@ def single_run(
 
     # run results
     summary = SimulationSummary(model)
-    summary_df = summary.summary_frame()
-
-    return summary_df
+    return summary.summary_frame()
 ```
 
 ```{python}

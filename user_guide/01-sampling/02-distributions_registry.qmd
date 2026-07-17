@@ -32,18 +32,18 @@ The `DistributionRegistry` is part of the `distributions` module.  You can think
 
 ```{python}
 import json
+from pathlib import Path
 
 import numpy as np
 
 from sim_tools.distributions import DistributionRegistry
-
 ```
 
 ## 2. Creating batches of distributions from configuration data
 
 `DistributionRegistry` allows a user to create a batch of statistical distributions in one go using `create_batch`.  A user can either pass in a `dict` or a `list`.
 
-> `DistributionRegistry` sets up non-overlapping pseudo random number streams for the distributions using the `distributions.spawn_seeds()` function. For reproducibile results a user should se the `main_seed` parameter of `create_batch`.
+> `DistributionRegistry` sets up non-overlapping pseudo random number streams for the distributions using the `distributions.spawn_seeds()` function. For reproducible results a user should use the `main_seed` parameter of `create_batch`.
 
 ```{python}
 # Dictionary-based configuration (named distributions)
@@ -123,7 +123,7 @@ json_config = """
 config_data = json.loads(json_config)
 
 # write JSON to file
-with open("example_sim_config.json", "w", encoding="utf-8") as f:
+with Path("example_sim_config.json").open("w", encoding="utf-8") as f:
     json.dump(json_config, f, indent=4)
 ```
 
@@ -135,7 +135,7 @@ Let's assume we want to run out model with the distributions specified in the JS
 
 ```{python}
 # read in file
-with open("example_sim_config.json", "r", encoding="utf-8") as f:
+with Path("example_sim_config.json").open(encoding="utf-8") as f:
     config = json.load(f)
 
 # Extract the distributions configuration
