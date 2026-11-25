@@ -430,13 +430,23 @@ class NSPPDirect:
         self._Tn_prev: float = 0.0  # NSPP clock time at last event
 
     def __repr__(self) -> str:
-        data_str = repr(self.data)
-        if len(data_str) > 100:
-            data_str = data_str[:100] + "..."
-        return (
-            f"{self.__class__.__name__}(data={data_str}, "
-            f"interval={self.interval})"
-        )
+        """
+        String representation of the generator and its live state.
+
+        Shows the profile's derived parameters (number of segments,
+        cycle length, expected arrivals per cycle, rate range) plus
+        the current generator state (simulation time, arrival clock,
+        number of arrivals sampled), so that stateful objects can be
+        distinguished at a glance in tracebacks and logs.
+        """
+        r = self._r[1:]
+        s = (f"{self.__class__.__name__}(K={len(r)}, "
+            f"cycle={self._b[-1]:g}, E[arr]/cycle={self._c[-1]:g}, "
+            f"rates {r.min():g}-{r.max():g}")
+        if (r == 0).any():
+            s += f" ({int((r == 0).sum())} zero-rate)"
+        s += f", at t={self._Tn_prev:.4g}, Sn={self._Sn_prev:.4g}, n={self._n})"
+        return s
 
     def reset(self) -> None:
         """Reset internal state so the generator can be reused from t=0.
