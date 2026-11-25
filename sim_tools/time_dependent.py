@@ -379,7 +379,7 @@ class NSPPDirect:
         Width of each time interval. Informational only (used in repr/plot,
         not by the inversion). Inferred from the first two rows when omitted.
     random_seed : int | SeedSequence, optional
-        Seed for the U(0,1) RNG used to generate unit-rate Poisson IATs.
+        Seed for the standard Exponential RNG used to generate unit-rate Poisson IATs.
 
     Reference:
     ----------
@@ -449,6 +449,40 @@ class NSPPDirect:
         s += f", at t={self._Tn_prev:.4g}, Sn={self._Sn_prev:.4g}, n={self._n})"
         return s
 
+    def _repr_html_(self) -> str:
+        """
+        Rich, collapsible HTML rendering for Jupyter notebooks.
+
+        Shows a one-line summary (K, cycle length, expected arrivals
+        per cycle, current state) as the visible header. The full
+        segment table (k, b_k, r_k, c_k) sits inside an HTML5
+        <details> disclosure widget and is revealed on click.
+        Jupyter calls this in preference to __repr__() when the
+        object is a cell's displayed result; print() and logging
+        still use __repr__().
+
+        Returns
+        -------
+        str
+            HTML fragment: <details><summary>header</summary>table</details>
+        """
+        r = self._r[1:]
+        seg = pd.DataFrame({
+            "k": np.arange(1, len(r) + 1),
+            "b_{k-1}": self._b[:-1], "b_k": self._b[1:],
+            "r_k": r, "c_{k-1}": self._c[:-1], "c_k": self._c[1:],
+        })
+        header = (f"{self.__class__.__name__} — K={len(r)}, "
+                f"cycle={self._b[-1]:g}, E[arr]/cycle={self._c[-1]:g}, "
+                f"at t={self._Tn_prev:.4g}, n={self._n}")
+        return (
+            "<details>"
+            f"<summary>{header}</summary>"
+            f"{seg.to_html(index=False, float_format=lambda x: f'{x:.4g}', border=0)}"
+            "</details>"
+        )
+
+
     def reset(self) -> None:
         """Reset internal state so the generator can be reused from t=0.
         Needed because the algorithm is stateful.  If the same object is used
@@ -497,8 +531,12 @@ class NSPPDirect:
             Inter-arrival time until the next NSPP event.
         """
         # Steps 5.1–5.3: generate next unit-rate Poisson inter-event time
-        u  = self.rng.uniform(0.0, 1.0)
-        An = -np.log(u)
+        # u  = self.rng.uniform(0.0, 1.0)
+        # An = -np.log(u)
+        # TM replaced the papers approach to use standard expontial which is fast
+        # AI analysis of this decision suggests that it means antithetic variates 
+        # won;t work with the class.
+        An = self.rng.standard_exponential()
         Sn = self._Sn_prev + An
 
         # Steps 5.4–5.5: invert to absolute NSPP time, then derive IAT
@@ -570,8 +608,9 @@ class NSPPDirect:
             Sn_running = 0.0
             arrivals = []
             for _ in range(n_arrivals):
-                u  = rng_copy.rng.uniform(0.0, 1.0)
-                An = -np.log(u)
+                # u  = rng_copy.rng.uniform(0.0, 1.0)
+                # An = -np.log(u)
+                An = rng_copy.rng.standard_exponential()
                 Sn = Sn_running + An
                 Tn = rng_copy._invert(Sn)
                 arrivals.append((Tn, Sn))
