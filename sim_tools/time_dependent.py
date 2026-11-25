@@ -331,6 +331,25 @@ def nspp_simulation(
 class NSPPDirect:
     """
     Non-Stationary Poisson Process via the Direct (Inversion) Algorithm.
+    Used to sequentially generate inter-arrival times (IATs) of time
+    dependent arrival processes.
+
+    The rate profile is treated as repeating: arrivals are generated
+    indefinitely, cycling back to the first segment once the end of the
+    table is passed.
+
+    In the direct algorithm we use K piecewise linear segments (straight
+    lines) to represent cumulative expected arrivals over time. We have one
+    "clock" that ticks in expected arrivals to the system. For a new arrival
+    we walk up the y-axis to determine which segment to use, and convert the
+    number of ticks into a simulation time by dividing the cumulative
+    arrivals within that segment by the arrival rate of the segment. This
+    gives the absolute time of the next arrival, Tn. The method sample() returns the
+    IAT (Tn minus the previous arrival time), so the first call returns the
+    time of the first arrival from t = 0.
+
+    Algorithm:
+    ----------
 
     The algorithm inverts the cumulative rate function Λ(t) to map
     unit-rate Poisson process event times (Sn) onto NSPP event times (Tn).
@@ -344,23 +363,23 @@ class NSPPDirect:
         Tn = b_{k-1} + (Sn - c_{k-1}) / r_k
     where k satisfies c_{k-1} < Sn <= c_k.
 
-    Sn = arrival clock (number of ticks)
-    Tn = current simulation time
+    Sn = arrival clock (cumulative expected arrivals, i.e. number of ticks)
+    Tn = absolute simulation time of the nth arrival
 
     Parameters
     ----------
     data : pd.DataFrame
-        Columns required:
-          "t"            - right boundary of each interval (b_k)
-          "arrival_rate" - piecewise-constant rate r_k for that segment
-          "mean_iat"     - 1 / arrival_rate (accepted for interface parity
-                           with NSPPThinning; not used internally)
+        Columns:
+        "t"            - right boundary of each interval (b_k). Must be
+                        finite, positive and strictly increasing.
+        "arrival_rate" - piecewise-constant rate r_k for that segment
+        "mean_iat"     - optional; 1 / arrival_rate. Accepted for interface
+                        parity with NSPPThinning; not used internally.
     interval_width : float, optional
-        Width of each time interval. Inferred from data when omitted.
-        Must be supplied when data has only one row.
+        Width of each time interval. Informational only (used in repr/plot,
+        not by the inversion). Inferred from the first two rows when omitted.
     random_seed : int | SeedSequence, optional
         Seed for the U(0,1) RNG used to generate unit-rate Poisson IATs.
-
 
     Reference:
     ----------
