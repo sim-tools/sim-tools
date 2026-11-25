@@ -428,6 +428,7 @@ class NSPPDirect:
         # Internal state
         self._Sn_prev: float = 0.0  # cumulative rate-1 time at last event
         self._Tn_prev: float = 0.0  # NSPP clock time at last event
+        self._n = 0 # arrival count
 
     def __repr__(self) -> str:
         """
@@ -454,6 +455,7 @@ class NSPPDirect:
         across replications then reset should be called."""
         self._Sn_prev = 0.0
         self._Tn_prev = 0.0
+        self._n = 0
 
     def _invert(self, Sn_val: float) -> float:
         """
@@ -506,6 +508,7 @@ class NSPPDirect:
 
         self._Sn_prev = Sn
         self._Tn_prev = Tn
+        self._n += 1
         return iat
     
     def plot_cumulative_rate(
