@@ -7,7 +7,6 @@ import pytest
 import sim_tools.time_dependent as td
 from sim_tools.datasets import load_banks_et_al_nspp
 
-
 SEED_1 = 42
 SEED_2 = 101
 

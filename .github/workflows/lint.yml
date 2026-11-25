@@ -1,0 +1,37 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Create uv virtualenv
+        run: uv venv
+
+      - name: Install package and dependencies
+        run: |
+          uv pip install --upgrade pip
+          uv pip install -e .
+          uv pip install ruff
+          uv pip install lintquarto
+
+      - name: Run ruff on .py files
+        run: uv run ruff check .
+
+      - name: Run ruff on .qmd files
+        run: uv run lintquarto

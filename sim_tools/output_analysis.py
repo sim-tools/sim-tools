@@ -1,4 +1,3 @@
-# pylint: disable=too-many-lines
 """
 module: output_analysis
 
@@ -10,16 +9,18 @@ The Confidence Interval Method (tables and visualisation)
 The Replications Algorithm (Hoad et al. 2010).
 """
 
-import inspect
-from typing import (Any, Callable, Dict, List, Optional, Protocol,
-                    runtime_checkable, Sequence, Union)
 import warnings
+from collections.abc import Callable, Sequence
+from typing import (
+    Any,
+    Protocol,
+    runtime_checkable,
+)
 
-import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 from scipy.stats import t
-
 
 OBSERVER_INTERFACE_ERROR = (
     "Observers of OnlineStatistics must implement "
@@ -34,13 +35,13 @@ ALG_INTERFACE_ERROR = (
 )
 
 
-# pylint: disable=too-few-public-methods
 @runtime_checkable
 class ReplicationObserver(Protocol):
     """
     Interface (protocol) for observers that track simulation replication
     results.
     """
+
     def update(self, results) -> None:
         """
         Add an observation of a replication
@@ -75,13 +76,11 @@ class AlgorithmObserver(Protocol):
         Create a DataFrame summarising all recorded replication statistics.
     """
 
-    dev: List[Any]
+    dev: list[Any]
 
-    def update(self, results) -> None:
-        ...
+    def update(self, results) -> None: ...
 
-    def summary_table(self) -> pd.DataFrame:
-        ...
+    def summary_table(self) -> pd.DataFrame: ...
 
 
 class OnlineStatistics:
@@ -117,9 +116,9 @@ class OnlineStatistics:
 
     def __init__(
         self,
-        data: Optional[np.ndarray] = None,
-        alpha: Optional[float] = 0.1,
-        observer: Optional[ReplicationObserver] = None,
+        data: np.ndarray | None = None,
+        alpha: float | None = 0.1,
+        observer: ReplicationObserver | None = None,
     ) -> None:
         """
         Initialise a new OnlineStatistics object.
@@ -161,8 +160,7 @@ class OnlineStatistics:
             # Raise an error if in different format - else will invisibly
             # proceed and won't notice it hasn't done this
             else:
-                raise ValueError(
-                    f"data must be np.ndarray but is type {type(data)}")
+                raise ValueError(f"data must be np.ndarray but is type {type(data)}")
 
     def register_observer(self, observer: ReplicationObserver) -> None:
         """
@@ -191,7 +189,7 @@ class OnlineStatistics:
         Returns
         -------
         float
-            Sample variance, calculated as the sum of squared differences 
+            Sample variance, calculated as the sum of squared differences
             from the mean divided by (n - 1).
         """
         return self._sq / (self.n - 1)
@@ -420,17 +418,15 @@ class ReplicationTabulizer:
 
 
 def confidence_interval_method(
-    replications: Union[
-        pd.Series,
-        pd.DataFrame,
-        Sequence[float],
-        Sequence[Sequence[float]],
-        Dict[str, Sequence[float]],
-    ],
-    alpha: Optional[float] = 0.05,
-    desired_precision: Optional[float] = 0.1,
-    min_rep: Optional[int] = 5,
-    decimal_places: Optional[int] = 2,
+    replications: pd.Series
+    | pd.DataFrame
+    | Sequence[float]
+    | Sequence[Sequence[float]]
+    | dict[str, Sequence[float]],
+    alpha: float | None = 0.05,
+    desired_precision: float | None = 0.1,
+    min_rep: int | None = 5,
+    decimal_places: int | None = 2,
 ):
     """
     Determine the minimum number of simulation replications required to achieve
@@ -489,7 +485,8 @@ def confidence_interval_method(
         # Set up method for calculating statistics
         observer = ReplicationTabulizer()
         stats = OnlineStatistics(
-            alpha=alpha, data=np.array(metric_values[:2]), observer=observer)
+            alpha=alpha, data=np.array(metric_values[:2]), observer=observer
+        )
 
         # Calculate statistics with each replication
         for i in range(2, len(metric_values)):
@@ -526,14 +523,12 @@ def confidence_interval_method(
     # Dictionary of metrics
     if isinstance(replications, dict):
         return {
-            name: process_single_metric(vals)
-            for name, vals in replications.items()
+            name: process_single_metric(vals) for name, vals in replications.items()
         }
 
     # List of lists, arrays or series
-    if (
-        isinstance(replications, list) and
-        all(isinstance(x, (list, np.ndarray, pd.Series)) for x in replications)
+    if isinstance(replications, list) and all(
+        isinstance(x, (list, np.ndarray, pd.Series)) for x in replications
     ):
         return {
             f"metric_{i}": process_single_metric(vals)
@@ -618,7 +613,7 @@ def plotly_confidence_interval_method(
         for col, color, dash in zip(
             ["Lower Interval", "Upper Interval"],
             ["lightblue", "lightblue"],
-            ["dot", "dot"]
+            ["dot", "dot"],
         ):
             fig.add_trace(
                 go.Scatter(
@@ -638,7 +633,7 @@ def plotly_confidence_interval_method(
             y=conf_ints["Cumulative Mean"],
             line={"color": "blue", "width": 2},
             name="Cumulative Mean",
-            hoverinfo="x+y+name"
+            hoverinfo="x+y+name",
         )
     )
 
@@ -691,7 +686,6 @@ class ReplicationsAlgorithmModelAdapter(Protocol):
         """
 
 
-# pylint: disable=too-many-instance-attributes
 class ReplicationsAlgorithm:
     """
     Automatically determine the number of simulation replications needed
@@ -740,16 +734,16 @@ class ReplicationsAlgorithm:
     Operational Research Society*, 61(11), 1632-1644.
     https://www.jstor.org/stable/40926090
     """
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
+
     def __init__(
         self,
-        alpha: Optional[float] = 0.05,
-        half_width_precision: Optional[float] = 0.1,
-        initial_replications: Optional[int] = 3,
-        look_ahead: Optional[int] = 5,
-        replication_budget: Optional[float] = 1000,
-        verbose: Optional[bool] = False,
-        observer_factory: Optional[Callable[[], AlgorithmObserver]] = None,
+        alpha: float | None = 0.05,
+        half_width_precision: float | None = 0.1,
+        initial_replications: int | None = 3,
+        look_ahead: int | None = 5,
+        replication_budget: float | None = 1000,
+        verbose: bool | None = False,
+        observer_factory: Callable[[], AlgorithmObserver] | None = None,
     ):
         """
         Initialise the replications algorithm
@@ -823,21 +817,22 @@ class ReplicationsAlgorithm:
         """
         for p in [self.initial_replications, self.look_ahead]:
             if not isinstance(p, int) or p < 0:
-                raise ValueError(f'{p} must be a non-negative integer.')
+                raise ValueError(f"{p} must be a non-negative integer.")
 
         if self.half_width_precision <= 0:
-            raise ValueError('half_width_precision must be greater than 0.')
+            raise ValueError("half_width_precision must be greater than 0.")
 
         if self.replication_budget < self.initial_replications:
             raise ValueError(
-                'replication_budget must be less than initial_replications.')
+                "replication_budget must be less than initial_replications."
+            )
 
         if self.observer_factory is not None:
             # Must be a callable (class, function, or lambda)
             if not callable(self.observer_factory):
                 raise TypeError(
                     "'observer_factory' must be callable (a class, function, ",
-                    "or lambda)."
+                    "or lambda).",
                 )
 
             # Instantiate a temporary observer to inspect
@@ -872,7 +867,7 @@ class ReplicationsAlgorithm:
         """
         return int((self.look_ahead / 100) * max(self.n, 100))
 
-    def find_position(self, lst: List[float]):
+    def find_position(self, lst: list[float]):
         """
         Find the first position where element is below deviation, and this is
         maintained through the lookahead period.
@@ -892,9 +887,7 @@ class ReplicationsAlgorithm:
             or None if not found.
         """
         # Check if the list is empty or if no value is below the threshold
-        if not lst or all(
-            x is None or x >= self.half_width_precision for x in lst
-        ):
+        if not lst or all(x is None or x >= self.half_width_precision for x in lst):
             return None
 
         # Find the first non-None value in the list
@@ -908,17 +901,14 @@ class ReplicationsAlgorithm:
                 # Check if all fall below the desired deviation
                 if all(
                     value < self.half_width_precision
-                    for value in lst[i:i+self.look_ahead+1]
+                    for value in lst[i : i + self.look_ahead + 1]
                 ):
                     # Add one, so it is the number of reps, as is zero-indexed
                     return i + 1
         return None
 
-    # pylint: disable=too-many-branches
     def select(
-        self,
-        model: ReplicationsAlgorithmModelAdapter,
-        metrics: list[str]
+        self, model: ReplicationsAlgorithmModelAdapter, metrics: list[str]
     ) -> dict[str, int]:
         """
         Executes the replication algorithm, determining the necessary number
@@ -967,9 +957,9 @@ class ReplicationsAlgorithm:
         # Create tracking dictionary
         solutions = {
             metric: {
-                "nreps": None,    # The solution
+                "nreps": None,  # The solution
                 "target_met": 0,  # Consecutive times target met
-                "solved": False   # Precision maintained over lookahead?
+                "solved": False,  # Precision maintained over lookahead?
             }
             for metric in metrics
         }
@@ -986,14 +976,15 @@ class ReplicationsAlgorithm:
         # If there are, run replications then create instances of
         # OnlineStatistics pre-loaded with data from initial replications
         else:
-            initial_results = [model.single_run(rep)
-                               for rep in range(self.initial_replications)]
+            initial_results = [
+                model.single_run(rep) for rep in range(self.initial_replications)
+            ]
             stats = {}
             for metric in metrics:
                 stats[metric] = OnlineStatistics(
                     data=np.array([res[metric] for res in initial_results]),
                     alpha=self.alpha,
-                    observer=observers[metric]
+                    observer=observers[metric],
                 )
 
         # Check which metrics meet precision after initial replications
@@ -1019,7 +1010,6 @@ class ReplicationsAlgorithm:
 
                     # Check if current deviation is within target precision
                     if stats[metric].deviation <= self.half_width_precision:
-
                         # Record solution, if not met in the last run
                         if solutions[metric]["target_met"] == 0:
                             solutions[metric]["nreps"] = self.n
@@ -1040,9 +1030,12 @@ class ReplicationsAlgorithm:
         # within initial replications
         for metric, dictionary in solutions.items():
             adj_nreps = self.find_position(observers[metric].dev)
-            if adj_nreps is not None and dictionary["nreps"] is not None:
-                if adj_nreps < dictionary["nreps"]:
-                    solutions[metric]["nreps"] = adj_nreps
+            if (
+                adj_nreps is not None
+                and dictionary["nreps"] is not None
+                and adj_nreps < dictionary["nreps"]
+            ):
+                solutions[metric]["nreps"] = adj_nreps
 
         # Extract minimum replications for each metric
         nreps = {metric: value["nreps"] for metric, value in solutions.items()}
@@ -1052,8 +1045,10 @@ class ReplicationsAlgorithm:
 
         # Combine summary frames
         summary_frame = pd.concat(
-            [observer.summary_table().assign(metric=metric)
-             for metric, observer in observers.items()]
+            [
+                observer.summary_table().assign(metric=metric)
+                for metric, observer in observers.items()
+            ]
         ).reset_index(drop=True)
 
         return nreps, summary_frame

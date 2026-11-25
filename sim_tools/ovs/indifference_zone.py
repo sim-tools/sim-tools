@@ -12,8 +12,7 @@ update the variance estimate of designs at each stage.
 import numpy as np
 
 
-# pylint: disable=too-many-instance-attributes
-class KNPlusPlus():
+class KNPlusPlus:
     """
     KN++ algorithm for Ranking and Selection
 
@@ -25,7 +24,7 @@ class KNPlusPlus():
     https://www2.isye.gatech.edu/~skim/KimNelson.pdf
 
     """
-    # pylint: disable=too-many-arguments,too-many-positional-arguments
+
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
         Constructor method for KN++  Ranking and Selection Procedure.
@@ -100,8 +99,10 @@ class KNPlusPlus():
         )
 
     def __str__(self):
-        return (f"KN(n_designs={self._k}, delta={self._delta}, " +
-                f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"KN(n_designs={self._k}, delta={self._delta}, "
+            + f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def reset(self):
         """Resets all attributes"""
@@ -146,10 +147,8 @@ class KNPlusPlus():
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def _sequential_replication(self):
         """
@@ -215,12 +214,10 @@ class KNPlusPlus():
 
         # I think the problem is that I am not using the variance of the
         # differences.
-        w_ij = (self._delta / (2 * self._n)) * (
+        return (self._delta / (2 * self._n)) * (
             ((self._h_squared * (sum_of_vars)) / self._delta**2) - self._n
         )
-
         # return max(0, w_ij)
-        return w_ij
 
     def _update(self):
         """update step.
@@ -273,11 +270,11 @@ class KNPlusPlus():
         self._means[design_index] = new_mean
 
 
-class KN():
+class KN:
     """
     KN - (Kim-Nelson) sequential Ranking and Selection Algorithm
     """
-    # pylint: disable = too-many-arguments,too-many-positional-arguments
+
     def __init__(self, model, n_designs, delta, alpha=0.05, n_0=2, obj="max"):
         """
         Constructor method for KN  Ranking and Selection Procedure.
@@ -343,8 +340,10 @@ class KN():
         self._variance_of_diffs = None
 
     def __str__(self):
-        return (f"KN(n_designs={self._k}, delta={self._delta}, " +
-                f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})")
+        return (
+            f"KN(n_designs={self._k}, delta={self._delta}, "
+            + f"alpha={self._alpha}, n_0={self._n_0}, obj={self._obj})"
+        )
 
     def reset(self):
         """
@@ -393,8 +392,7 @@ class KN():
         pairwise_diffs = self._init_obs[:, None] - self._init_obs
         variance_of_diffs = pairwise_diffs.var(axis=-1, ddof=1)
         # flattens array and drops differences with same design
-        return variance_of_diffs[
-            ~np.eye(variance_of_diffs.shape[0], dtype=bool)]
+        return variance_of_diffs[~np.eye(variance_of_diffs.shape[0], dtype=bool)]
 
     # need to check if this is correct...
     # possibly a bug.  Works when in designs are ordered, but not otherwise...
@@ -406,21 +404,18 @@ class KN():
 
         # designs in contention for this round
         for i, design_i in enumerate(self._contenders_old):
-            for l, design_l in enumerate(self._contenders_old):
-                if i != l:
-                    if not self._design_still_in_contention(design_i,
-                                                            design_l):
-                        contenders_mask[i] = False
-                        break
+            for j, design_j in enumerate(self._contenders_old):
+                if i != j and not self._design_still_in_contention(design_i, design_j):
+                    contenders_mask[i] = False
+                    break
 
         self._contenders = self._contenders[contenders_mask]
 
-
-    def _design_still_in_contention(self, design_i, design_l):
-        w_il = self._limit_to_distance_from_sample_means(design_i, design_l)
+    def _design_still_in_contention(self, design_i, design_j):
+        w_il = self._limit_to_distance_from_sample_means(design_i, design_j)
 
         mean_i = self._means[design_i]
-        mean_l = self._means[design_l]
+        mean_l = self._means[design_j]
 
         return mean_i >= mean_l - w_il
 
@@ -435,8 +430,7 @@ class KN():
         index = design_i * (self._k - 1) + (design_l - 1)
 
         w_il = (self._delta / (2 * self._r)) * (
-            ((self._h_squared * self._variance_of_diffs[index])
-             / self._delta**2)
+            ((self._h_squared * self._variance_of_diffs[index]) / self._delta**2)
             - self._r
         )
 
@@ -448,10 +442,8 @@ class KN():
         else take one further sample from each system
 
         """
-        if len(self._contenders) == 1:
-            return True
-
-        return False
+        # Returns True if this is the case and False otherwise
+        return len(self._contenders) == 1
 
     def feedback(self, *args):
         """
@@ -490,7 +482,7 @@ class KN():
         """
         n = self._allocations[design_index]
         current_value = self._means[design_index]
-        new_value = ((n - 1) / float(n)) * current_value + (
+
+        return ((n - 1) / float(n)) * current_value + (
             1 / float(n)
         ) * observation * self._negate
-        return new_value
